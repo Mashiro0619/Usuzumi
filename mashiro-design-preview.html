@@ -1,0 +1,3510 @@
+
+<!doctype html>
+<html lang="en" data-preview-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Design System Preview</title>
+  <style>
+    @font-face {
+      font-family: "Meddon Custom";
+      src: url("Meddon-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #181817;
+      --surface: #20201e;
+      --surface-soft: #242421;
+      --fg: #f4f2ec;
+      --muted: #bbb7ad;
+      --soft: #8f8b83;
+      --border: #383733;
+
+      --preview-bg: #f4f3f0;
+      --preview-surface: #fbfaf7;
+      --preview-surface-subtle: #efeee9;
+      --preview-surface-muted: #ebeae6;
+      --preview-fg: #333331;
+      --preview-strong: #20201e;
+      --preview-muted: #686866;
+      --preview-soft: #999995;
+      --preview-border: #dad9d5;
+      --preview-border-soft: #e5e4e0;
+      --preview-accent: #2f2f2c;
+      --preview-accent-fg: #f7f6f1;
+      --preview-success: #4e6655;
+      --preview-success-bg: #e6ede7;
+      --preview-warning: #7b6842;
+      --preview-warning-bg: #f0eadc;
+      --preview-danger: #7a4d4a;
+      --preview-danger-bg: #efe3e1;
+      --preview-info: #56606a;
+      --preview-info-bg: #e5e7e8;
+
+      --font-serif: Georgia, "Times New Roman", "Noto Serif SC", "Source Han Serif CN", serif;
+      --font-script: "Meddon Custom", cursive;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --motion-quick: 160ms;
+      --motion-base: 180ms;
+      --motion-slow: 280ms;
+      --ease-standard: cubic-bezier(.2, .8, .2, 1);
+      --focus-ring: 0 0 0 3px color-mix(in srgb, var(--preview-strong) 14%, transparent);
+      --focus-offset: 2px;
+      --card-title-size: 18px;
+      --card-title-line: 1.25;
+      --card-subtitle-size: 13px;
+      --card-subtitle-line: 1.55;
+      --card-title-gap: 6px;
+      --card-block-gap: 12px;
+      --spacing-preview-card-min: 96px;
+      --spacing-preview-card-padding: 10px;
+      --spacing-preview-max-sample: 72px;
+    }
+
+    html[data-preview-theme="dark"] {
+      --preview-bg: #181817;
+      --preview-surface: #20201e;
+      --preview-surface-subtle: #242421;
+      --preview-surface-muted: #292824;
+      --preview-fg: #e5e3de;
+      --preview-strong: #f4f2ec;
+      --preview-muted: #bbb7ad;
+      --preview-soft: #8f8b83;
+      --preview-border: #383733;
+      --preview-border-soft: #292824;
+      --preview-accent: #f4f2ec;
+      --preview-accent-fg: #181817;
+      --preview-success: #b7d0be;
+      --preview-success-bg: #263229;
+      --preview-warning: #d6c08e;
+      --preview-warning-bg: #342d1f;
+      --preview-danger: #d6aaa5;
+      --preview-danger-bg: #352524;
+      --preview-info: #c0c8d0;
+      --preview-info-bg: #252a30;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    :focus {
+      outline: none;
+    }
+
+    :focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition-duration: 0ms !important;
+        animation-duration: 0ms !important;
+      }
+    }
+
+    @supports (-moz-appearance: none) {
+      html {
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+      }
+
+      .live-panel {
+        scrollbar-width: thin;
+        scrollbar-color: var(--preview-border) transparent;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-button {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent !important;
+      -webkit-appearance: none;
+    }
+
+    ::-webkit-scrollbar-button:single-button,
+    ::-webkit-scrollbar-button:double-button,
+    ::-webkit-scrollbar-button:start:decrement,
+    ::-webkit-scrollbar-button:start:increment,
+    ::-webkit-scrollbar-button:end:decrement,
+    ::-webkit-scrollbar-button:end:increment,
+    ::-webkit-scrollbar-button:vertical:decrement,
+    ::-webkit-scrollbar-button:vertical:increment,
+    ::-webkit-scrollbar-button:vertical:start:decrement,
+    ::-webkit-scrollbar-button:vertical:start:increment,
+    ::-webkit-scrollbar-button:vertical:end:decrement,
+    ::-webkit-scrollbar-button:vertical:end:increment,
+    ::-webkit-scrollbar-button:horizontal:decrement,
+    ::-webkit-scrollbar-button:horizontal:increment,
+    ::-webkit-scrollbar-button:horizontal:start:decrement,
+    ::-webkit-scrollbar-button:horizontal:start:increment,
+    ::-webkit-scrollbar-button:horizontal:end:decrement,
+    ::-webkit-scrollbar-button:horizontal:end:increment {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent !important;
+      -webkit-appearance: none;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--soft);
+    }
+
+    ::selection {
+      background: color-mix(in srgb, var(--fg) 18%, transparent);
+      color: var(--fg);
+    }
+
+    .live-panel ::selection {
+      background: color-mix(in srgb, var(--preview-strong) 18%, transparent);
+      color: var(--preview-strong);
+    }
+
+    .live-panel ::-webkit-scrollbar-thumb {
+      background: var(--preview-border);
+    }
+
+    .live-panel ::-webkit-scrollbar-button {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent !important;
+      -webkit-appearance: none;
+    }
+
+    .live-panel ::-webkit-scrollbar-button:single-button,
+    .live-panel ::-webkit-scrollbar-button:double-button,
+    .live-panel ::-webkit-scrollbar-button:start:decrement,
+    .live-panel ::-webkit-scrollbar-button:start:increment,
+    .live-panel ::-webkit-scrollbar-button:end:decrement,
+    .live-panel ::-webkit-scrollbar-button:end:increment,
+    .live-panel ::-webkit-scrollbar-button:vertical:decrement,
+    .live-panel ::-webkit-scrollbar-button:vertical:increment,
+    .live-panel ::-webkit-scrollbar-button:vertical:start:decrement,
+    .live-panel ::-webkit-scrollbar-button:vertical:start:increment,
+    .live-panel ::-webkit-scrollbar-button:vertical:end:decrement,
+    .live-panel ::-webkit-scrollbar-button:vertical:end:increment,
+    .live-panel ::-webkit-scrollbar-button:horizontal:decrement,
+    .live-panel ::-webkit-scrollbar-button:horizontal:increment,
+    .live-panel ::-webkit-scrollbar-button:horizontal:start:decrement,
+    .live-panel ::-webkit-scrollbar-button:horizontal:start:increment,
+    .live-panel ::-webkit-scrollbar-button:horizontal:end:decrement,
+    .live-panel ::-webkit-scrollbar-button:horizontal:end:increment {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent !important;
+      -webkit-appearance: none;
+    }
+
+    .live-panel ::-webkit-scrollbar-thumb:hover {
+      background: var(--preview-soft);
+    }
+
+    .live-panel ::placeholder {
+      color: var(--preview-soft);
+      opacity: 1;
+    }
+
+    .live-panel input,
+    .live-panel textarea {
+      caret-color: var(--preview-strong);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% -8%, rgba(255, 255, 255, 0.045), transparent 30%),
+        var(--bg);
+      color: var(--fg);
+      font-family: var(--font-serif);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 42px 28px 72px;
+    }
+
+    .preview-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .preview-title {
+      margin: 0;
+      color: var(--fg);
+      font-size: 22px;
+      line-height: 1.1;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: transparent;
+    }
+
+    .segment {
+      min-height: 34px;
+      padding: 7px 11px;
+      border: 0;
+      border-left: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      line-height: 1;
+      white-space: nowrap;
+      transition: color var(--motion-quick) var(--ease-standard), background var(--motion-quick) var(--ease-standard);
+    }
+
+    .segment:first-child {
+      border-left: 0;
+    }
+
+    .segment svg {
+      width: 14px;
+      height: 14px;
+      display: block;
+    }
+
+    .segment.is-active {
+      background: var(--surface-soft);
+      color: var(--fg);
+    }
+
+    .segment:not(.is-active):hover {
+      color: var(--fg);
+      background: color-mix(in srgb, var(--surface-soft) 55%, transparent);
+    }
+
+    .preview-shell {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .preview-window-bar {
+      height: 42px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--soft);
+      background: var(--surface);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .traffic {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .traffic span {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--soft);
+      opacity: .72;
+    }
+
+    .preview-path {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .live-panel {
+      display: block;
+      min-height: 720px;
+      background:
+        radial-gradient(circle at 10% -6%, color-mix(in srgb, var(--preview-strong) 3%, transparent), transparent 28%),
+        linear-gradient(180deg, color-mix(in srgb, var(--preview-surface) 70%, var(--preview-bg)) 0%, var(--preview-bg) 42%, var(--preview-bg) 100%);
+      color: var(--preview-fg);
+      transition: background var(--motion-slow) var(--ease-standard), color var(--motion-slow) var(--ease-standard);
+    }
+
+    .catalog {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 48px 34px 60px;
+    }
+
+    .hero {
+      padding-bottom: 46px;
+      border-bottom: 1px solid var(--preview-border);
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--preview-soft);
+      font-size: 12px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0 0 18px;
+      max-width: 850px;
+      color: var(--preview-strong);
+      font-size: clamp(44px, 7vw, 82px);
+      line-height: .98;
+      font-weight: 400;
+      letter-spacing: -.05em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      color: var(--preview-muted);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 10px 14px 11px;
+      border: 1px solid color-mix(in srgb, var(--preview-border) 86%, var(--preview-strong));
+      border-radius: 7px;
+      background: color-mix(in srgb, var(--preview-surface) 72%, transparent);
+      color: var(--preview-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      text-decoration: none;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+      transition: transform var(--motion-base) var(--ease-standard), background var(--motion-base) var(--ease-standard), border-color var(--motion-base) var(--ease-standard), color var(--motion-base) var(--ease-standard);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--preview-strong) 38%, var(--preview-border));
+      background: var(--preview-surface);
+    }
+
+    .btn-primary {
+      border-color: var(--preview-accent);
+      background: var(--preview-accent);
+      color: var(--preview-accent-fg);
+    }
+
+    .btn-primary:hover {
+      border-color: var(--preview-accent);
+      background: var(--preview-accent);
+      color: var(--preview-accent-fg);
+    }
+
+    .btn-ghost {
+      border-color: transparent;
+      background: transparent;
+      color: var(--preview-muted);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--preview-border);
+      background: var(--preview-surface-subtle);
+      color: var(--preview-strong);
+    }
+
+    .btn-soft {
+      background: var(--preview-surface-subtle);
+    }
+
+    .btn-danger {
+      border-color: color-mix(in srgb, var(--preview-danger) 30%, var(--preview-border));
+      background: color-mix(in srgb, var(--preview-danger-bg) 68%, var(--preview-surface));
+      color: var(--preview-danger);
+    }
+
+    .btn-danger:hover {
+      border-color: color-mix(in srgb, var(--preview-danger) 46%, var(--preview-border));
+      background: var(--preview-danger-bg);
+      color: var(--preview-danger);
+    }
+
+    .btn[disabled],
+    .btn.is-disabled {
+      cursor: not-allowed;
+      opacity: .52;
+      transform: none;
+    }
+
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      display: block;
+    }
+
+    .section {
+      padding: 50px 0;
+      border-bottom: 1px solid var(--preview-border);
+    }
+
+    .section:last-child {
+      border-bottom: 0;
+    }
+
+    .section-head {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 30px;
+      max-width: 720px;
+    }
+
+    .section-label {
+      margin: 0;
+      width: max-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--preview-soft);
+      font-size: 12px;
+      line-height: 1.25;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .section-label::after {
+      content: "";
+      width: 32px;
+      height: 1.5px;
+      background: var(--preview-strong);
+      opacity: .72;
+      transform: translateY(1px);
+    }
+
+    .section-head h2 {
+      margin: 0;
+      color: var(--preview-strong);
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.08;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .group-title {
+      margin: 0 0 16px;
+      color: var(--preview-strong);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .subgroup {
+      margin-bottom: 28px;
+    }
+
+    .subgroup:last-child {
+      margin-bottom: 0;
+    }
+
+    .subgroup-title {
+      margin: 0 0 12px;
+      color: var(--preview-muted);
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    .card-title,
+    .example-card h3,
+    .sample-card > h3,
+    .sample-card > h4,
+    .modal-demo h3,
+    .empty-state h3 {
+      margin: 0;
+      color: var(--preview-strong);
+      font-size: var(--card-title-size);
+      font-weight: 400;
+      line-height: var(--card-title-line);
+    }
+
+    .card-subtitle,
+    .example-card h3 + p,
+    .sample-card > h3 + p,
+    .sample-card > h4 + p,
+    .modal-demo h3 + p,
+    .empty-state h3 + p {
+      margin: var(--card-title-gap) 0 0;
+      color: var(--preview-muted);
+      font-size: var(--card-subtitle-size);
+      line-height: var(--card-subtitle-line);
+    }
+
+    .modal-demo h3 + p,
+    .empty-state h3 + p {
+      margin-bottom: 16px;
+    }
+
+    .sample-card > h3 + :not(p),
+    .sample-card > h4 + :not(p) {
+      margin-top: var(--card-block-gap);
+    }
+
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .token-card {
+      min-height: 154px;
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 14px;
+      display: grid;
+      align-content: space-between;
+      gap: 14px;
+    }
+
+    .swatch {
+      height: 56px;
+      border: 1px solid var(--preview-border-soft);
+      border-radius: 4px;
+      background: var(--swatch);
+    }
+
+    .token-name {
+      margin: 0 0 4px;
+      color: var(--preview-strong);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .token-value {
+      margin: 0 0 5px;
+      color: var(--preview-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .token-use {
+      margin: 0;
+      color: var(--preview-soft);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .type-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .type-row {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 16px;
+    }
+
+    .type-sample {
+      margin: 0 0 8px;
+      color: var(--preview-strong);
+    }
+
+    .type-meta {
+      margin: 0;
+      color: var(--preview-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .identity-logo {
+      font-family: var(--font-script);
+      font-size: clamp(58px, 8vw, 96px);
+      line-height: 1.05;
+      font-weight: 400;
+      letter-spacing: 0;
+      transform: translateX(-6px);
+    }
+
+    .display-product {
+      font-size: clamp(72px, 10vw, 118px);
+      line-height: .88;
+      font-weight: 400;
+      letter-spacing: -.055em;
+    }
+
+    .h1-sample {
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: .98;
+      letter-spacing: -.05em;
+      font-weight: 400;
+    }
+
+    .h2-sample {
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.08;
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+
+    .body-large {
+      font-size: 20px;
+      line-height: 1.65;
+      font-weight: 400;
+    }
+
+    .body-text {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .button-text {
+      font-size: 13px;
+      line-height: 1;
+      letter-spacing: .005em;
+    }
+
+    .caption-text {
+      color: var(--preview-muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .button-showcase,
+    .card-grid,
+    .form-grid,
+    .spacing-grid,
+    .radius-grid,
+    .elevation-grid,
+    .motion-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .button-showcase {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .button-card.is-wide {
+      grid-column: 1 / -1;
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .download-group {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
+    }
+
+    .button-card,
+    .form-card,
+    .space-card,
+    .radius-card,
+    .elevation-card {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 16px;
+    }
+
+    .button-card {
+      min-height: 76px;
+      display: grid;
+      grid-template-columns: minmax(148px, 220px) minmax(0, 1fr);
+      align-items: center;
+      gap: 16px;
+    }
+
+    .button-card .btn {
+      width: 100%;
+    }
+
+    .variant-label {
+      margin: 0;
+      color: var(--preview-muted);
+      font-size: 13px;
+    }
+
+    .icon-only {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border-radius: 999px;
+    }
+
+    .button-card .icon-only {
+      width: 42px;
+      justify-self: start;
+    }
+
+    .card-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .example-card {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 18px;
+      min-height: 220px;
+      display: grid;
+      align-content: start;
+      gap: 0;
+      transition: transform var(--motion-base) var(--ease-standard), border-color var(--motion-base) var(--ease-standard);
+    }
+
+    .example-card > * + * {
+      margin-top: var(--card-block-gap);
+    }
+
+    .example-card > h3 + p {
+      margin-top: var(--card-title-gap);
+    }
+
+    .example-card:hover,
+    .example-card.is-featured {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--preview-strong) 36%, var(--preview-border));
+    }
+
+    .card-preview {
+      height: 82px;
+      border: 1px solid var(--preview-border-soft);
+      border-radius: 4px;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--preview-strong) 3%, transparent), transparent 44%),
+        var(--preview-surface-muted);
+      position: relative;
+    }
+
+    .card-preview::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      width: 64px;
+      height: 2px;
+      background: var(--preview-strong);
+      opacity: .45;
+    }
+
+    .card-badge {
+      width: max-content;
+      min-height: 24px;
+      padding: 4px 8px;
+      border: 1px solid var(--preview-border);
+      border-radius: 999px;
+      color: var(--preview-muted);
+      font-size: 12px;
+    }
+
+    .form-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--preview-strong);
+      font-size: 13px;
+    }
+
+    .input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--preview-border);
+      border-radius: 7px;
+      background: var(--preview-surface);
+      color: var(--preview-fg);
+      padding: 9px 11px;
+      font-family: var(--font-serif);
+      font-size: 15px;
+      outline: none;
+    }
+
+    textarea.input {
+      min-height: 104px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    .input.focus {
+      border-color: color-mix(in srgb, var(--preview-strong) 32%, var(--preview-border));
+      box-shadow: var(--focus-ring);
+    }
+
+    .input.error {
+      border-color: var(--preview-danger);
+      background: color-mix(in srgb, var(--preview-danger-bg) 52%, var(--preview-surface));
+      color: var(--preview-danger);
+    }
+
+    .field-note {
+      margin: 0;
+      color: var(--preview-soft);
+      font-size: 12px;
+    }
+
+    .select-demo {
+      position: relative;
+    }
+
+    .select-trigger {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--preview-border);
+      border-radius: 7px;
+      background: var(--preview-surface);
+      color: var(--preview-fg);
+      padding: 9px 34px 9px 11px;
+      font-family: var(--font-serif);
+      font-size: 15px;
+      line-height: 1.2;
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+      outline: none;
+      transition: border-color var(--motion-base) var(--ease-standard),
+                  box-shadow var(--motion-base) var(--ease-standard),
+                  background-color var(--motion-base) var(--ease-standard);
+    }
+
+    .select-trigger::after {
+      content: "";
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--preview-muted);
+      transform: translateY(-35%);
+    }
+
+    .select-trigger:hover,
+    .select-trigger:focus-visible,
+    .select-demo.is-open .select-trigger {
+      border-color: color-mix(in srgb, var(--preview-strong) 32%, var(--preview-border));
+      background: var(--preview-surface);
+    }
+
+    .select-trigger:focus-visible {
+      box-shadow: var(--focus-ring);
+    }
+
+    .select-menu {
+      position: absolute;
+      z-index: 4;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      margin: 0;
+      padding: 6px;
+      display: grid;
+      gap: 4px;
+      list-style: none;
+      border: 1px solid var(--preview-border);
+      border-radius: 7px;
+      background: var(--preview-surface);
+      box-shadow: 0 16px 48px color-mix(in srgb, var(--preview-strong) 10%, transparent);
+    }
+
+    .select-demo:not(.is-open) .select-menu {
+      display: none;
+    }
+
+    .select-option {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 4px;
+      color: var(--preview-fg);
+      font-size: 15px;
+      line-height: 1.2;
+      cursor: pointer;
+    }
+
+    .select-option:hover,
+    .select-option.is-active {
+      background: var(--preview-surface-subtle);
+      color: var(--preview-strong);
+    }
+
+    .select-option.is-selected {
+      background: var(--preview-strong);
+      color: var(--preview-accent-fg);
+    }
+
+    .choice-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--preview-fg);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .choice input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: var(--preview-accent);
+    }
+
+    .time-picker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .time-picker .input {
+      width: 56px;
+      min-height: 42px;
+      padding-inline: 8px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .time-separator {
+      color: var(--preview-muted);
+      font-size: 13px;
+    }
+
+    .mini-segmented {
+      display: inline-flex;
+      overflow: hidden;
+      border: 1px solid var(--preview-border);
+      border-radius: 7px;
+      background: var(--preview-surface-subtle);
+    }
+
+    .mini-segmented span {
+      min-height: 32px;
+      padding: 9px 10px;
+      border-left: 1px solid var(--preview-border);
+      color: var(--preview-muted);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .mini-segmented span:first-child {
+      border-left: 0;
+    }
+
+    .mini-segmented .is-active {
+      background: var(--preview-surface);
+      color: var(--preview-strong);
+    }
+
+    .spacing-grid {
+      grid-template-columns: repeat(auto-fit, minmax(var(--spacing-preview-card-min), 1fr));
+      align-items: stretch;
+    }
+
+    .space-card {
+      min-height: 168px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: stretch;
+      justify-items: center;
+      gap: 12px;
+      padding: var(--spacing-preview-card-padding);
+    }
+
+    .space-card::before {
+      content: "";
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    .space-block {
+      grid-row: 1;
+      grid-column: 1;
+      align-self: center;
+      justify-self: center;
+      width: min(var(--size), 100%);
+      max-width: var(--spacing-preview-max-sample);
+      aspect-ratio: 1;
+      background: var(--preview-strong);
+      opacity: .82;
+      border-radius: 4px;
+    }
+
+    .space-card span {
+      grid-row: 2;
+      min-height: 16px;
+      color: var(--preview-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .radius-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .radius-demo {
+      height: 68px;
+      border: 1px solid var(--preview-border);
+      background: var(--preview-surface-subtle);
+      border-radius: var(--r);
+      margin-bottom: 10px;
+    }
+
+    .radius-card strong,
+    .elevation-card strong {
+      display: block;
+      color: var(--preview-strong);
+      font-size: 15px;
+      font-weight: 400;
+      margin-bottom: var(--card-title-gap);
+    }
+
+    .radius-card span,
+    .elevation-card span {
+      color: var(--preview-muted);
+      font-size: 13px;
+    }
+
+    .elevation-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .elevation-card {
+      min-height: 128px;
+      display: grid;
+      align-content: center;
+      background: var(--elev-bg, var(--preview-surface));
+      box-shadow: var(--shadow, none);
+    }
+
+    .elevation-card.level-1 {
+      border-color: var(--preview-border);
+    }
+
+    .elevation-card.level-2 {
+      background: var(--preview-surface-subtle);
+    }
+
+    .elevation-card.level-3 {
+      box-shadow: 0 20px 70px color-mix(in srgb, var(--preview-strong) 11%, transparent);
+    }
+
+    .elevation-card.ring {
+      box-shadow: var(--focus-ring);
+    }
+
+    .motion-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .motion-card {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 16px;
+      display: grid;
+      align-content: start;
+      gap: 0;
+    }
+
+    .motion-value {
+      margin: 0 0 var(--card-block-gap);
+      color: var(--preview-strong);
+      font-family: var(--font-mono);
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .motion-name {
+      margin: 0;
+      color: var(--preview-strong);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.25;
+    }
+
+    .motion-use {
+      margin: var(--card-title-gap) 0 0;
+      color: var(--preview-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .motion-easing {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .motion-curve {
+      color: var(--preview-strong);
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    .focus-demo {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .focus-demo .btn,
+    .focus-demo .input {
+      max-width: 280px;
+    }
+
+    .contrast-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .contrast-card {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 16px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .contrast-sample {
+      height: 72px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--preview-border-soft);
+      border-radius: 4px;
+      font-family: var(--font-serif);
+      font-size: 30px;
+      font-weight: 400;
+    }
+
+    .contrast-tokens {
+      margin: 0;
+      color: var(--preview-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .contrast-ratio {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--preview-strong);
+      font-family: var(--font-mono);
+      font-size: 14px;
+    }
+
+    .contrast-tag {
+      font-family: var(--font-serif);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .contrast-tag.good {
+      color: var(--preview-success);
+      background: var(--preview-success-bg);
+    }
+
+    .contrast-tag.warn {
+      color: var(--preview-warning);
+      background: var(--preview-warning-bg);
+    }
+
+    .contrast-tag.muted {
+      color: var(--preview-muted);
+      background: var(--preview-surface-subtle);
+    }
+
+    .requirement-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .requirement-list li {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--preview-border-soft);
+      color: var(--preview-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .requirement-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .requirement-list strong {
+      color: var(--preview-strong);
+      font-weight: 400;
+    }
+
+    .default-card {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 18px;
+    }
+
+    .default-sample {
+      margin: 0;
+      color: var(--preview-strong);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 740px;
+    }
+
+    .scroll-demo {
+      max-height: 180px;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+    }
+
+    .scroll-content > p {
+      margin: 0 0 12px;
+      color: var(--preview-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .scroll-content > p:last-child {
+      margin-bottom: 0;
+    }
+
+    .cursor-row {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--preview-border-soft);
+    }
+
+    .cursor-row:first-child {
+      padding-top: 0;
+    }
+
+    .cursor-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .cursor-chip {
+      justify-self: start;
+      padding: 6px 12px;
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface-subtle);
+      color: var(--preview-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .cursor-chip.cursor-pointer { cursor: pointer; }
+    .cursor-chip.cursor-text { cursor: text; }
+    .cursor-chip.cursor-not-allowed { cursor: not-allowed; }
+    .cursor-chip.cursor-move { cursor: move; }
+    .cursor-chip.cursor-grab { cursor: grab; }
+
+    .cursor-label {
+      color: var(--preview-muted);
+      font-size: 14px;
+      align-self: center;
+    }
+
+    .switch-set {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px 32px;
+      align-items: flex-end;
+    }
+
+    .component-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .component-caption {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--preview-soft);
+      line-height: 1;
+    }
+
+    .switch {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      border-radius: 999px;
+      background: var(--preview-surface-subtle);
+      border: 1px solid var(--preview-border);
+      cursor: pointer;
+      transition: background-color var(--motion-base) var(--ease-standard),
+                  border-color var(--motion-base) var(--ease-standard);
+    }
+
+    .switch-knob {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: var(--preview-surface);
+      transition: transform var(--motion-base) var(--ease-standard);
+    }
+
+    .switch.is-on {
+      background: var(--preview-accent);
+      border-color: var(--preview-accent);
+    }
+
+    .switch.is-on .switch-knob {
+      transform: translateX(16px);
+    }
+
+    .switch.is-large {
+      width: 42px;
+      height: 24px;
+    }
+
+    .switch.is-large .switch-knob {
+      width: 20px;
+      height: 20px;
+    }
+
+    .switch.is-large.is-on .switch-knob {
+      transform: translateX(18px);
+    }
+
+    .switch.is-disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .calendar-stage {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .calendar {
+      width: min(280px, 100%);
+      padding: 12px;
+      background: var(--preview-surface);
+      border: 1px solid var(--preview-border);
+      border-radius: 10px;
+      box-shadow: 0 20px 70px rgba(25, 25, 22, 0.08);
+    }
+
+    .calendar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px 8px;
+    }
+
+    .calendar-title {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--preview-strong);
+    }
+
+    .calendar-nav {
+      display: flex;
+      gap: 2px;
+    }
+
+    .calendar-nav button {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--preview-muted);
+      font-family: var(--font-serif);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color var(--motion-quick) var(--ease-standard),
+                  color var(--motion-quick) var(--ease-standard);
+    }
+
+    .calendar-nav button:hover {
+      background: var(--preview-surface-subtle);
+      color: var(--preview-strong);
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    .calendar-weekday {
+      font-family: var(--font-serif);
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--preview-soft);
+      text-align: center;
+      padding: 4px 0;
+    }
+
+    .calendar-day {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      color: var(--preview-fg);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background-color var(--motion-quick) var(--ease-standard);
+    }
+
+    .calendar-day.is-muted {
+      color: var(--preview-soft);
+    }
+
+    .calendar-day:hover {
+      background: var(--preview-surface-subtle);
+    }
+
+    .calendar-day.is-today {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .calendar-day.is-selected,
+    .calendar-day.is-selected:hover {
+      background: var(--preview-strong);
+      color: var(--preview-accent-fg);
+    }
+
+    .progress-linear-set {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .progress-linear {
+      width: 240px;
+      height: 4px;
+      background: var(--preview-surface-subtle);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-linear-fill {
+      height: 100%;
+      background: var(--preview-strong);
+    }
+
+    .progress-linear-fill.is-determinate {
+      width: 64%;
+      transition: width var(--motion-slow) var(--ease-standard);
+    }
+
+    .progress-linear-fill.is-indeterminate {
+      width: 30%;
+      animation: progress-slide 1.6s var(--ease-standard) infinite;
+    }
+
+    @keyframes progress-slide {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(370%); }
+    }
+
+    .progress-circular-set {
+      display: flex;
+      align-items: flex-end;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .progress-circular {
+      display: inline-block;
+      line-height: 0;
+    }
+
+    .progress-circular svg {
+      display: block;
+      transform: rotate(-90deg);
+    }
+
+    .ring-track {
+      fill: none;
+      stroke: var(--preview-border);
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke: var(--preview-strong);
+      stroke-linecap: butt;
+    }
+
+    .tooltip-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      padding: 24px 0 8px;
+    }
+
+    .tooltip-bubble {
+      position: relative;
+      max-width: 220px;
+      padding: 6px 10px;
+      background: var(--preview-strong);
+      color: var(--preview-accent-fg);
+      font-family: var(--font-serif);
+      font-size: 12px;
+      line-height: 1.4;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .tooltip-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--preview-strong);
+    }
+
+    .tooltip-trigger {
+      padding: 10px 13px 11px;
+      border-radius: 7px;
+      border: 1px solid color-mix(in srgb, var(--preview-border) 86%, var(--preview-strong));
+      background: color-mix(in srgb, var(--preview-surface) 72%, transparent);
+      color: var(--preview-strong);
+      font-family: var(--font-serif);
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+      transition: border-color var(--motion-base) var(--ease-standard),
+                  transform var(--motion-base) var(--ease-standard);
+    }
+
+    .tooltip-trigger:hover {
+      border-color: var(--preview-strong);
+      transform: translateY(-1px);
+    }
+
+    .form-card.is-wide {
+      grid-column: 1 / -1;
+    }
+
+    .component-grid,
+    .container-grid,
+    .navigation-grid,
+    .feedback-grid,
+    .overlay-grid,
+    .layout-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .component-grid.three,
+    .container-grid.three,
+    .feedback-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .feedback-grid {
+      align-items: start;
+    }
+
+    .sample-card {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 16px;
+    }
+
+    .sample-card p {
+      margin: 0;
+      color: var(--preview-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .surface-standard {
+      min-height: 140px;
+      display: grid;
+      align-content: start;
+      gap: 0;
+    }
+
+    .surface-muted {
+      background: var(--preview-surface-subtle);
+      border-color: var(--preview-border-soft);
+    }
+
+    .metric-value {
+      margin: 10px 0 var(--card-title-gap);
+      color: var(--preview-strong);
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-label {
+      margin: 0;
+      color: var(--preview-soft);
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .preview-block {
+      aspect-ratio: 16 / 10;
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface-muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-block::before,
+    .preview-block::after {
+      content: "";
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      height: 1px;
+      background: color-mix(in srgb, var(--preview-strong) 30%, transparent);
+    }
+
+    .preview-block::before {
+      top: 18px;
+    }
+
+    .preview-block::after {
+      bottom: 20px;
+      right: 55%;
+    }
+
+    .top-nav-demo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: color-mix(in srgb, var(--preview-surface) 78%, transparent);
+    }
+
+    .nav-mark {
+      color: var(--preview-strong);
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a,
+    .tabs-demo a,
+    .sidebar-demo a {
+      color: var(--preview-muted);
+      font-size: 13px;
+      text-decoration: none;
+      transition: color var(--motion-quick) var(--ease-standard), background-color var(--motion-quick) var(--ease-standard);
+    }
+
+    .nav-links a:hover,
+    .tabs-demo a:hover,
+    .sidebar-demo a:hover {
+      color: var(--preview-strong);
+    }
+
+    .sidebar-demo {
+      width: min(244px, 100%);
+      display: grid;
+      gap: 4px;
+      padding: 10px;
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: color-mix(in srgb, var(--preview-surface) 78%, transparent);
+    }
+
+    .sidebar-demo a {
+      padding: 9px 10px;
+      border-radius: 4px;
+    }
+
+    .sidebar-demo a.is-active,
+    .sidebar-demo a:hover {
+      background: var(--preview-surface-subtle);
+      color: var(--preview-strong);
+    }
+
+    .tabs-demo {
+      display: flex;
+      gap: 24px;
+      border-bottom: 1px solid var(--preview-border);
+    }
+
+    .tabs-demo a {
+      padding: 0 0 10px;
+      border-bottom: 1px solid transparent;
+    }
+
+    .tabs-demo a.is-active {
+      color: var(--preview-strong);
+      border-bottom-color: var(--preview-strong);
+    }
+
+    .segmented-demo {
+      display: inline-flex;
+      overflow: hidden;
+      border: 1px solid var(--preview-border);
+      border-radius: 10px;
+      background: var(--preview-surface-subtle);
+    }
+
+    .segmented-demo span {
+      min-height: 38px;
+      padding: 11px 14px;
+      border-left: 1px solid var(--preview-border);
+      color: var(--preview-muted);
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .segmented-demo span:first-child {
+      border-left: 0;
+    }
+
+    .segmented-demo .is-active {
+      background: var(--preview-surface);
+      color: var(--preview-strong);
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      min-height: 26px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border: 1px solid var(--preview-border);
+      border-radius: 999px;
+      color: var(--preview-muted);
+      background: var(--preview-surface);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .badge.success { color: var(--preview-success); border-color: color-mix(in srgb, var(--preview-success) 28%, var(--preview-border)); background: var(--preview-success-bg); }
+    .badge.warning { color: var(--preview-warning); border-color: color-mix(in srgb, var(--preview-warning) 28%, var(--preview-border)); background: var(--preview-warning-bg); }
+    .badge.danger { color: var(--preview-danger); border-color: color-mix(in srgb, var(--preview-danger) 28%, var(--preview-border)); background: var(--preview-danger-bg); }
+    .badge.info { color: var(--preview-info); border-color: color-mix(in srgb, var(--preview-info) 28%, var(--preview-border)); background: var(--preview-info-bg); }
+
+    .alert {
+      border: 1px solid var(--preview-border);
+      border-left-width: 8px;
+      border-radius: 4px;
+      padding: 14px 16px;
+      background: var(--preview-surface);
+      display: grid;
+      align-content: start;
+      gap: var(--card-title-gap);
+    }
+
+    .alert strong,
+    .toast strong {
+      color: var(--preview-strong);
+      font-size: var(--card-title-size);
+      font-weight: 400;
+      line-height: var(--card-title-line);
+    }
+
+    .alert span,
+    .toast span {
+      color: var(--preview-muted);
+      font-size: var(--card-subtitle-size);
+      line-height: var(--card-subtitle-line);
+    }
+
+    .alert.success { border-left-color: var(--preview-success); background: var(--preview-success-bg); }
+    .alert.warning { border-left-color: var(--preview-warning); background: var(--preview-warning-bg); }
+    .alert.danger { border-left-color: var(--preview-danger); background: var(--preview-danger-bg); }
+
+    .toast {
+      max-width: 320px;
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 14px 16px;
+      display: grid;
+      align-content: start;
+      gap: var(--card-title-gap);
+      box-shadow: 0 20px 70px color-mix(in srgb, var(--preview-strong) 9%, transparent);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+    }
+
+    .data-table {
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--preview-border-soft);
+      text-align: left;
+    }
+
+    .data-table th {
+      color: var(--preview-soft);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .data-table td {
+      color: var(--preview-fg);
+      font-size: 14px;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .list-demo {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--preview-border-soft);
+    }
+
+    .list-item:last-child {
+      border-bottom: 0;
+    }
+
+    .list-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--preview-surface-subtle);
+      border: 1px solid var(--preview-border-soft);
+    }
+
+    .list-main {
+      display: grid;
+      gap: 2px;
+    }
+
+    .list-main strong {
+      color: var(--preview-strong);
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .list-main span,
+    .list-action {
+      color: var(--preview-muted);
+      font-size: 13px;
+    }
+
+    .modal-demo {
+      max-width: 520px;
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 22px 24px;
+      box-shadow: 0 20px 70px color-mix(in srgb, var(--preview-strong) 11%, transparent);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .popover-demo {
+      width: min(280px, 100%);
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 10px;
+      box-shadow: 0 16px 48px color-mix(in srgb, var(--preview-strong) 10%, transparent);
+      display: grid;
+      gap: 4px;
+    }
+
+    .popover-demo button {
+      width: 100%;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--preview-muted);
+      padding: 9px 10px;
+      text-align: left;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .popover-demo button:hover {
+      background: var(--preview-surface-subtle);
+      color: var(--preview-strong);
+    }
+
+    .empty-state {
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 28px 24px;
+      text-align: center;
+      display: grid;
+      justify-items: center;
+    }
+
+    .empty-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      border: 1px solid var(--preview-border);
+      background: var(--preview-surface-subtle);
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .empty-icon::before,
+    .empty-icon::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      height: 1px;
+      background: var(--preview-muted);
+    }
+
+    .empty-icon::before { top: 19px; }
+    .empty-icon::after { top: 27px; }
+
+    .layout-demo {
+      min-height: 180px;
+      border: 1px solid var(--preview-border);
+      border-radius: 4px;
+      background: var(--preview-surface);
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .layout-bar,
+    .layout-line {
+      border-radius: 4px;
+      background: var(--preview-surface-subtle);
+      border: 1px solid var(--preview-border-soft);
+    }
+
+    .layout-bar { height: 34px; }
+    .layout-line { height: 12px; }
+
+    .layout-columns {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 12px;
+      min-height: 112px;
+    }
+
+    .layout-columns > div {
+      border: 1px solid var(--preview-border-soft);
+      border-radius: 4px;
+      background: var(--preview-surface-subtle);
+    }
+
+    .breakpoint-row {
+      display: grid;
+      gap: 10px;
+    }
+
+    .breakpoint {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--preview-border-soft);
+    }
+
+    .breakpoint:last-child {
+      border-bottom: 0;
+    }
+
+    .breakpoint strong {
+      color: var(--preview-strong);
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .breakpoint span {
+      color: var(--preview-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .touch-target-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .touch-target {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 44px;
+      padding: 9px 12px;
+      border: 1px solid var(--preview-border-soft);
+      border-radius: 4px;
+      background: var(--preview-surface-subtle);
+      color: var(--preview-muted);
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .touch-target strong {
+      color: var(--preview-strong);
+      font-weight: 400;
+    }
+
+    @media (max-width: 920px) {
+      .preview-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .controls {
+        justify-content: flex-start;
+      }
+
+      .token-grid,
+      .button-showcase,
+      .card-grid,
+      .form-grid,
+      .component-grid,
+      .container-grid,
+      .navigation-grid,
+      .feedback-grid,
+      .overlay-grid,
+      .layout-grid,
+      .elevation-grid,
+      .motion-grid,
+      .contrast-grid,
+      .cursor-row {
+        grid-template-columns: 1fr;
+      }
+
+      .download-group {
+        grid-template-columns: 1fr;
+      }
+
+      .layout-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 28px 16px 48px;
+      }
+
+      .catalog {
+        padding: 34px 20px 44px;
+      }
+
+      .hero h1 {
+        font-size: clamp(40px, 15vw, 64px);
+      }
+
+      .radius-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="preview-head">
+      <h1 class="preview-title">Preview</h1>
+      <div class="controls">
+        <div class="segmented" aria-label="Preview theme">
+          <button class="segment is-active" type="button" id="lightMode">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+            Light
+          </button>
+          <button class="segment" type="button" id="darkMode">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20.3 15.1A7.6 7.6 0 0 1 8.9 3.7 8.9 8.9 0 1 0 20.3 15.1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            </svg>
+            Dark
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section class="preview-shell">
+      <div class="preview-window-bar">
+        <div class="traffic" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span class="preview-path">/preview/design-system/catalog</span>
+      </div>
+
+      <div class="live-panel">
+        <div class="catalog">
+          <section class="hero">
+            <p class="eyebrow">Design System</p>
+            <h1>Soft Monochrome Design System</h1>
+            <p>A production-ready design token catalog for color, typography, component states, spacing, motion, and system defaults.</p>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">01 / Colors</p>
+              <h2>Color Palette</h2>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Primary</h3>
+              <div class="token-grid">
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#f4f3f0"></div>
+                  <div>
+                    <p class="token-name">Paper Gray</p>
+                    <p class="token-value">#f4f3f0</p>
+                    <p class="token-use">Page background</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#20201e"></div>
+                  <div>
+                    <p class="token-name">Strong Ink</p>
+                    <p class="token-value">#20201e</p>
+                    <p class="token-use">Primary text, headings</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#f7f6f1"></div>
+                  <div>
+                    <p class="token-name">Off Paper</p>
+                    <p class="token-value">#f7f6f1</p>
+                    <p class="token-use">Button text on dark</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Neutral Scale</h3>
+              <div class="token-grid">
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#333331"></div>
+                  <div>
+                    <p class="token-name">Body Ink</p>
+                    <p class="token-value">#333331</p>
+                    <p class="token-use">Body text</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#575753"></div>
+                  <div>
+                    <p class="token-name">Soft Ink</p>
+                    <p class="token-value">#575753</p>
+                    <p class="token-use">Secondary body text</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#686866"></div>
+                  <div>
+                    <p class="token-name">Muted Text</p>
+                    <p class="token-value">#686866</p>
+                    <p class="token-use">Descriptions, captions</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#999995"></div>
+                  <div>
+                    <p class="token-name">Soft Text</p>
+                    <p class="token-value">#999995</p>
+                    <p class="token-use">Labels, quiet UI hints</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#b9b8b2"></div>
+                  <div>
+                    <p class="token-name">Disabled</p>
+                    <p class="token-value">#b9b8b2</p>
+                    <p class="token-use">Disabled controls</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#2f2f2c"></div>
+                  <div>
+                    <p class="token-name">Charcoal Accent</p>
+                    <p class="token-value">#2f2f2c</p>
+                    <p class="token-use">Primary actions</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Surface &amp; Border</h3>
+              <div class="token-grid">
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#fbfaf7"></div>
+                  <div>
+                    <p class="token-name">Surface White</p>
+                    <p class="token-value">#fbfaf7</p>
+                    <p class="token-use">Cards, panels, modals</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#efeee9"></div>
+                  <div>
+                    <p class="token-name">Soft Surface</p>
+                    <p class="token-value">#efeee9</p>
+                    <p class="token-use">Inputs, subtle controls</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#ebeae6"></div>
+                  <div>
+                    <p class="token-name">Muted Surface</p>
+                    <p class="token-value">#ebeae6</p>
+                    <p class="token-use">Preview placeholders</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#dad9d5"></div>
+                  <div>
+                    <p class="token-name">Default Border</p>
+                    <p class="token-value">#dad9d5</p>
+                    <p class="token-use">Cards, buttons, dividers</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#e5e4e0"></div>
+                  <div>
+                    <p class="token-name">Soft Border</p>
+                    <p class="token-value">#e5e4e0</p>
+                    <p class="token-use">Internal dividers</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#aaa9a2"></div>
+                  <div>
+                    <p class="token-name">Strong Border</p>
+                    <p class="token-value">#aaa9a2</p>
+                    <p class="token-use">Focus, selected states</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Semantic</h3>
+              <div class="token-grid">
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#e6ede7"></div>
+                  <div>
+                    <p class="token-name">Success</p>
+                    <p class="token-value">#4e6655 / #e6ede7</p>
+                    <p class="token-use">Synced, completed</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#f0eadc"></div>
+                  <div>
+                    <p class="token-name">Warning</p>
+                    <p class="token-value">#7b6842 / #f0eadc</p>
+                    <p class="token-use">Pending, missing setup</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#efe3e1"></div>
+                  <div>
+                    <p class="token-name">Danger</p>
+                    <p class="token-value">#7a4d4a / #efe3e1</p>
+                    <p class="token-use">Errors, destructive actions</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#e5e7e8"></div>
+                  <div>
+                    <p class="token-name">Info</p>
+                    <p class="token-value">#56606a / #e5e7e8</p>
+                    <p class="token-use">Neutral informational messages</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Dark Mode</h3>
+              <div class="token-grid">
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#181817"></div>
+                  <div>
+                    <p class="token-name">Dark Background</p>
+                    <p class="token-value">#181817</p>
+                    <p class="token-use">Primary dark page background</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#20201e"></div>
+                  <div>
+                    <p class="token-name">Dark Elevated</p>
+                    <p class="token-value">#20201e</p>
+                    <p class="token-use">Cards and panels</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#242421"></div>
+                  <div>
+                    <p class="token-name">Dark Soft Surface</p>
+                    <p class="token-value">#242421</p>
+                    <p class="token-use">Secondary panels</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#292824"></div>
+                  <div>
+                    <p class="token-name">Dark Muted Surface</p>
+                    <p class="token-value">#292824</p>
+                    <p class="token-use">Nested surfaces</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#f4f2ec"></div>
+                  <div>
+                    <p class="token-name">Dark Strong Text</p>
+                    <p class="token-value">#f4f2ec</p>
+                    <p class="token-use">Headings and emphasis</p>
+                  </div>
+                </article>
+                <article class="token-card">
+                  <div class="swatch" style="--swatch:#383733"></div>
+                  <div>
+                    <p class="token-name">Dark Border</p>
+                    <p class="token-value">#383733</p>
+                    <p class="token-use">Primary dark borders</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">02 / Typography</p>
+              <h2>Typography Scale</h2>
+            </div>
+
+            <div class="type-list">
+              <article class="type-row">
+                <p class="type-sample identity-logo">Signature</p>
+                <p class="type-meta">Identity Logo — 78–132px / 400 / 1.05 / 0 / Meddon Custom</p>
+              </article>
+              <article class="type-row">
+                <p class="type-sample display-product">product</p>
+                <p class="type-meta">Product Hero — 84–150px / 400 / 0.86–0.90 / -0.055em / Georgia Serif</p>
+              </article>
+              <article class="type-row">
+                <p class="type-sample h1-sample">Soft monochrome product systems.</p>
+                <p class="type-meta">Page H1 — 48–92px / 400 / 0.96–1.05 / -0.05em / Georgia Serif</p>
+              </article>
+              <article class="type-row">
+                <p class="type-sample h2-sample">Editorial structure with quiet controls.</p>
+                <p class="type-meta">Section Heading — 30–52px / 400 / 1.08 / 0 / Georgia Serif</p>
+              </article>
+              <article class="type-row">
+                <p class="type-sample" style="font-size:20px;line-height:1.25;">Card Title</p>
+                <p class="type-meta">Card Title — 20–24px / 400 / 1.25 / Georgia Serif</p>
+              </article>
+              <article class="type-row">
+                <p class="type-sample body-large">Body Large — Build quiet personal products with paper-like surfaces and precise controls.</p>
+                <p class="type-meta">Body Large — 18–20px / 400 / 1.65 / Georgia Serif</p>
+              </article>
+              <article class="type-row">
+                <p class="type-sample body-text">Body — Standard reading text for descriptions, paragraphs, product details, and UI content.</p>
+                <p class="type-meta">Body — 15–16px / 400 / 1.65–1.70 / Georgia Serif</p>
+              </article>
+              <article class="type-row">
+                <p class="type-sample button-text">Button / Link — Interactive text</p>
+                <p class="type-meta">Button / Link — 13px / 400 / 1.00 / 0.005em / Georgia Serif</p>
+              </article>
+              <article class="type-row">
+                <p class="type-sample caption-text">Caption — Metadata and small labels</p>
+                <p class="type-meta">Caption — 12–13px / 400 / 1.50 / Georgia Serif</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">03 / Buttons</p>
+              <h2>Button Variants</h2>
+            </div>
+
+            <div class="button-showcase">
+              <article class="button-card">
+                <button class="btn btn-primary" type="button">Save Changes</button>
+                <p class="variant-label">Primary Charcoal</p>
+              </article>
+              <article class="button-card">
+                <button class="btn" type="button">Open Details</button>
+                <p class="variant-label">Default / Outline</p>
+              </article>
+              <article class="button-card">
+                <button class="btn btn-ghost" type="button">Cancel</button>
+                <p class="variant-label">Ghost / Low Emphasis</p>
+              </article>
+              <article class="button-card">
+                <button class="btn btn-danger" type="button">Delete Entry</button>
+                <p class="variant-label">Danger / Destructive</p>
+              </article>
+              <article class="button-card">
+                <button class="btn btn-soft" type="button">Settings</button>
+                <p class="variant-label">Soft Surface</p>
+              </article>
+              <article class="button-card">
+                <button class="btn is-disabled" type="button" disabled>Unavailable</button>
+                <p class="variant-label">Disabled</p>
+              </article>
+              <article class="button-card">
+                <button class="btn icon-only" type="button" aria-label="Add">+</button>
+                <p class="variant-label">Pill Icon</p>
+              </article>
+              <article class="button-card is-wide">
+                <div class="download-group">
+                  <button class="btn btn-primary" type="button">Primary Download</button>
+                  <button class="btn" type="button">Source Package</button>
+                  <button class="btn" type="button">Direct File</button>
+                </div>
+                <p class="variant-label">Download Group / Desktop row, mobile stack</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">04 / Cards</p>
+              <h2>Cards &amp; Containers</h2>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Card Examples</h3>
+              <div class="card-grid">
+                <article class="example-card">
+                  <div class="card-preview"></div>
+                  <span class="card-badge">Template</span>
+                  <h3>Editorial Profile</h3>
+                  <p>A minimal profile surface with a signature mark, quiet preview blocks, and compact footer links.</p>
+                </article>
+                <article class="example-card is-featured">
+                  <div class="card-preview"></div>
+                  <span class="card-badge">Featured</span>
+                  <h3>Product Introduction</h3>
+                  <p>Introduction surface with hero actions, interface mockup, feature sections, and language controls.</p>
+                </article>
+                <article class="example-card">
+                  <div class="card-preview"></div>
+                  <span class="card-badge">Starter</span>
+                  <h3>Quiet Dashboard</h3>
+                  <p>Soft metric cards, low-saturation statuses, thin data tables, and restrained product controls.</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Container Types</h3>
+              <div class="container-grid three">
+                <article class="sample-card surface-standard">
+                  <h3>Standard Card</h3>
+                  <p>Surface White, default border, 4px Micro radius, no shadow.</p>
+                </article>
+                <article class="sample-card surface-standard surface-muted">
+                  <h3>Muted Card</h3>
+                  <p>Soft Surface with soft border for nested and secondary content.</p>
+                </article>
+                <article class="sample-card surface-standard surface-muted">
+                  <p class="metric-label">Completion</p>
+                  <p class="metric-value">72%</p>
+                  <p>Metric value with uppercase 11px label and quiet note.</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Preview Block</h3>
+              <div class="container-grid">
+                <article class="sample-card">
+                  <div class="preview-block" aria-hidden="true"></div>
+                </article>
+                <article class="sample-card surface-standard">
+                  <h3>Placeholder Surface</h3>
+                  <p>Muted surface, optional internal line, no colorful gradients, emoji, fake screenshots, or generic illustrations.</p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">05 / Forms</p>
+              <h2>Form Elements</h2>
+            </div>
+
+            <div class="form-grid">
+              <article class="form-card">
+                <div class="field">
+                  <label>Workspace Name</label>
+                  <input class="input" value="design-system" aria-label="Workspace Name">
+                  <p class="field-note">Default border</p>
+                </div>
+              </article>
+              <article class="form-card">
+                <div class="field">
+                  <label>Repository</label>
+                  <input class="input focus" value="design/system" aria-label="Repository">
+                  <p class="field-note">Soft focus ring</p>
+                </div>
+              </article>
+              <article class="form-card">
+                <div class="field">
+                  <label>Domain</label>
+                  <input class="input error" value="invalid domain" aria-label="Domain">
+                  <p class="field-note" style="color:var(--preview-danger);">Low-saturation error</p>
+                </div>
+              </article>
+              <article class="form-card">
+                <div class="field">
+                  <label>Textarea</label>
+                  <textarea class="input" aria-label="Description">Quiet notes with vertical resize only.</textarea>
+                  <p class="field-note">Minimum height 100px</p>
+                </div>
+              </article>
+              <article class="form-card">
+                <div class="field">
+                  <label>Select</label>
+                  <div class="select-demo" data-select-demo>
+                    <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">Overview</button>
+                    <ul class="select-menu" role="listbox" aria-label="View mode">
+                      <li class="select-option is-selected" role="option" aria-selected="true">Overview</li>
+                      <li class="select-option" role="option" aria-selected="false">Details</li>
+                      <li class="select-option" role="option" aria-selected="false">Archive</li>
+                    </ul>
+                  </div>
+                  <p class="field-note">Custom menu with tokenized states</p>
+                </div>
+              </article>
+              <article class="form-card">
+                <div class="field">
+                  <label>Choices</label>
+                  <div class="choice-list">
+                    <label class="choice"><input type="checkbox" checked> Enable quiet notifications</label>
+                    <label class="choice"><input type="radio" name="density" checked> Comfortable density</label>
+                    <label class="choice"><input type="radio" name="density"> Compact density</label>
+                  </div>
+                  <p class="field-note">Native controls with charcoal accent</p>
+                </div>
+              </article>
+              <article class="form-card">
+                <div class="field">
+                  <label>Time Picker</label>
+                  <div class="time-picker" aria-label="Time picker mockup">
+                    <input class="input" value="09" aria-label="Hour">
+                    <span class="time-separator">:</span>
+                    <input class="input" value="30" aria-label="Minute">
+                    <span class="mini-segmented" aria-label="Meridiem">
+                      <span class="is-active">AM</span>
+                      <span>PM</span>
+                    </span>
+                  </div>
+                  <p class="field-note">Editable 56x42 inputs</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">06 / Navigation</p>
+              <h2>Navigation Patterns</h2>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Top Navigation</h3>
+              <article class="default-card">
+                <nav class="top-nav-demo" aria-label="Top navigation example">
+                  <span class="nav-mark">System</span>
+                  <span class="nav-links">
+                    <a href="#">Overview</a>
+                    <a href="#">Components</a>
+                    <a href="#">Guidelines</a>
+                    <button class="btn" type="button">Action</button>
+                  </span>
+                </nav>
+              </article>
+            </div>
+
+            <div class="navigation-grid">
+              <article class="sample-card">
+                <h3>Sidebar Navigation</h3>
+                <nav class="sidebar-demo" aria-label="Sidebar navigation example">
+                  <a class="is-active" href="#">Foundation</a>
+                  <a href="#">Components</a>
+                  <a href="#">Patterns</a>
+                  <a href="#">Accessibility</a>
+                </nav>
+              </article>
+              <article class="sample-card">
+                <h3>Tabs</h3>
+                <nav class="tabs-demo" aria-label="Tabs example">
+                  <a class="is-active" href="#">Today</a>
+                  <a href="#">Plan</a>
+                  <a href="#">Review</a>
+                </nav>
+                <p style="margin-top:14px;">Thin bottom rule, quiet inactive text, and a single active underline.</p>
+              </article>
+              <article class="sample-card">
+                <h3>Segmented Control</h3>
+                <div class="segmented-demo" aria-label="Segmented control example">
+                  <span class="is-active">Today</span>
+                  <span>Plan</span>
+                  <span>Review</span>
+                </div>
+                <p style="margin-top:14px;">Soft container, surface active segment, 38px minimum height.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">07 / Feedback</p>
+              <h2>Status &amp; Feedback</h2>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Badges</h3>
+              <article class="default-card">
+                <div class="badge-row">
+                  <span class="badge">Draft</span>
+                  <span class="badge success">Synced</span>
+                  <span class="badge warning">Pending</span>
+                  <span class="badge danger">Failed</span>
+                  <span class="badge info">Info</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="feedback-grid">
+              <article class="alert success">
+                <strong>Changes saved</strong>
+                <span>Low-saturation success feedback with an 8px vertical bar.</span>
+              </article>
+              <article class="alert warning">
+                <strong>Setup pending</strong>
+                <span>Warning state stays muted and avoids bright dashboard color.</span>
+              </article>
+              <article class="alert danger">
+                <strong>Validation failed</strong>
+                <span>Danger tone is quiet, readable, and not saturated red.</span>
+              </article>
+              <article class="toast">
+                <strong>Copied to clipboard</strong>
+                <span>Floating confirmation with soft border and diffused shadow.</span>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">08 / Data</p>
+              <h2>Tables &amp; Lists</h2>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Table</h3>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Status</th>
+                      <th>Updated</th>
+                      <th>Owner</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Interface Tokens</td>
+                      <td><span class="badge success">Synced</span></td>
+                      <td>Today</td>
+                      <td>Design</td>
+                    </tr>
+                    <tr>
+                      <td>Component Audit</td>
+                      <td><span class="badge warning">Pending</span></td>
+                      <td>Yesterday</td>
+                      <td>Product</td>
+                    </tr>
+                    <tr>
+                      <td>Release Notes</td>
+                      <td><span class="badge">Draft</span></td>
+                      <td>May 2026</td>
+                      <td>Content</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">List Item</h3>
+              <div class="list-demo">
+                <div class="list-item">
+                  <span class="list-avatar" aria-hidden="true"></span>
+                  <span class="list-main"><strong>Component review</strong><span>Recent activity with avatar and action slot</span></span>
+                  <span class="list-action">Open</span>
+                </div>
+                <div class="list-item">
+                  <span class="list-avatar" aria-hidden="true"></span>
+                  <span class="list-main"><strong>Token update</strong><span>Soft divider, 34px avatar, 13px metadata</span></span>
+                  <span class="list-action">View</span>
+                </div>
+                <div class="list-item">
+                  <span class="list-avatar" aria-hidden="true"></span>
+                  <span class="list-main"><strong>Accessibility pass</strong><span>Status or action stays aligned to the right</span></span>
+                  <span class="list-action">Done</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">09 / Overlays</p>
+              <h2>Modals &amp; Overlays</h2>
+            </div>
+
+            <div class="overlay-grid">
+              <article class="sample-card">
+                <h3>Modal</h3>
+                <div class="modal-demo">
+                  <h3>Publish changes?</h3>
+                  <p>Confirmation dialogs use Surface White, a quiet border, restrained radius, and right-aligned actions.</p>
+                  <div class="modal-actions">
+                    <button class="btn btn-ghost" type="button">Cancel</button>
+                    <button class="btn btn-primary" type="button">Publish</button>
+                  </div>
+                </div>
+              </article>
+              <article class="sample-card">
+                <h3>Popover</h3>
+                <div class="popover-demo" role="menu" aria-label="Popover example">
+                  <button type="button">Rename</button>
+                  <button type="button">Duplicate</button>
+                  <button type="button">Archive</button>
+                </div>
+              </article>
+              <article class="sample-card">
+                <h3>Tooltip</h3>
+                <div class="tooltip-stage">
+                  <div class="tooltip-bubble" role="tooltip">Brief contextual hint, never required information.</div>
+                  <button class="tooltip-trigger" type="button">Hover target</button>
+                </div>
+              </article>
+              <article class="sample-card">
+                <h3>Empty State</h3>
+                <div class="empty-state">
+                  <span class="empty-icon" aria-hidden="true"></span>
+                  <h3>No entries yet</h3>
+                  <p>Create the first item when there is useful work to continue.</p>
+                  <button class="btn" type="button">Create Item</button>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">10 / Layout</p>
+              <h2>Layout &amp; Responsive</h2>
+            </div>
+
+            <div class="layout-grid">
+              <article class="layout-demo">
+                <div class="layout-bar"></div>
+                <div class="layout-columns">
+                  <div></div>
+                  <div></div>
+                </div>
+                <div class="layout-line"></div>
+                <div class="layout-line" style="width:68%;"></div>
+              </article>
+              <article class="sample-card">
+                <h3>Breakpoints</h3>
+                <div class="breakpoint-row">
+                  <div class="breakpoint"><strong>Mobile</strong><span>&lt; 640px, single-column layout and stacked actions.</span></div>
+                  <div class="breakpoint"><strong>Tablet</strong><span>640px-920px, one-column hero and selective two-column cards.</span></div>
+                  <div class="breakpoint"><strong>Desktop</strong><span>&gt; 920px, generous containers and sticky side navigation.</span></div>
+                </div>
+              </article>
+              <article class="sample-card">
+                <h3>Touch Targets</h3>
+                <div class="touch-target-grid">
+                  <div class="touch-target"><strong>Buttons</strong><span>42px minimum height</span></div>
+                  <div class="touch-target"><strong>List Rows</strong><span>44px minimum height</span></div>
+                  <div class="touch-target"><strong>Tabs</strong><span>38px minimum height</span></div>
+                  <div class="touch-target"><strong>Inputs</strong><span>42px minimum height</span></div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">11 / Spacing</p>
+              <h2>Spacing Scale</h2>
+            </div>
+
+            <div class="spacing-grid">
+              <div class="space-card"><div class="space-block" style="--size:8px"></div><span>8</span></div>
+              <div class="space-card"><div class="space-block" style="--size:10px"></div><span>10</span></div>
+              <div class="space-card"><div class="space-block" style="--size:12px"></div><span>12</span></div>
+              <div class="space-card"><div class="space-block" style="--size:16px"></div><span>16</span></div>
+              <div class="space-card"><div class="space-block" style="--size:24px"></div><span>24</span></div>
+              <div class="space-card"><div class="space-block" style="--size:32px"></div><span>32</span></div>
+              <div class="space-card"><div class="space-block" style="--size:40px"></div><span>40</span></div>
+              <div class="space-card"><div class="space-block" style="--size:56px"></div><span>56</span></div>
+              <div class="space-card"><div class="space-block" style="--size:72px"></div><span>72</span></div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">12 / Radius</p>
+              <h2>Border Radius Scale</h2>
+            </div>
+
+            <div class="radius-grid">
+              <article class="radius-card">
+                <div class="radius-demo" style="--r:4px"></div>
+                <strong>4px</strong>
+                <span>Micro</span>
+              </article>
+              <article class="radius-card">
+                <div class="radius-demo" style="--r:7px"></div>
+                <strong>7px</strong>
+                <span>Buttons</span>
+              </article>
+              <article class="radius-card">
+                <div class="radius-demo" style="--r:10px"></div>
+                <strong>10px</strong>
+                <span>Controls</span>
+              </article>
+              <article class="radius-card">
+                <div class="radius-demo" style="--r:14px"></div>
+                <strong>14px</strong>
+                <span>Panels</span>
+              </article>
+              <article class="radius-card">
+                <div class="radius-demo" style="--r:999px"></div>
+                <strong>999px</strong>
+                <span>Pills</span>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">13 / Elevation</p>
+              <h2>Elevation &amp; Depth</h2>
+            </div>
+
+            <div class="elevation-grid">
+              <article class="elevation-card">
+                <strong>Level 0: Flat</strong>
+                <span>No shadow, paper background</span>
+              </article>
+              <article class="elevation-card level-1">
+                <strong>Level 1: Bordered</strong>
+                <span>1px solid #dad9d5</span>
+              </article>
+              <article class="elevation-card level-2">
+                <strong>Level 2: Nested</strong>
+                <span>Soft surface inset</span>
+              </article>
+              <article class="elevation-card level-3">
+                <strong>Level 3: Popover</strong>
+                <span>Soft diffused shadow</span>
+              </article>
+              <article class="elevation-card ring">
+                <strong>Ring</strong>
+                <span>Low-contrast focus ring</span>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">14 / Motion</p>
+              <h2>Motion &amp; Transitions</h2>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Duration Tiers</h3>
+              <div class="motion-grid">
+                <article class="motion-card">
+                  <p class="motion-value">160ms</p>
+                  <p class="motion-name">Quick</p>
+                  <p class="motion-use">Hover, focus, segment toggle</p>
+                </article>
+                <article class="motion-card">
+                  <p class="motion-value">180ms</p>
+                  <p class="motion-name">Base</p>
+                  <p class="motion-use">Button, card, link feedback</p>
+                </article>
+                <article class="motion-card">
+                  <p class="motion-value">280ms</p>
+                  <p class="motion-name">Slow</p>
+                  <p class="motion-use">Theme switch, language switch</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Easing</h3>
+              <article class="motion-easing">
+                <code class="motion-curve">cubic-bezier(.2, .8, .2, 1)</code>
+                <span class="motion-use">The only easing curve in the system — gently decelerated, never bouncy.</span>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">15 / Focus &amp; Accessibility</p>
+              <h2>Focus &amp; Contrast Audit</h2>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Focus Ring</h3>
+              <article class="focus-demo">
+                <button class="btn" type="button">Press Tab to focus me</button>
+                <input class="input" placeholder="Then Tab again to me" aria-label="Focus demo input">
+                <p class="motion-use">Rings use <code>:focus-visible</code> — they appear for keyboard navigation only, not mouse clicks. Composed via <code>box-shadow: var(--focus-ring)</code> so they follow the element's existing border-radius.</p>
+              </article>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Contrast — Light Mode (vs page background)</h3>
+              <div class="contrast-grid">
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#f4f3f0;color:#20201e">Aa</div>
+                  <p class="contrast-tokens">Strong Ink · #20201e</p>
+                  <p class="contrast-ratio"><span>14.71 : 1</span><span class="contrast-tag good">AAA</span></p>
+                </article>
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#f4f3f0;color:#333331">Aa</div>
+                  <p class="contrast-tokens">Body Ink · #333331</p>
+                  <p class="contrast-ratio"><span>11.41 : 1</span><span class="contrast-tag good">AAA</span></p>
+                </article>
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#f4f3f0;color:#575753">Aa</div>
+                  <p class="contrast-tokens">Soft Ink · #575753</p>
+                  <p class="contrast-ratio"><span>6.54 : 1</span><span class="contrast-tag good">AA</span></p>
+                </article>
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#f4f3f0;color:#686866">Aa</div>
+                  <p class="contrast-tokens">Muted · #686866</p>
+                  <p class="contrast-ratio"><span>5.03 : 1</span><span class="contrast-tag good">AA</span></p>
+                </article>
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#f4f3f0;color:#999995">Aa</div>
+                  <p class="contrast-tokens">Soft Text · #999995</p>
+                  <p class="contrast-ratio"><span>2.58 : 1</span><span class="contrast-tag warn">decorative</span></p>
+                </article>
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#f4f3f0;color:#b9b8b2">Aa</div>
+                  <p class="contrast-tokens">Disabled · #b9b8b2</p>
+                  <p class="contrast-ratio"><span>1.79 : 1</span><span class="contrast-tag muted">disabled</span></p>
+                </article>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Soft-Border Note</h3>
+              <article class="motion-easing">
+                <span class="motion-use">Default / Soft borders sit below WCAG 3 : 1 intentionally (1.15 – 1.27 : 1) for the paper aesthetic. Never rely on a border alone to signal an interactive control — pair it with readable text or icon affordance that meets contrast on its own.</span>
+              </article>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Contrast — Dark Mode (vs dark background)</h3>
+              <div class="contrast-grid">
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#181817;color:#f4f2ec">Aa</div>
+                  <p class="contrast-tokens">Dark Strong · #f4f2ec</p>
+                  <p class="contrast-ratio"><span>15.87 : 1</span><span class="contrast-tag good">AAA</span></p>
+                </article>
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#181817;color:#e5e3de">Aa</div>
+                  <p class="contrast-tokens">Dark Body · #e5e3de</p>
+                  <p class="contrast-ratio"><span>13.85 : 1</span><span class="contrast-tag good">AAA</span></p>
+                </article>
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#181817;color:#cbc7bd">Aa</div>
+                  <p class="contrast-tokens">Dark Soft · #cbc7bd</p>
+                  <p class="contrast-ratio"><span>10.53 : 1</span><span class="contrast-tag good">AAA</span></p>
+                </article>
+                <article class="contrast-card">
+                  <div class="contrast-sample" style="background:#181817;color:#bbb7ad">Aa</div>
+                  <p class="contrast-tokens">Dark Muted · #bbb7ad</p>
+                  <p class="contrast-ratio"><span>8.88 : 1</span><span class="contrast-tag good">AAA</span></p>
+                </article>
+              </div>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Accessibility Requirements</h3>
+              <article class="default-card">
+                <ul class="requirement-list">
+                  <li><strong>Color</strong><span>Meaning is never carried by color alone; pair tone with text, icon, shape, or position.</span></li>
+                  <li><strong>Keyboard</strong><span>Interactive elements stay reachable in source order, with visible focus and Escape behavior for overlays.</span></li>
+                  <li><strong>Motion</strong><span>Reduced-motion preferences remove animation while preserving focus visibility and state feedback.</span></li>
+                  <li><strong>Forced Colors</strong><span>Native controls, visible outlines, and border-based structure remain intact in high-contrast modes.</span></li>
+                </ul>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">16 / System Defaults</p>
+              <h2>System Defaults</h2>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Text Selection</h3>
+              <article class="default-card">
+                <p class="default-sample">Try selecting this paragraph. The wash uses Strong Ink at 18% opacity — never the system blue or orange. The same rule resolves correctly in dark mode because the strong-ink token flips with the theme.</p>
+              </article>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Scrollbar</h3>
+              <article class="default-card scroll-demo" id="scrollbar-demo">
+                <div class="scroll-content">
+                  <p>Scroll this box to see the thin paper-toned scrollbar.</p>
+                  <p>6px wide on both axes.</p>
+                  <p>Thumb radius 4px Micro — the minimum radius used across preview surfaces.</p>
+                  <p>Transparent track. Never tinted.</p>
+                  <p>Thumb uses <code>--border</code> by default.</p>
+                  <p>Thumb fades to <code>--soft</code> on hover.</p>
+                  <p>No arrow buttons at either end. No platform stylization. No pill shape.</p>
+                  <p>Consistent across light and dark mode.</p>
+                  <p>Inside this catalog the scrollbar uses <code>--preview-border</code> / <code>--preview-soft</code>.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Cursor Affordances</h3>
+              <article class="default-card">
+                <div class="cursor-row">
+                  <span class="cursor-chip cursor-pointer">hover for pointer</span>
+                  <span class="cursor-label">Buttons, links, segmented controls</span>
+                </div>
+                <div class="cursor-row">
+                  <span class="cursor-chip cursor-text">hover for text</span>
+                  <span class="cursor-label">Text inputs, textareas</span>
+                </div>
+                <div class="cursor-row">
+                  <span class="cursor-chip cursor-not-allowed">hover for not-allowed</span>
+                  <span class="cursor-label">Disabled controls</span>
+                </div>
+                <div class="cursor-row">
+                  <span class="cursor-chip cursor-move">hover for move</span>
+                  <span class="cursor-label">Resizable elements</span>
+                </div>
+                <div class="cursor-row">
+                  <span class="cursor-chip cursor-grab">hover for grab</span>
+                  <span class="cursor-label">Drag handles (only when drag-and-drop exists)</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Placeholder &amp; Caret</h3>
+              <article class="default-card">
+                <input class="input" placeholder="Click to type — placeholder is Soft Text, caret is Strong Ink" aria-label="Placeholder caret demo" style="max-width:520px">
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <p class="section-label">17 / Controls &amp; Progress</p>
+              <h2>Controls &amp; Progress</h2>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Switch / Toggle</h3>
+              <article class="default-card">
+                <div class="switch-set" aria-label="Switch component examples">
+                  <div class="component-cell">
+                    <span class="component-caption">Off</span>
+                    <span class="switch" role="switch" aria-checked="false" aria-label="Sync disabled">
+                      <span class="switch-knob"></span>
+                    </span>
+                  </div>
+                  <div class="component-cell">
+                    <span class="component-caption">On</span>
+                    <span class="switch is-on" role="switch" aria-checked="true" aria-label="Sync enabled">
+                      <span class="switch-knob"></span>
+                    </span>
+                  </div>
+                  <div class="component-cell">
+                    <span class="component-caption">Large</span>
+                    <span class="switch is-large is-on" role="switch" aria-checked="true" aria-label="Notifications enabled">
+                      <span class="switch-knob"></span>
+                    </span>
+                  </div>
+                  <div class="component-cell">
+                    <span class="component-caption">Disabled</span>
+                    <span class="switch is-disabled" role="switch" aria-checked="false" aria-disabled="true" aria-label="Disabled toggle">
+                      <span class="switch-knob"></span>
+                    </span>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Date Picker</h3>
+              <article class="default-card calendar-stage">
+                <div class="calendar" aria-label="Date picker mockup">
+                  <div class="calendar-head">
+                    <span class="calendar-title">May 2026</span>
+                    <div class="calendar-nav" aria-hidden="true">
+                      <button type="button">&lt;</button>
+                      <button type="button">&gt;</button>
+                    </div>
+                  </div>
+                  <div class="calendar-grid">
+                    <span class="calendar-weekday">Mo</span>
+                    <span class="calendar-weekday">Tu</span>
+                    <span class="calendar-weekday">We</span>
+                    <span class="calendar-weekday">Th</span>
+                    <span class="calendar-weekday">Fr</span>
+                    <span class="calendar-weekday">Sa</span>
+                    <span class="calendar-weekday">Su</span>
+                    <span class="calendar-day is-muted">27</span>
+                    <span class="calendar-day is-muted">28</span>
+                    <span class="calendar-day is-muted">29</span>
+                    <span class="calendar-day is-muted">30</span>
+                    <span class="calendar-day">1</span>
+                    <span class="calendar-day">2</span>
+                    <span class="calendar-day">3</span>
+                    <span class="calendar-day">4</span>
+                    <span class="calendar-day">5</span>
+                    <span class="calendar-day">6</span>
+                    <span class="calendar-day">7</span>
+                    <span class="calendar-day">8</span>
+                    <span class="calendar-day">9</span>
+                    <span class="calendar-day">10</span>
+                    <span class="calendar-day">11</span>
+                    <span class="calendar-day">12</span>
+                    <span class="calendar-day is-selected">13</span>
+                    <span class="calendar-day">14</span>
+                    <span class="calendar-day">15</span>
+                    <span class="calendar-day">16</span>
+                    <span class="calendar-day">17</span>
+                    <span class="calendar-day">18</span>
+                    <span class="calendar-day">19</span>
+                    <span class="calendar-day">20</span>
+                    <span class="calendar-day">21</span>
+                    <span class="calendar-day">22</span>
+                    <span class="calendar-day">23</span>
+                    <span class="calendar-day">24</span>
+                    <span class="calendar-day is-today">25</span>
+                    <span class="calendar-day">26</span>
+                    <span class="calendar-day">27</span>
+                    <span class="calendar-day">28</span>
+                    <span class="calendar-day">29</span>
+                    <span class="calendar-day">30</span>
+                    <span class="calendar-day">31</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="subgroup">
+              <h3 class="subgroup-title">Progress</h3>
+              <article class="default-card">
+                <div class="progress-linear-set">
+                  <div class="component-cell">
+                    <span class="component-caption">Linear / 64%</span>
+                    <div class="progress-linear" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="64">
+                      <div class="progress-linear-fill is-determinate"></div>
+                    </div>
+                  </div>
+                  <div class="component-cell">
+                    <span class="component-caption">Linear / Indeterminate</span>
+                    <div class="progress-linear" role="progressbar" aria-label="Syncing">
+                      <div class="progress-linear-fill is-indeterminate"></div>
+                    </div>
+                  </div>
+                  <div class="progress-circular-set">
+                    <div class="component-cell">
+                      <span class="component-caption">Circular / 40</span>
+                      <span class="progress-circular" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72">
+                        <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+                          <circle class="ring-track" cx="20" cy="20" r="17" stroke-width="2"></circle>
+                          <circle class="ring-fill" cx="20" cy="20" r="17" stroke-width="2" stroke-dasharray="76.9 106.8"></circle>
+                        </svg>
+                      </span>
+                    </div>
+                    <div class="component-cell">
+                      <span class="component-caption">Circular / 64</span>
+                      <span class="progress-circular" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72">
+                        <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+                          <circle class="ring-track" cx="32" cy="32" r="28" stroke-width="2"></circle>
+                          <circle class="ring-fill" cx="32" cy="32" r="28" stroke-width="2" stroke-dasharray="126.7 175.9"></circle>
+                        </svg>
+                      </span>
+                    </div>
+                    <div class="component-cell">
+                      <span class="component-caption">Circular / 96</span>
+                      <span class="progress-circular" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72">
+                        <svg width="96" height="96" viewBox="0 0 96 96" aria-hidden="true">
+                          <circle class="ring-track" cx="48" cy="48" r="42" stroke-width="2"></circle>
+                          <circle class="ring-fill" cx="48" cy="48" r="42" stroke-width="2" stroke-dasharray="190 263.9"></circle>
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    const root = document.documentElement;
+    const lightMode = document.getElementById('lightMode');
+    const darkMode = document.getElementById('darkMode');
+
+    function setTheme(theme) {
+      root.setAttribute('data-preview-theme', theme);
+      lightMode.classList.toggle('is-active', theme === 'light');
+      darkMode.classList.toggle('is-active', theme === 'dark');
+    }
+
+    lightMode.addEventListener('click', () => setTheme('light'));
+    darkMode.addEventListener('click', () => setTheme('dark'));
+
+    document.querySelectorAll('[data-select-demo]').forEach((select) => {
+      const trigger = select.querySelector('.select-trigger');
+      const options = [...select.querySelectorAll('.select-option')];
+
+      function closeSelect() {
+        select.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+      }
+
+      trigger.addEventListener('click', () => {
+        const isOpen = select.classList.toggle('is-open');
+        trigger.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      options.forEach((option) => {
+        option.addEventListener('click', () => {
+          options.forEach((item) => {
+            item.classList.remove('is-selected');
+            item.setAttribute('aria-selected', 'false');
+          });
+          option.classList.add('is-selected');
+          option.setAttribute('aria-selected', 'true');
+          trigger.textContent = option.textContent;
+          closeSelect();
+          trigger.focus();
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!select.contains(event.target)) closeSelect();
+      });
+
+      select.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeSelect();
+          trigger.focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

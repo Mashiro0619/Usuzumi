@@ -1,0 +1,485 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mashiro</title>
+<style>
+  @font-face {
+    font-family: 'Meddon Custom';
+    src: url('Meddon-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --bg: #f4f3f0;
+    --fg: #333331;
+    --fg-strong: #20201e;
+    --muted: #686866;
+    --soft: #999995;
+    --border: #dad9d5;
+    --border-soft: #e5e4e0;
+    --surface: #fbfaf7;
+    --surface-soft: #efeee9;
+    --project-bg: #ebeae6;
+    --project-ink: #20201e;
+    --toggle-bg: rgba(244, 243, 240, 0.78);
+    --card-title-gap: 6px;
+    --card-block-gap: 12px;
+    --motion-quick: 160ms;
+    --motion-base: 180ms;
+    --motion-slow: 280ms;
+    --ease-standard: cubic-bezier(.2, .8, .2, 1);
+    --focus-ring: 0 0 0 3px color-mix(in srgb, var(--fg-strong) 14%, transparent);
+  }
+
+  html[data-theme="dark"] {
+    --bg: #181817;
+    --fg: #e5e3de;
+    --fg-strong: #f4f2ec;
+    --muted: #bbb7ad;
+    --soft: #8f8b83;
+    --border: #383733;
+    --border-soft: #292824;
+    --surface: #20201e;
+    --surface-soft: #242421;
+    --project-bg: #292824;
+    --project-ink: #f4f2ec;
+    --toggle-bg: rgba(24, 24, 23, 0.78);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition-duration: 0ms !important;
+      animation-duration: 0ms !important;
+    }
+  }
+
+  @supports (-moz-appearance: none) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent !important;
+    -webkit-appearance: none;
+  }
+
+  ::-webkit-scrollbar-button:single-button,
+  ::-webkit-scrollbar-button:double-button,
+  ::-webkit-scrollbar-button:start:decrement,
+  ::-webkit-scrollbar-button:start:increment,
+  ::-webkit-scrollbar-button:end:decrement,
+  ::-webkit-scrollbar-button:end:increment,
+  ::-webkit-scrollbar-button:vertical:decrement,
+  ::-webkit-scrollbar-button:vertical:increment,
+  ::-webkit-scrollbar-button:vertical:start:decrement,
+  ::-webkit-scrollbar-button:vertical:start:increment,
+  ::-webkit-scrollbar-button:vertical:end:decrement,
+  ::-webkit-scrollbar-button:vertical:end:increment,
+  ::-webkit-scrollbar-button:horizontal:decrement,
+  ::-webkit-scrollbar-button:horizontal:increment,
+  ::-webkit-scrollbar-button:horizontal:start:decrement,
+  ::-webkit-scrollbar-button:horizontal:start:increment,
+  ::-webkit-scrollbar-button:horizontal:end:decrement,
+  ::-webkit-scrollbar-button:horizontal:end:increment {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent !important;
+    -webkit-appearance: none;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--soft);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--fg-strong) 18%, transparent);
+    color: var(--fg-strong);
+  }
+
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 12% 0%, rgba(0, 0, 0, 0.025), transparent 34%),
+      linear-gradient(180deg, #fbfaf7 0%, var(--bg) 44%, var(--bg) 100%);
+    color: var(--fg);
+    font-family: Georgia, 'Times New Roman', 'Noto Serif SC', 'Source Han Serif CN', serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    transition: background var(--motion-slow) var(--ease-standard), color var(--motion-slow) var(--ease-standard);
+  }
+
+  html[data-theme="dark"] body {
+    background:
+      radial-gradient(circle at 12% 0%, rgba(255, 255, 255, 0.035), transparent 34%),
+      var(--bg);
+  }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 80px 40px 60px;
+    position: relative;
+  }
+
+  .theme-toggle {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 10;
+    width: 38px;
+    height: 38px;
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--toggle-bg);
+    color: var(--muted);
+    backdrop-filter: blur(10px);
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color var(--motion-base) var(--ease-standard), border-color var(--motion-base) var(--ease-standard), background var(--motion-base) var(--ease-standard), transform var(--motion-base) var(--ease-standard);
+  }
+
+  .theme-toggle:hover {
+    color: var(--fg-strong);
+    border-color: var(--fg-strong);
+    transform: translateY(-1px);
+  }
+
+  .theme-toggle svg {
+    width: 17px;
+    height: 17px;
+    display: block;
+  }
+
+  .theme-toggle .icon-sun {
+    display: none;
+  }
+
+  html[data-theme="dark"] .theme-toggle .icon-moon {
+    display: none;
+  }
+
+  html[data-theme="dark"] .theme-toggle .icon-sun {
+    display: block;
+  }
+
+  .lead {
+    margin-bottom: 64px;
+    position: relative;
+  }
+
+  .lead-name {
+    font-family: 'Meddon Custom', cursive;
+    font-weight: 400;
+    font-size: clamp(78px, 13vw, 132px);
+    letter-spacing: 0;
+    color: var(--fg-strong);
+    line-height: 1.05;
+    display: block;
+    margin-left: -10px;
+    text-wrap: balance;
+  }
+
+  .section-label {
+    width: max-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--soft);
+    margin-bottom: 30px;
+    font-weight: 400;
+  }
+
+  .section-label::after {
+    content: '';
+    width: 32px;
+    height: 1.5px;
+    background: var(--fg-strong);
+    opacity: 0.72;
+    transform: translateY(1px);
+  }
+
+  .project {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .project:last-of-type {
+    border-bottom: none;
+  }
+
+  .project-image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--project-bg);
+    border-radius: 4px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-image::before {
+    content: '';
+    position: absolute;
+    inset: 18px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+
+  .project-image::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
+    width: 72px;
+    height: 2px;
+    background: var(--project-ink);
+    opacity: 0.55;
+  }
+
+  .project-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-bottom: var(--card-title-gap);
+    color: var(--fg-strong);
+  }
+
+  .project-title-en {
+    font-size: 13px;
+    color: var(--soft);
+    font-style: normal;
+  }
+
+  .project-meta {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  a {
+    color: var(--fg-strong);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--soft);
+  }
+
+  a:hover {
+    text-decoration-color: var(--fg-strong);
+  }
+
+  .github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .project-section {
+    margin-bottom: 64px;
+  }
+
+  .more-link {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--soft);
+  }
+
+  .github-link svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+  }
+
+  footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 12px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--soft);
+    letter-spacing: 0.04em;
+  }
+
+  footer a {
+    color: var(--muted);
+    text-decoration-color: transparent;
+  }
+
+  footer a:hover {
+    color: var(--fg-strong);
+    text-decoration-color: var(--soft);
+  }
+
+  .footer-divider {
+    color: var(--soft);
+    opacity: 0.72;
+  }
+
+  @media (max-width: 640px) {
+    .page {
+      padding: 56px 24px 40px;
+    }
+
+    .theme-toggle {
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+    }
+
+    .lead {
+      margin-bottom: 44px;
+    }
+
+    .lead-name {
+      font-size: clamp(58px, 18vw, 82px);
+      margin-left: -4px;
+      line-height: 1.12;
+    }
+
+    footer {
+      justify-content: flex-start;
+      line-height: 1.9;
+    }
+  }
+</style>
+</head>
+<body>
+<button class="theme-toggle" type="button" aria-label="切换暗黑模式" id="themeToggle">
+  <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+    <path d="M20.3 15.1A7.6 7.6 0 0 1 8.9 3.7 8.9 8.9 0 1 0 20.3 15.1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+  </svg>
+  <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+    <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.7"/>
+    <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+  </svg>
+</button>
+
+<div class="page">
+
+  <div class="lead">
+    <span class="lead-name">Mashiro</span>
+  </div>
+
+  <section class="project-section">
+    <h2 class="section-label">精选作品 / selected works</h2>
+
+    <div class="project">
+      <div class="project-image" aria-label="Sked 项目预览占位"></div>
+      <p class="project-title">
+        Sked
+        <span class="project-title-en">/ sked</span>
+      </p>
+      <p class="project-meta">品牌设计 · 网页构建 · 2024</p>
+    </div>
+
+    <div class="project">
+      <div class="project-image" aria-label="LibreWrite 项目预览占位"></div>
+      <p class="project-title">
+        LibreWrite
+        <span class="project-title-en">/ libre write</span>
+      </p>
+      <p class="project-meta">品牌设计 · 产品设计 · 2024</p>
+    </div>
+
+    <p class="more-link">
+      <a href="#">查看更多 / view all</a>
+    </p>
+  </section>
+
+  <footer>
+    <span>© 2025 Mashiro</span>
+    <span class="footer-divider">·</span>
+    <a href="mailto:hello@mashiro.me">hello@mashiro.me</a>
+    <span class="footer-divider">·</span>
+    <a class="github-link" href="#" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+        <path d="M12 .5A11.5 11.5 0 0 0 8.36 22.9c.58.1.79-.25.79-.56v-2.1c-3.22.7-3.9-1.38-3.9-1.38-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.4-1.27.73-1.56-2.57-.29-5.27-1.28-5.27-5.73 0-1.27.45-2.3 1.2-3.11-.12-.3-.52-1.49.11-3.08 0 0 .98-.31 3.2 1.19A11.1 11.1 0 0 1 12 5.94c.99 0 1.98.13 2.91.4 2.22-1.5 3.2-1.19 3.2-1.19.63 1.59.23 2.78.11 3.08.75.81 1.2 1.84 1.2 3.11 0 4.46-2.7 5.44-5.28 5.73.42.36.78 1.07.78 2.16v3.11c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/>
+      </svg>
+      GitHub
+    </a>
+  </footer>
+
+</div>
+
+<script>
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    toggle.setAttribute('aria-label', theme === 'dark' ? '切换到浅色模式' : '切换到暗黑模式');
+    localStorage.setItem('mashiro-theme', theme);
+  }
+
+  const savedTheme = localStorage.getItem('mashiro-theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+  toggle.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+</script>
+</body>
+</html>
