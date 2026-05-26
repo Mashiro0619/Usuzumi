@@ -101,7 +101,7 @@ function validateTextFiles() {
 }
 
 function validateJavaScript() {
-  execFileSync(process.execPath, ['--check', path.join(root, 'ui/mashiro.js')], {
+  execFileSync(process.execPath, ['--check', path.join(root, 'ui/usuzumi.js')], {
     cwd: root,
     stdio: 'inherit'
   });

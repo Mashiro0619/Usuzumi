@@ -1,0 +1,145 @@
+﻿<!doctype html>
+<html class="uzu-root" lang="zh-CN" data-theme="light" data-uzu-theme-key="app-introduction-theme" data-language="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Introduction Example</title>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var key = root.dataset.uzuThemeKey || "";
+      var mode = root.getAttribute("data-theme-mode") || "auto";
+      try {
+        mode = (key && window.localStorage.getItem(key)) || mode;
+      } catch (_) {}
+      if (!/^(auto|light|dark)$/.test(mode)) mode = "auto";
+      var theme = mode === "auto" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : mode === "dark" ? "dark" : "light";
+      root.setAttribute("data-theme-mode", mode);
+      root.setAttribute("data-theme", theme);
+      root.setAttribute("data-uzu-theme", theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="../ui/usuzumi.css">
+  <script src="../ui/usuzumi.js" defer></script>
+</head>
+<body class="uzu-app">
+  <div class="uzu-floating-controls" aria-label="Page settings">
+    <button class="uzu-icon-button uzu-language-toggle" type="button" data-uzu-language-toggle data-uzu-language-key="app-introduction-language" aria-label="Switch language">EN</button>
+    <button class="uzu-icon-button uzu-theme-toggle" type="button" data-uzu-theme-toggle aria-label="Switch theme">
+      <svg class="uzu-icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+        <path d="M20.3 15.1A7.6 7.6 0 0 1 8.9 3.7 8.9 8.9 0 1 0 20.3 15.1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </svg>
+      <svg class="uzu-icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+        <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.7"/>
+        <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <main class="uzu-page">
+    <header class="uzu-topbar">
+      <a class="uzu-brand-link" href="index.html">Usuzumi</a>
+      <nav class="uzu-nav" aria-label="Page navigation">
+        <a href="#features"><span data-lang="zh">功能</span><span data-lang="en">Features</span></a>
+        <a href="#screens"><span data-lang="zh">界面</span><span data-lang="en">Screens</span></a>
+      </nav>
+    </header>
+
+    <section class="uzu-hero-split">
+      <div class="uzu-app-hero-copy">
+        <div class="uzu-product-meta">
+          <span data-lang="zh">Web / Mobile App</span><span data-lang="en">Web / mobile app</span>
+          <span>2026</span>
+        </div>
+        <h1 class="uzu-hero-title">Product</h1>
+        <p class="uzu-body-large uzu-mt-block">
+          <span data-lang="zh">用一句清晰的承诺介绍应用价值，把主要行动、界面预览和核心卖点放进同一个安静节奏里。</span>
+          <span data-lang="en">Introduce an app with a clear promise, focused actions, interface previews, and a calm feature rhythm.</span>
+        </p>
+        <div class="uzu-download-actions uzu-mt-block" aria-label="Download options">
+          <button class="uzu-button uzu-button-primary" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M7 4.8v14.4c0 .7.8 1.1 1.4.7l10.8-7.2a.8.8 0 0 0 0-1.4L8.4 4.1A.9.9 0 0 0 7 4.8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            App Store
+          </button>
+          <button class="uzu-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 3.5a8.6 8.6 0 0 0-2.7 16.8c.4.1.5-.2.5-.4v-1.6c-2.2.5-2.7-.9-2.7-.9-.4-.9-.9-1.2-.9-1.2-.8-.5 0-.5 0-.5.8.1 1.3.9 1.3.9.8 1.3 2 1 2.4.8.1-.6.3-1 .5-1.2-1.8-.2-3.6-.9-3.6-3.9 0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8.6-.2 1.3-.3 2-.3s1.4.1 2 .3c1.5-1 2.2-.8 2.2-.8.5 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.1 0 3-1.8 3.7-3.6 3.9.3.3.6.8.6 1.6v2.1c0 .2.1.5.6.4A8.6 8.6 0 0 0 12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            GitHub
+          </button>
+          <button class="uzu-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 17.5v1.2c0 .8.6 1.3 1.4 1.3h11.2c.8 0 1.4-.5 1.4-1.3v-1.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-lang="zh">直接下载</span><span data-lang="en">Download</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="uzu-app-preview" aria-label="App interface mockup">
+        <div class="uzu-app-window">
+          <div class="uzu-window-bar">
+            <div class="uzu-window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <span>APP</span>
+          </div>
+          <div class="uzu-mock-content">
+            <div class="uzu-mock-panel">
+              <div class="uzu-today-head">
+                <div><p class="uzu-micro-label">Overview</p><p class="uzu-mock-date">Launch</p></div>
+                <span class="uzu-badge uzu-badge-success">Live</span>
+              </div>
+              <div class="uzu-timeline">
+                <div class="uzu-task is-current"><span class="uzu-task-time">01</span><div><p class="uzu-task-title">Capture</p><p class="uzu-task-note">Primary user input</p></div></div>
+                <div class="uzu-task"><span class="uzu-task-time">02</span><div><p class="uzu-task-title">Organize</p><p class="uzu-task-note">Readable structure</p></div></div>
+                <div class="uzu-task"><span class="uzu-task-time">03</span><div><p class="uzu-task-title">Share</p><p class="uzu-task-note">Export or handoff</p></div></div>
+              </div>
+            </div>
+            <div class="uzu-mock-stat-grid">
+              <div class="uzu-mock-stat"><p class="uzu-micro-label">Signal</p><p class="uzu-metric-value">84%</p><p class="uzu-text uzu-muted"><span data-lang="zh">核心流程完成率</span><span data-lang="en">core flow completion</span></p></div>
+              <div class="uzu-mock-stat"><p class="uzu-micro-label">Trust</p><p class="uzu-metric-value">4.8</p><p class="uzu-text uzu-muted"><span data-lang="zh">用户评分示例</span><span data-lang="en">sample user rating</span></p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="uzu-section" id="features">
+      <div class="uzu-section-head">
+        <p class="uzu-section-label"><span data-lang="zh">功能</span><span data-lang="en">Features</span></p>
+        <h2 class="uzu-section-title"><span data-lang="zh">从承诺到行动，页面只保留用户需要判断的内容。</span><span data-lang="en">From promise to action, the page keeps only what users need to decide.</span></h2>
+        <p class="uzu-body-large"><span data-lang="zh">这个模板适合展示工具类、效率类或内容型应用：先说明价值，再展示界面，最后给出可信的下一步。</span><span data-lang="en">This template suits tools, productivity apps, and content products: explain value, show the interface, then offer a trustworthy next step.</span></p>
+      </div>
+      <div class="uzu-feature-list">
+        <article class="uzu-feature-item">
+          <span class="uzu-feature-index">01</span>
+          <div class="uzu-title-pair"><h3><span data-lang="zh">清晰承诺</span><span data-lang="en">Clear promise</span></h3><p><span data-lang="zh">用少量文字说明产品解决什么问题，不把首屏变成营销噪音。</span><span data-lang="en">Explain the product value without turning the first screen into marketing noise.</span></p></div>
+        </article>
+        <article class="uzu-feature-item">
+          <span class="uzu-feature-index">02</span>
+          <div class="uzu-title-pair"><h3><span data-lang="zh">核心流程</span><span data-lang="en">Core flow</span></h3><p><span data-lang="zh">用界面预览表现主要任务，让访问者快速理解应用如何工作。</span><span data-lang="en">Use interface previews to show the primary task and make the product easy to understand.</span></p></div>
+        </article>
+        <article class="uzu-feature-item">
+          <span class="uzu-feature-index">03</span>
+          <div class="uzu-title-pair"><h3><span data-lang="zh">可信行动</span><span data-lang="en">Trusted actions</span></h3><p><span data-lang="zh">下载、源码、文档或试用入口保持明确，不用过多按钮争夺注意力。</span><span data-lang="en">Keep download, source, docs, or trial actions clear without letting too many buttons compete.</span></p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="uzu-section" id="screens">
+      <div class="uzu-section-head">
+        <p class="uzu-section-label"><span data-lang="zh">界面</span><span data-lang="en">Screens</span></p>
+        <h2 class="uzu-section-title"><span data-lang="zh">三个界面卡片，展示从入口到结果的完整印象。</span><span data-lang="en">Three screen cards present a complete impression from entry to outcome.</span></h2>
+      </div>
+      <div class="uzu-screen-grid">
+        <article class="uzu-screen-card"><div class="uzu-screen-art uzu-screen-art-today"><span class="uzu-screen-mark"></span></div><div class="uzu-title-pair"><h3>Overview</h3><p><span data-lang="zh">产品入口、状态摘要和主要行动。</span><span data-lang="en">Product entry, status summary, and primary action.</span></p></div></article>
+        <article class="uzu-screen-card"><div class="uzu-screen-art uzu-screen-art-plan"><span class="uzu-screen-mark"></span></div><div class="uzu-title-pair"><h3>Workflow</h3><p><span data-lang="zh">核心流程、步骤关系和输入区域。</span><span data-lang="en">Core flow, step relationships, and input areas.</span></p></div></article>
+        <article class="uzu-screen-card"><div class="uzu-screen-art uzu-screen-art-review"><span class="uzu-screen-mark"></span></div><div class="uzu-title-pair"><h3>Result</h3><p><span data-lang="zh">完成状态、导出结果和后续操作。</span><span data-lang="en">Completion state, output, and follow-up actions.</span></p></div></article>
+      </div>
+    </section>
+
+    <footer class="uzu-footer">
+      <span>© 2026 Mashiro0619</span>
+      <span class="uzu-divider">·</span>
+      <a href="mailto:mashiro070619@gmail.com">mashiro070619@gmail.com</a>
+      <span class="uzu-divider">·</span>
+      <a href="https://github.com/Mashiro0619">GitHub</a>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,129 @@
+﻿/* Forced-colors mode: ensure visibility under user-selected high-contrast themes.
+   Goal is visibility, not visual fidelity. Author colors yield to system colors;
+   semantics are carried by labels, icons, and ARIA, never by hue. */
+
+@media (forced-colors: active) {
+  /* Focus — box-shadow rings are ignored under forced-colors. */
+  .uzu-app :focus-visible,
+  .uzu-scope :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+
+  /* Surfaces and containers. */
+  .uzu-card,
+  .uzu-card-muted,
+  .uzu-popover,
+  .uzu-modal,
+  .uzu-alert,
+  .uzu-app-preview,
+  .uzu-preview-block,
+  .uzu-empty-state,
+  .uzu-table-wrap,
+  .uzu-segmented,
+  .uzu-badge {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+  }
+
+  /* Form and command controls. */
+  .uzu-button,
+  .uzu-icon-button,
+  .uzu-input,
+  .uzu-textarea,
+  .uzu-select-trigger,
+  .uzu-select-menu {
+    border: 1px solid CanvasText;
+    background: ButtonFace;
+    color: ButtonText;
+    box-shadow: none;
+  }
+
+  .uzu-button-primary {
+    background: Highlight;
+    color: HighlightText;
+    border-color: Highlight;
+  }
+
+  /* Selected and active states. */
+  .uzu-tab.is-active {
+    color: Highlight;
+    border-bottom-color: Highlight;
+  }
+
+  .uzu-segment.is-active,
+  .uzu-select-option.is-selected {
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  /* Progress and toggles. */
+  .uzu-progress {
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+
+  .uzu-progress-bar {
+    background: Highlight;
+  }
+
+  .uzu-progress-circular .ring-track {
+    stroke: CanvasText;
+  }
+
+  .uzu-progress-circular .ring-fill {
+    stroke: Highlight;
+  }
+
+  .uzu-switch {
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+
+  .uzu-switch.is-on {
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  /* Links. */
+  .uzu-app a,
+  .uzu-scope a,
+  .uzu-text-link {
+    color: LinkText;
+    text-decoration-color: LinkText;
+  }
+
+  /* Disabled — GrayText is the canonical disabled token. */
+  .uzu-button:disabled,
+  .uzu-button[aria-disabled="true"],
+  .uzu-icon-button:disabled,
+  .uzu-icon-button[aria-disabled="true"],
+  .uzu-input:disabled,
+  .uzu-textarea:disabled,
+  .uzu-select-trigger:disabled,
+  .uzu-tab:disabled,
+  .uzu-tab[aria-disabled="true"],
+  .uzu-segment:disabled,
+  .uzu-segment[aria-disabled="true"] {
+    color: GrayText;
+    border-color: GrayText;
+  }
+
+  /* Invalid — neutralize tinted backgrounds; semantics carried by aria-invalid + help text. */
+  .uzu-field.is-invalid .uzu-input,
+  .uzu-field.is-invalid .uzu-textarea,
+  .uzu-field.is-invalid .uzu-select-trigger,
+  .uzu-input.is-invalid,
+  .uzu-textarea.is-invalid,
+  .uzu-select.is-invalid .uzu-select-trigger,
+  .uzu-input[aria-invalid="true"],
+  .uzu-textarea[aria-invalid="true"],
+  .uzu-select-trigger[aria-invalid="true"] {
+    border-color: CanvasText;
+    background: ButtonFace;
+    color: CanvasText;
+  }
+}

@@ -1,8 +1,8 @@
-.msh-hidden {
+﻿.uzu-hidden {
   display: none !important;
 }
 
-.msh-sr-only {
+.uzu-sr-only {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -14,64 +14,64 @@
   border: 0;
 }
 
-.msh-flex {
+.uzu-flex {
   display: flex;
 }
 
-.msh-wrap {
+.uzu-wrap {
   flex-wrap: wrap;
 }
 
-.msh-center {
+.uzu-center {
   display: grid;
   place-items: center;
 }
 
-.msh-gap-2 {
+.uzu-gap-2 {
   gap: 8px;
 }
 
-.msh-gap-3 {
+.uzu-gap-3 {
   gap: 12px;
 }
 
-.msh-gap-4 {
+.uzu-gap-4 {
   gap: 16px;
 }
 
-.msh-gap-5 {
+.uzu-gap-5 {
   gap: 20px;
 }
 
-.msh-mt-block {
-  margin-top: var(--msh-card-block-gap);
+.uzu-mt-block {
+  margin-top: var(--uzu-card-block-gap);
 }
 
-.msh-no-border {
+.uzu-no-border {
   border: 0 !important;
 }
 
-.msh-surface {
-  background: var(--msh-surface);
+.uzu-surface {
+  background: var(--uzu-surface);
 }
 
-.msh-surface-soft {
-  background: var(--msh-surface-soft);
+.uzu-surface-soft {
+  background: var(--uzu-surface-soft);
 }
 
-.msh-surface-muted {
-  background: var(--msh-surface-muted);
+.uzu-surface-muted {
+  background: var(--uzu-surface-muted);
 }
 
-html[data-msh-lang="en"] .msh-app [data-lang="zh"],
-html[data-language="en"] .msh-app [data-lang="zh"],
-.msh-app[data-msh-lang="en"] [data-lang="zh"],
-.msh-scope[data-msh-lang="en"] [data-lang="zh"],
-.msh-scope[data-language="en"] [data-lang="zh"],
-html[data-msh-lang="zh"] .msh-app [data-lang="en"],
-html[data-language="zh"] .msh-app [data-lang="en"],
-.msh-app[data-msh-lang="zh"] [data-lang="en"],
-.msh-scope[data-msh-lang="zh"] [data-lang="en"],
-.msh-scope[data-language="zh"] [data-lang="en"] {
+html[data-uzu-lang="en"] .uzu-app [data-lang="zh"],
+html[data-language="en"] .uzu-app [data-lang="zh"],
+.uzu-app[data-uzu-lang="en"] [data-lang="zh"],
+.uzu-scope[data-uzu-lang="en"] [data-lang="zh"],
+.uzu-scope[data-language="en"] [data-lang="zh"],
+html[data-uzu-lang="zh"] .uzu-app [data-lang="en"],
+html[data-language="zh"] .uzu-app [data-lang="en"],
+.uzu-app[data-uzu-lang="zh"] [data-lang="en"],
+.uzu-scope[data-uzu-lang="zh"] [data-lang="en"],
+.uzu-scope[data-language="zh"] [data-lang="en"] {
   display: none !important;
 }

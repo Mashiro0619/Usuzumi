@@ -1,46 +1,46 @@
-.msh-signature {
+﻿.uzu-signature {
   margin: 0;
   display: block;
   max-width: 100%;
-  color: var(--msh-fg-strong);
-  font-family: var(--msh-font-signature);
+  color: var(--uzu-fg-strong);
+  font-family: var(--uzu-font-signature);
   font-size: 124px;
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: 0;
 }
 
-.msh-hero-title {
+.uzu-hero-title {
   margin: 0;
-  color: var(--msh-fg-strong);
+  color: var(--uzu-fg-strong);
   font-size: 132px;
   font-weight: 400;
   line-height: .86;
   letter-spacing: 0;
 }
 
-.msh-page-title {
+.uzu-page-title {
   margin: 0;
-  color: var(--msh-fg-strong);
+  color: var(--uzu-fg-strong);
   font-size: 56px;
   font-weight: 400;
   line-height: 1.02;
   letter-spacing: 0;
 }
 
-.msh-section-title {
+.uzu-section-title {
   margin: 0;
-  color: var(--msh-fg-strong);
+  color: var(--uzu-fg-strong);
   font-size: 44px;
   font-weight: 400;
   line-height: 1.08;
   letter-spacing: 0;
 }
 
-.msh-section-label,
-.msh-kicker {
+.uzu-section-label,
+.uzu-kicker {
   margin: 0;
-  color: var(--msh-soft);
+  color: var(--uzu-soft);
   display: inline-flex;
   align-items: center;
   font-size: 12px;
@@ -49,90 +49,94 @@
   text-transform: uppercase;
 }
 
-.msh-body-large {
+.uzu-body-large {
   margin: 0;
-  color: var(--msh-fg);
+  color: var(--uzu-fg);
   font-size: 18px;
   line-height: 1.65;
 }
 
-.msh-text {
+.uzu-text {
   margin: 0;
-  color: var(--msh-fg);
+  color: var(--uzu-fg);
   font-size: 15px;
   line-height: 1.7;
 }
 
-.msh-muted {
-  color: var(--msh-muted);
+.uzu-muted {
+  color: var(--uzu-muted);
 }
 
-.msh-soft {
-  color: var(--msh-soft);
+.uzu-subtle {
+  color: var(--uzu-subtle);
 }
 
-.msh-mono {
-  font-family: var(--msh-font-mono);
+.uzu-soft {
+  color: var(--uzu-soft);
 }
 
-.msh-title-pair {
+.uzu-mono {
+  font-family: var(--uzu-font-mono);
+}
+
+.uzu-title-pair {
   display: grid;
-  gap: var(--msh-card-title-gap);
+  gap: var(--uzu-card-title-gap);
 }
 
-.msh-title-pair > :first-child {
+.uzu-title-pair > :first-child {
   margin: 0;
-  color: var(--msh-fg-strong);
-  font-size: var(--msh-card-title-size);
+  color: var(--uzu-fg-strong);
+  font-size: var(--uzu-card-title-size);
   font-weight: 400;
-  line-height: var(--msh-card-title-line);
+  line-height: var(--uzu-card-title-line);
 }
 
-.msh-title-pair > :last-child {
+.uzu-title-pair > :last-child {
   margin: 0;
-  color: var(--msh-muted);
-  font-size: var(--msh-card-subtitle-size);
-  line-height: var(--msh-card-subtitle-line);
+  color: var(--uzu-muted);
+  font-size: var(--uzu-card-subtitle-size);
+  line-height: var(--uzu-card-subtitle-line);
 }
 
 @media (max-width: 920px) {
-  .msh-hero-title {
+  .uzu-hero-title {
     font-size: 112px;
   }
 
-  .msh-signature {
+  .uzu-signature {
     font-size: 104px;
   }
 }
 
 @media (max-width: 640px) {
-  .msh-hero-title {
+  .uzu-hero-title {
     font-size: 82px;
   }
 
-  .msh-signature {
+  .uzu-signature {
     font-size: 76px;
     line-height: 1.12;
   }
 
-  .msh-page-title {
+  .uzu-page-title {
     font-size: 40px;
   }
 
-  .msh-section-title {
+  .uzu-section-title {
     font-size: 34px;
   }
 }
 
 @media (max-width: 430px) {
-  .msh-signature {
+  .uzu-signature {
     font-size: 58px;
     line-height: 1.18;
   }
 }
 
 @media (max-width: 340px) {
-  .msh-signature {
+  .uzu-signature {
     font-size: 42px;
   }
 }

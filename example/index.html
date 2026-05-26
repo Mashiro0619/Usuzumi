@@ -1,69 +1,84 @@
-<!doctype html>
-<html class="msh-root" lang="en" data-theme="light">
+﻿<!doctype html>
+<html class="uzu-root" lang="en" data-theme="light" data-uzu-theme-key="usuzumi-example-theme">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mashiro Example</title>
-  <link rel="stylesheet" href="../ui/mashiro.css">
-  <script src="../ui/mashiro.js" defer></script>
+  <title>Usuzumi Example</title>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var key = root.dataset.uzuThemeKey || "";
+      var mode = root.getAttribute("data-theme-mode") || "auto";
+      try {
+        mode = (key && window.localStorage.getItem(key)) || mode;
+      } catch (_) {}
+      if (!/^(auto|light|dark)$/.test(mode)) mode = "auto";
+      var theme = mode === "auto" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : mode === "dark" ? "dark" : "light";
+      root.setAttribute("data-theme-mode", mode);
+      root.setAttribute("data-theme", theme);
+      root.setAttribute("data-uzu-theme", theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="../ui/usuzumi.css">
+  <script src="../ui/usuzumi.js" defer></script>
 </head>
-<body class="msh-app">
-  <div class="msh-floating-controls" aria-label="Page settings">
-    <button class="msh-icon-button msh-theme-toggle" type="button" data-msh-theme-toggle data-msh-theme-key="mashiro-example-theme" aria-label="Switch theme">
-      <svg class="msh-icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+<body class="uzu-app">
+  <div class="uzu-floating-controls" aria-label="Page settings">
+    <button class="uzu-icon-button uzu-theme-toggle" type="button" data-uzu-theme-toggle aria-label="Switch theme">
+      <svg class="uzu-icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
         <path d="M20.3 15.1A7.6 7.6 0 0 1 8.9 3.7 8.9 8.9 0 1 0 20.3 15.1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
       </svg>
-      <svg class="msh-icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <svg class="uzu-icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none">
         <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.7"/>
         <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
       </svg>
     </button>
   </div>
 
-  <main class="msh-page msh-page-narrow">
-    <header class="msh-home-hero">
-      <h1 class="msh-signature">Mashiro</h1>
-      <p class="msh-home-summary">Independent interface work shaped around calm reading, durable components, and small product pages that stay easy to scan on every screen.</p>
+  <main class="uzu-page uzu-page-narrow">
+    <header class="uzu-home-hero">
+      <h1 class="uzu-signature">Mashiro</h1>
+      <p class="uzu-home-summary">Independent interface work shaped around calm reading, durable components, and small product pages that stay easy to scan on every screen.</p>
     </header>
 
-    <section class="msh-section">
-      <div class="msh-section-head">
-        <p class="msh-section-label">Selected works</p>
-        <h2 class="msh-section-title">A compact index for product pages and design-system work.</h2>
+    <section class="uzu-section">
+      <div class="uzu-section-head">
+        <p class="uzu-section-label">Selected works</p>
+        <h2 class="uzu-section-title">A compact index for product pages and design-system work.</h2>
       </div>
-      <div class="msh-project-list">
-        <article class="msh-project-row">
-          <div class="msh-project-media">
-            <div class="msh-project-preview msh-project-preview-app" aria-label="App introduction page preview"></div>
+      <div class="uzu-project-list">
+        <article class="uzu-project-row">
+          <div class="uzu-project-media">
+            <div class="uzu-project-preview uzu-project-preview-app" aria-label="App introduction page preview"></div>
           </div>
-          <div class="msh-project-copy">
-            <div class="msh-title-pair">
+          <div class="uzu-project-copy">
+            <div class="uzu-title-pair">
               <h3>App introduction template</h3>
               <p>Hero copy, download actions, product mockup, feature rhythm, and bilingual presentation.</p>
             </div>
           </div>
-          <a class="msh-text-link msh-project-action" href="sked-app.html">View page</a>
+          <a class="uzu-text-link uzu-project-action" href="app-introduction.html">View page</a>
         </article>
-        <article class="msh-project-row">
-          <div class="msh-project-media">
-            <div class="msh-project-preview msh-project-preview-system" aria-label="Design system catalog preview"></div>
+        <article class="uzu-project-row">
+          <div class="uzu-project-media">
+            <div class="uzu-project-preview uzu-project-preview-system" aria-label="Design system catalog preview"></div>
           </div>
-          <div class="msh-project-copy">
-            <div class="msh-title-pair">
-              <h3>Mashiro UI</h3>
+          <div class="uzu-project-copy">
+            <div class="uzu-title-pair">
+              <h3>Usuzumi</h3>
               <p>Soft monochrome tokens, reusable components, accessibility defaults, and page patterns.</p>
             </div>
           </div>
-          <a class="msh-text-link msh-project-action" href="../mashiro-design-preview.html">View system</a>
+          <a class="uzu-text-link uzu-project-action" href="preview.html">View system</a>
         </article>
       </div>
     </section>
 
-    <footer class="msh-footer">
-      <span>© 2025-2026 Mashiro</span>
-      <span class="msh-divider">·</span>
+    <footer class="uzu-footer">
+      <span>© 2025-2026 Mashiro0619</span>
+      <span class="uzu-divider">·</span>
       <a href="mailto:mashiro070619@gmail.com">mashiro070619@gmail.com</a>
-      <span class="msh-divider">·</span>
+      <span class="uzu-divider">·</span>
       <a href="https://github.com/Mashiro0619">GitHub</a>
     </footer>
   </main>

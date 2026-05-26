@@ -1,43 +1,43 @@
-.msh-app,
-.msh-app *,
-.msh-app *::before,
-.msh-app *::after,
-.msh-scope,
-.msh-scope *,
-.msh-scope *::before,
-.msh-scope *::after {
+﻿.uzu-app,
+.uzu-app *,
+.uzu-app *::before,
+.uzu-app *::after,
+.uzu-scope,
+.uzu-scope *,
+.uzu-scope *::before,
+.uzu-scope *::after {
   box-sizing: border-box;
 }
 
-html.msh-root,
-.msh-app {
+html.uzu-root,
+.uzu-app {
   scroll-behavior: smooth;
 }
 
-.msh-app,
-.msh-scope {
-  background: var(--msh-bg);
-  color: var(--msh-fg);
-  font-family: var(--msh-font-serif);
+.uzu-app,
+.uzu-scope {
+  background: var(--uzu-bg);
+  color: var(--uzu-fg);
+  font-family: var(--uzu-font-serif);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
-body.msh-app {
+body.uzu-app {
   margin: 0;
   min-height: 100vh;
-  transition: background var(--msh-motion-slow) var(--msh-ease-standard), color var(--msh-motion-slow) var(--msh-ease-standard);
+  transition: background var(--uzu-motion-slow) var(--uzu-ease-standard), color var(--uzu-motion-slow) var(--uzu-ease-standard);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .msh-app,
-  .msh-app *,
-  .msh-app *::before,
-  .msh-app *::after,
-  .msh-scope,
-  .msh-scope *,
-  .msh-scope *::before,
-  .msh-scope *::after {
+  .uzu-app,
+  .uzu-app *,
+  .uzu-app *::before,
+  .uzu-app *::after,
+  .uzu-scope,
+  .uzu-scope *,
+  .uzu-scope *::before,
+  .uzu-scope *::after {
     transition-duration: 0ms !important;
     animation-duration: 0ms !important;
     scroll-behavior: auto !important;
@@ -45,101 +45,101 @@ body.msh-app {
 }
 
 @supports (-moz-appearance: none) {
-  html.msh-root,
-  body.msh-app,
-  .msh-scroll,
-  .msh-table-wrap,
-  .msh-catalog-body {
+  html.uzu-root,
+  body.uzu-app,
+  .uzu-scroll,
+  .uzu-table-wrap,
+  .uzu-catalog-body {
     scrollbar-width: thin;
-    scrollbar-color: var(--msh-border) transparent;
+    scrollbar-color: var(--uzu-border) transparent;
   }
 }
 
-html.msh-root::-webkit-scrollbar,
-body.msh-app::-webkit-scrollbar,
-.msh-scroll::-webkit-scrollbar,
-.msh-table-wrap::-webkit-scrollbar,
-.msh-catalog-body::-webkit-scrollbar {
+html.uzu-root::-webkit-scrollbar,
+body.uzu-app::-webkit-scrollbar,
+.uzu-scroll::-webkit-scrollbar,
+.uzu-table-wrap::-webkit-scrollbar,
+.uzu-catalog-body::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-html.msh-root::-webkit-scrollbar-button,
-body.msh-app::-webkit-scrollbar-button,
-.msh-scroll::-webkit-scrollbar-button,
-html.msh-root::-webkit-scrollbar-button:single-button,
-html.msh-root::-webkit-scrollbar-button:double-button,
-html.msh-root::-webkit-scrollbar-button:start:decrement,
-html.msh-root::-webkit-scrollbar-button:start:increment,
-html.msh-root::-webkit-scrollbar-button:end:decrement,
-html.msh-root::-webkit-scrollbar-button:end:increment,
-html.msh-root::-webkit-scrollbar-button:vertical:decrement,
-html.msh-root::-webkit-scrollbar-button:vertical:increment,
-html.msh-root::-webkit-scrollbar-button:vertical:start:decrement,
-html.msh-root::-webkit-scrollbar-button:vertical:start:increment,
-html.msh-root::-webkit-scrollbar-button:vertical:end:decrement,
-html.msh-root::-webkit-scrollbar-button:vertical:end:increment,
-html.msh-root::-webkit-scrollbar-button:horizontal:decrement,
-html.msh-root::-webkit-scrollbar-button:horizontal:increment,
-html.msh-root::-webkit-scrollbar-button:horizontal:start:decrement,
-html.msh-root::-webkit-scrollbar-button:horizontal:start:increment,
-html.msh-root::-webkit-scrollbar-button:horizontal:end:decrement,
-html.msh-root::-webkit-scrollbar-button:horizontal:end:increment,
-body.msh-app::-webkit-scrollbar-button:single-button,
-body.msh-app::-webkit-scrollbar-button:double-button,
-body.msh-app::-webkit-scrollbar-button:start:decrement,
-body.msh-app::-webkit-scrollbar-button:start:increment,
-body.msh-app::-webkit-scrollbar-button:end:decrement,
-body.msh-app::-webkit-scrollbar-button:end:increment,
-body.msh-app::-webkit-scrollbar-button:vertical:decrement,
-body.msh-app::-webkit-scrollbar-button:vertical:increment,
-body.msh-app::-webkit-scrollbar-button:vertical:start:decrement,
-body.msh-app::-webkit-scrollbar-button:vertical:start:increment,
-body.msh-app::-webkit-scrollbar-button:vertical:end:decrement,
-body.msh-app::-webkit-scrollbar-button:vertical:end:increment,
-body.msh-app::-webkit-scrollbar-button:horizontal:decrement,
-body.msh-app::-webkit-scrollbar-button:horizontal:increment,
-body.msh-app::-webkit-scrollbar-button:horizontal:start:decrement,
-body.msh-app::-webkit-scrollbar-button:horizontal:start:increment,
-body.msh-app::-webkit-scrollbar-button:horizontal:end:decrement,
-body.msh-app::-webkit-scrollbar-button:horizontal:end:increment,
-.msh-scroll::-webkit-scrollbar-button:single-button,
-.msh-scroll::-webkit-scrollbar-button:double-button,
-.msh-scroll::-webkit-scrollbar-button:start:decrement,
-.msh-scroll::-webkit-scrollbar-button:start:increment,
-.msh-scroll::-webkit-scrollbar-button:end:decrement,
-.msh-scroll::-webkit-scrollbar-button:end:increment,
-.msh-scroll::-webkit-scrollbar-button:vertical:decrement,
-.msh-scroll::-webkit-scrollbar-button:vertical:increment,
-.msh-scroll::-webkit-scrollbar-button:vertical:start:decrement,
-.msh-scroll::-webkit-scrollbar-button:vertical:start:increment,
-.msh-scroll::-webkit-scrollbar-button:vertical:end:decrement,
-.msh-scroll::-webkit-scrollbar-button:vertical:end:increment,
-.msh-scroll::-webkit-scrollbar-button:horizontal:decrement,
-.msh-scroll::-webkit-scrollbar-button:horizontal:increment,
-.msh-scroll::-webkit-scrollbar-button:horizontal:start:decrement,
-.msh-scroll::-webkit-scrollbar-button:horizontal:start:increment,
-.msh-scroll::-webkit-scrollbar-button:horizontal:end:decrement,
-.msh-scroll::-webkit-scrollbar-button:horizontal:end:increment,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:single-button,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:double-button,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:start:decrement,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:start:increment,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:end:decrement,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:end:increment,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:vertical:decrement,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:vertical:increment,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:vertical:start:decrement,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:vertical:start:increment,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:vertical:end:decrement,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:vertical:end:increment,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:horizontal:decrement,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:horizontal:increment,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:horizontal:start:decrement,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:horizontal:start:increment,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:horizontal:end:decrement,
-:where(.msh-table-wrap, .msh-catalog-body)::-webkit-scrollbar-button:horizontal:end:increment {
+html.uzu-root::-webkit-scrollbar-button,
+body.uzu-app::-webkit-scrollbar-button,
+.uzu-scroll::-webkit-scrollbar-button,
+html.uzu-root::-webkit-scrollbar-button:single-button,
+html.uzu-root::-webkit-scrollbar-button:double-button,
+html.uzu-root::-webkit-scrollbar-button:start:decrement,
+html.uzu-root::-webkit-scrollbar-button:start:increment,
+html.uzu-root::-webkit-scrollbar-button:end:decrement,
+html.uzu-root::-webkit-scrollbar-button:end:increment,
+html.uzu-root::-webkit-scrollbar-button:vertical:decrement,
+html.uzu-root::-webkit-scrollbar-button:vertical:increment,
+html.uzu-root::-webkit-scrollbar-button:vertical:start:decrement,
+html.uzu-root::-webkit-scrollbar-button:vertical:start:increment,
+html.uzu-root::-webkit-scrollbar-button:vertical:end:decrement,
+html.uzu-root::-webkit-scrollbar-button:vertical:end:increment,
+html.uzu-root::-webkit-scrollbar-button:horizontal:decrement,
+html.uzu-root::-webkit-scrollbar-button:horizontal:increment,
+html.uzu-root::-webkit-scrollbar-button:horizontal:start:decrement,
+html.uzu-root::-webkit-scrollbar-button:horizontal:start:increment,
+html.uzu-root::-webkit-scrollbar-button:horizontal:end:decrement,
+html.uzu-root::-webkit-scrollbar-button:horizontal:end:increment,
+body.uzu-app::-webkit-scrollbar-button:single-button,
+body.uzu-app::-webkit-scrollbar-button:double-button,
+body.uzu-app::-webkit-scrollbar-button:start:decrement,
+body.uzu-app::-webkit-scrollbar-button:start:increment,
+body.uzu-app::-webkit-scrollbar-button:end:decrement,
+body.uzu-app::-webkit-scrollbar-button:end:increment,
+body.uzu-app::-webkit-scrollbar-button:vertical:decrement,
+body.uzu-app::-webkit-scrollbar-button:vertical:increment,
+body.uzu-app::-webkit-scrollbar-button:vertical:start:decrement,
+body.uzu-app::-webkit-scrollbar-button:vertical:start:increment,
+body.uzu-app::-webkit-scrollbar-button:vertical:end:decrement,
+body.uzu-app::-webkit-scrollbar-button:vertical:end:increment,
+body.uzu-app::-webkit-scrollbar-button:horizontal:decrement,
+body.uzu-app::-webkit-scrollbar-button:horizontal:increment,
+body.uzu-app::-webkit-scrollbar-button:horizontal:start:decrement,
+body.uzu-app::-webkit-scrollbar-button:horizontal:start:increment,
+body.uzu-app::-webkit-scrollbar-button:horizontal:end:decrement,
+body.uzu-app::-webkit-scrollbar-button:horizontal:end:increment,
+.uzu-scroll::-webkit-scrollbar-button:single-button,
+.uzu-scroll::-webkit-scrollbar-button:double-button,
+.uzu-scroll::-webkit-scrollbar-button:start:decrement,
+.uzu-scroll::-webkit-scrollbar-button:start:increment,
+.uzu-scroll::-webkit-scrollbar-button:end:decrement,
+.uzu-scroll::-webkit-scrollbar-button:end:increment,
+.uzu-scroll::-webkit-scrollbar-button:vertical:decrement,
+.uzu-scroll::-webkit-scrollbar-button:vertical:increment,
+.uzu-scroll::-webkit-scrollbar-button:vertical:start:decrement,
+.uzu-scroll::-webkit-scrollbar-button:vertical:start:increment,
+.uzu-scroll::-webkit-scrollbar-button:vertical:end:decrement,
+.uzu-scroll::-webkit-scrollbar-button:vertical:end:increment,
+.uzu-scroll::-webkit-scrollbar-button:horizontal:decrement,
+.uzu-scroll::-webkit-scrollbar-button:horizontal:increment,
+.uzu-scroll::-webkit-scrollbar-button:horizontal:start:decrement,
+.uzu-scroll::-webkit-scrollbar-button:horizontal:start:increment,
+.uzu-scroll::-webkit-scrollbar-button:horizontal:end:decrement,
+.uzu-scroll::-webkit-scrollbar-button:horizontal:end:increment,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:single-button,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:double-button,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:start:decrement,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:start:increment,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:end:decrement,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:end:increment,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:vertical:decrement,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:vertical:increment,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:vertical:start:decrement,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:vertical:start:increment,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:vertical:end:decrement,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:vertical:end:increment,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:horizontal:decrement,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:horizontal:increment,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:horizontal:start:decrement,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:horizontal:start:increment,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:horizontal:end:decrement,
+:where(.uzu-table-wrap, .uzu-catalog-body)::-webkit-scrollbar-button:horizontal:end:increment {
   display: none !important;
   width: 0 !important;
   height: 0 !important;
@@ -150,82 +150,82 @@ body.msh-app::-webkit-scrollbar-button:horizontal:end:increment,
   -webkit-appearance: none;
 }
 
-html.msh-root::-webkit-scrollbar-track,
-body.msh-app::-webkit-scrollbar-track,
-.msh-scroll::-webkit-scrollbar-track,
-.msh-table-wrap::-webkit-scrollbar-track,
-.msh-catalog-body::-webkit-scrollbar-track {
+html.uzu-root::-webkit-scrollbar-track,
+body.uzu-app::-webkit-scrollbar-track,
+.uzu-scroll::-webkit-scrollbar-track,
+.uzu-table-wrap::-webkit-scrollbar-track,
+.uzu-catalog-body::-webkit-scrollbar-track {
   background: transparent;
 }
 
-html.msh-root::-webkit-scrollbar-thumb,
-body.msh-app::-webkit-scrollbar-thumb,
-.msh-scroll::-webkit-scrollbar-thumb,
-.msh-table-wrap::-webkit-scrollbar-thumb,
-.msh-catalog-body::-webkit-scrollbar-thumb {
-  background: var(--msh-border);
-  border-radius: var(--msh-radius-micro);
+html.uzu-root::-webkit-scrollbar-thumb,
+body.uzu-app::-webkit-scrollbar-thumb,
+.uzu-scroll::-webkit-scrollbar-thumb,
+.uzu-table-wrap::-webkit-scrollbar-thumb,
+.uzu-catalog-body::-webkit-scrollbar-thumb {
+  background: var(--uzu-border);
+  border-radius: var(--uzu-radius-micro);
 }
 
-html.msh-root::-webkit-scrollbar-thumb:hover,
-body.msh-app::-webkit-scrollbar-thumb:hover,
-.msh-scroll::-webkit-scrollbar-thumb:hover,
-.msh-table-wrap::-webkit-scrollbar-thumb:hover,
-.msh-catalog-body::-webkit-scrollbar-thumb:hover {
-  background: var(--msh-soft);
+html.uzu-root::-webkit-scrollbar-thumb:hover,
+body.uzu-app::-webkit-scrollbar-thumb:hover,
+.uzu-scroll::-webkit-scrollbar-thumb:hover,
+.uzu-table-wrap::-webkit-scrollbar-thumb:hover,
+.uzu-catalog-body::-webkit-scrollbar-thumb:hover {
+  background: var(--uzu-soft);
 }
 
-.msh-app ::selection,
-.msh-scope ::selection {
-  background: color-mix(in srgb, var(--msh-fg-strong) 18%, transparent);
-  color: var(--msh-fg-strong);
+.uzu-app ::selection,
+.uzu-scope ::selection {
+  background: color-mix(in srgb, var(--uzu-fg-strong) 18%, transparent);
+  color: var(--uzu-fg-strong);
 }
 
-.msh-app :focus,
-.msh-scope :focus {
+.uzu-app :focus,
+.uzu-scope :focus {
   outline: none;
 }
 
-.msh-app :focus-visible,
-.msh-scope :focus-visible {
+.uzu-app :focus-visible,
+.uzu-scope :focus-visible {
   outline: none;
-  box-shadow: var(--msh-focus-ring);
+  box-shadow: var(--uzu-focus-ring);
 }
 
-.msh-app a,
-.msh-scope a {
-  color: var(--msh-fg-strong);
+.uzu-app a,
+.uzu-scope a {
+  color: var(--uzu-fg-strong);
   text-decoration: underline;
-  text-decoration-color: var(--msh-soft);
+  text-decoration-color: var(--uzu-soft);
   text-underline-offset: 3px;
-  transition: color var(--msh-motion-base) var(--msh-ease-standard), text-decoration-color var(--msh-motion-base) var(--msh-ease-standard);
+  transition: color var(--uzu-motion-base) var(--uzu-ease-standard), text-decoration-color var(--uzu-motion-base) var(--uzu-ease-standard);
 }
 
-.msh-app a:hover,
-.msh-scope a:hover {
-  text-decoration-color: var(--msh-fg-strong);
+.uzu-app a:hover,
+.uzu-scope a:hover {
+  text-decoration-color: var(--uzu-fg-strong);
 }
 
-.msh-app button,
-.msh-scope button,
-.msh-app input,
-.msh-scope input,
-.msh-app textarea,
-.msh-scope textarea,
-.msh-app select,
-.msh-scope select {
+.uzu-app button,
+.uzu-scope button,
+.uzu-app input,
+.uzu-scope input,
+.uzu-app textarea,
+.uzu-scope textarea,
+.uzu-app select,
+.uzu-scope select {
   font: inherit;
 }
 
-.msh-app input,
-.msh-scope input,
-.msh-app textarea,
-.msh-scope textarea {
-  caret-color: var(--msh-fg-strong);
+.uzu-app input,
+.uzu-scope input,
+.uzu-app textarea,
+.uzu-scope textarea {
+  caret-color: var(--uzu-fg-strong);
 }
 
-.msh-app ::placeholder,
-.msh-scope ::placeholder {
-  color: var(--msh-soft);
+.uzu-app ::placeholder,
+.uzu-scope ::placeholder {
+  color: var(--uzu-subtle);
   opacity: 1;
 }

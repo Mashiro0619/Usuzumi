@@ -1,19 +1,58 @@
-{
-  "name": "mashiro-ui",
+﻿{
+  "name": "usuzumi",
   "version": "0.1.0",
-  "description": "A zero-build web design system for quiet editorial interfaces and small product pages.",
+  "description": "A zero-build web design system by Mashiro0619 for quiet editorial interfaces and small product pages.",
+  "keywords": [
+    "ui",
+    "css",
+    "usuzumi",
+    "design-system",
+    "components",
+    "zero-build",
+    "theme",
+    "mashiro"
+  ],
+  "homepage": "https://github.com/Mashiro0619/Usuzumi#readme",
+  "bugs": {
+    "url": "https://github.com/Mashiro0619/Usuzumi/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mashiro0619/Usuzumi.git"
+  },
   "license": "MIT",
+  "author": "Mashiro0619",
   "type": "module",
+  "main": "./ui/usuzumi.js",
+  "style": "./ui/usuzumi.css",
+  "unpkg": "./ui/usuzumi.css",
+  "jsdelivr": "./ui/usuzumi.css",
+  "sideEffects": [
+    "./ui/usuzumi.css",
+    "./ui/css/*.css",
+    "./ui/usuzumi.js"
+  ],
+  "exports": {
+    ".": {
+      "style": "./ui/usuzumi.css",
+      "default": "./ui/usuzumi.js"
+    },
+    "./usuzumi.css": "./ui/usuzumi.css",
+    "./usuzumi.js": "./ui/usuzumi.js",
+    "./ui/*": "./ui/*"
+  },
   "scripts": {
     "validate": "node scripts/validate.mjs"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "ui/",
-    "example/",
-    "mashiro-design-preview.html",
+    "scripts/",
     "DESIGN.md",
     "README.md",
-    "README.en.md",
+    "README.zh-CN.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md"
   ]

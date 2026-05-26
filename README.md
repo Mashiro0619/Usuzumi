@@ -1,47 +1,73 @@
-# Mashiro UI
+﻿# Usuzumi
 
-[English](README.en.md)
+[中文](README.zh-CN.md)
 
-Mashiro UI 是一套零构建网页设计系统，适用于安静、克制的编辑型界面、个人主页、应用介绍页、文档页面和小型产品工具。
+Usuzumi is a zero-build web design system by Mashiro0619 for quiet editorial interfaces, personal homepages, app introduction pages, documentation pages, and small product tools.
 
-它围绕柔和的单色纸面气质构建：暖灰背景、炭黑文字、Georgia 系衬线字体、低对比边框、克制动效，以及可复用的 `msh-*` HTML/CSS/JS 原语。
+It is built around a soft monochrome paper atmosphere: warm gray surfaces, charcoal ink, Georgia-based serif typography, low-contrast borders, restrained motion, and reusable `uzu-*` HTML/CSS/JS primitives.
 
-## 预览
+## Preview
 
-这些文件可以直接在浏览器中打开：
+Open these files directly in a browser:
 
-- [设计系统目录](mashiro-design-preview.html)
-- [个人主页示例](example/index.html)
-- [应用介绍页示例](example/sked-app.html)
+- [Design system catalog](https://github.com/Mashiro0619/Usuzumi/blob/main/example/preview.html)
+- [Personal homepage example](https://github.com/Mashiro0619/Usuzumi/blob/main/example/index.html)
+- [App introduction example](https://github.com/Mashiro0619/Usuzumi/blob/main/example/app-introduction.html)
 
-不需要构建步骤，也不需要启动开发服务器。
+No build step or development server is required.
 
-## 快速开始
+## Quick Start
 
-引入打包入口 CSS 和 JavaScript：
+Link the bundled CSS and JavaScript:
 
 ```html
-<link rel="stylesheet" href="ui/mashiro.css">
-<script src="ui/mashiro.js" defer></script>
+<link rel="stylesheet" href="ui/usuzumi.css">
+<script src="ui/usuzumi.js" defer></script>
 ```
 
-用于一个完整的 Mashiro 页面：
+After installing from npm, projects with CSS import support can use:
+
+```bash
+npm install usuzumi
+```
+
+```js
+import "usuzumi/usuzumi.css";
+import "usuzumi/usuzumi.js";
+```
+
+For a full Usuzumi page:
 
 ```html
 <!doctype html>
-<html class="msh-root" lang="zh-CN">
+<html class="uzu-root" lang="en" data-theme="light" data-uzu-theme-key="site-theme">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="ui/mashiro.css">
-  <script src="ui/mashiro.js" defer></script>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var key = root.dataset.uzuThemeKey || "";
+      var mode = root.getAttribute("data-theme-mode") || "auto";
+      try {
+        mode = (key && window.localStorage.getItem(key)) || mode;
+      } catch (_) {}
+      if (!/^(auto|light|dark)$/.test(mode)) mode = "auto";
+      var theme = mode === "auto" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : mode === "dark" ? "dark" : "light";
+      root.setAttribute("data-theme-mode", mode);
+      root.setAttribute("data-theme", theme);
+      root.setAttribute("data-uzu-theme", theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="ui/usuzumi.css">
+  <script src="ui/usuzumi.js" defer></script>
 </head>
-<body class="msh-app" data-theme="light">
-  <main class="msh-page">
-    <section class="msh-section">
-      <div class="msh-section-head">
-        <p class="msh-section-label">Overview</p>
-        <h1 class="msh-page-title">A quiet interface starts with good rhythm.</h1>
+<body class="uzu-app">
+  <main class="uzu-page">
+    <section class="uzu-section">
+      <div class="uzu-section-head">
+        <p class="uzu-section-label">Overview</p>
+        <h1 class="uzu-page-title">A quiet interface starts with good rhythm.</h1>
       </div>
     </section>
   </main>
@@ -49,49 +75,47 @@ Mashiro UI 是一套零构建网页设计系统，适用于安静、克制的编
 </html>
 ```
 
-用于现有项目中的局部迁移：
+For incremental migration inside an existing site:
 
 ```html
-<section class="msh-scope">
-  <article class="msh-card">
-    <div class="msh-title-pair">
+<section class="uzu-scope">
+  <article class="uzu-card">
+    <div class="uzu-title-pair">
       <h3>Scoped component</h3>
-      <p>This area adopts Mashiro UI without taking over the whole page.</p>
+      <p>This area adopts Usuzumi without taking over the whole page.</p>
     </div>
   </article>
 </section>
 ```
 
-## 包含内容
+## What Is Included
 
-- 颜色、圆角、字体、动效、边框、暗色模式等设计 token。
-- 页面、章节、网格、顶部栏、hero split、页脚等布局原语。
-- 按钮、文本链接、卡片、字段、选择器、标签页、分段控件、徽章、提示、表格、浮层和进度组件。
-- 个人主页、应用介绍页、设计目录、项目列表、产品 mockup、功能列表和屏幕卡片等页面模式。
-- 无框架 JavaScript，用于主题切换、语言切换和自定义 select 行为。
-- 只使用公共 UI 库的示例页面。
+- Design tokens for color, radius, typography, motion, borders, and dark mode.
+- Layout primitives such as pages, sections, grids, top bars, hero splits, and footers.
+- Components for buttons, text links, cards, fields, selects, tabs, segmented controls, badges, alerts, tables, overlays, and progress.
+- Page patterns for personal homepages, app introduction pages, design catalogs, project lists, mockups, feature lists, and screen cards.
+- Small framework-free JavaScript for theme toggles, language toggles, and custom select behavior.
+- Examples that use only the public UI library.
 
-## 仓库结构
+## Repository Structure
 
 ```text
 .
-├── CHANGELOG.md
-├── CONTRIBUTING.md
 ├── DESIGN.md
 ├── LICENSE
 ├── README.md
-├── README.en.md
+├── README.zh-CN.md
 ├── THIRD_PARTY_NOTICES.md
-├── mashiro-design-preview.html
 ├── package.json
 ├── example/
+│   ├── preview.html
 │   ├── index.html
-│   └── sked-app.html
+│   └── app-introduction.html
 ├── scripts/
 │   └── validate.mjs
 └── ui/
-    ├── mashiro.css
-    ├── mashiro.js
+    ├── usuzumi.css
+    ├── usuzumi.js
     ├── assets/
     │   └── Meddon-Regular.ttf
     └── css/
@@ -101,51 +125,56 @@ Mashiro UI 是一套零构建网页设计系统，适用于安静、克制的编
         ├── components.css
         ├── layout.css
         ├── patterns.css
+        ├── forced-colors.css
         └── utilities.css
 ```
 
-`ui/mashiro.css` 是公共样式入口，它会导入 `ui/css/` 下的可维护源码文件。
+Use `ui/usuzumi.css` as the public stylesheet entry. It imports the source CSS files in `ui/css/`.
 
-## 维护校验
+## Validation
 
-运行时库没有依赖。维护者可以使用这个可选的 Node 校验命令：
+The runtime library has no dependencies. The repository includes one optional Node-based validation command for maintainers:
 
 ```bash
 npm run validate
 ```
 
-它会检查 JavaScript 语法、本地文件引用、占位链接，以及最低圆角、字体尺寸、字距等设计系统约束。
+It checks JavaScript syntax, local file references, placeholder links, and design-system guardrails such as minimum radius, font sizing, and letter spacing.
 
-## 设计原则
+## Design Principles
 
-- 使用纸感暖灰背景，而不是纯白。
-- 使用炭黑文字，而不是纯黑。
-- 用间距、边框和字体层级建立结构，避免依赖重阴影或高饱和色。
-- 可见圆角最低为 `4px`。
-- 真正的命令使用矩形按钮，普通导航使用 `.msh-text-link`。
-- 标题和副标题组合使用 `.msh-title-pair`。
-- 示例页面保持通用、可复用，避免和具体项目强绑定。
+- Use paper-gray backgrounds instead of pure white.
+- Use charcoal ink instead of pure black.
+- Build hierarchy with spacing, borders, and type scale rather than heavy shadows or saturated color.
+- Keep the minimum visible radius at `4px`.
+- Use rectangular buttons for real actions and `.uzu-text-link` for ordinary navigation.
+- Use `.uzu-title-pair` for title and subtitle rhythm.
+- Keep page templates generic and reusable.
 
-完整规范见 [DESIGN.md](DESIGN.md)。
+See [DESIGN.md](DESIGN.md) for the full specification.
 
-## JavaScript 行为
+## JavaScript Behaviors
 
-`ui/mashiro.js` 保持小型、无依赖。
+`ui/usuzumi.js` is intentionally small and dependency-free.
 
-它支持：
+It supports:
 
-- `[data-msh-theme-toggle]`
-- `[data-msh-language-toggle]`
-- `[data-msh-select]`
+- `[data-uzu-theme-toggle]`
+- `[data-uzu-language-toggle]`
+- `[data-uzu-select]`
+- `[data-uzu-switch]`
 
-脚本可以作用于文档根节点，也可以通过 `data-msh-theme-target` 等 target 属性作用于局部作用域。
+Theme mode is stored as `data-theme-mode="auto|light|dark"` and resolved to `data-theme="light|dark"`. Put `data-uzu-theme-key` on the themed root so the early head script and deferred toggle share the same storage key. The script can target either the document root or a scoped element through target attributes such as `data-uzu-theme-target`.
 
-## 浏览器说明
+## Browser Notes
 
-Mashiro UI 使用 CSS custom properties、`color-mix()`、`:focus-visible` 和 WebKit scrollbar pseudo-elements 等现代 CSS 能力，面向现代浏览器。
+Usuzumi uses modern CSS features such as CSS custom properties, `color-mix()`, `:focus-visible`, and WebKit scrollbar pseudo-elements. It is intended for modern browsers.
 
-## 许可证
+The CSS entry file (`ui/usuzumi.css`) uses `@import` chains for modular development. For production deployment, consider concatenating the CSS files to avoid render-blocking sequential imports.
+When installed through a package manager, use `usuzumi/usuzumi.css` for styles and `usuzumi/usuzumi.js` for behavior.
 
-Mashiro UI 代码使用 [MIT License](LICENSE) 发布。
+## License
 
-内置的 Meddon 字体按其自身的 SIL Open Font License 条款再分发。替换、修改或再分发内置资产前，请查看 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+Usuzumi code is released under the [MIT License](LICENSE).
+
+The bundled Meddon font is redistributed under its own SIL Open Font License terms. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before replacing, modifying, or redistributing bundled assets.

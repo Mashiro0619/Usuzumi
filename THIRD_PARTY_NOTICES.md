@@ -1,11 +1,11 @@
 # Third-Party Notices
 
-Mashiro UI includes one bundled third-party font asset.
+Usuzumi includes one bundled third-party font asset.
 
 ## Meddon
 
 - File: `ui/assets/Meddon-Regular.ttf`
-- Use in Mashiro UI: signature identity specimens through `Meddon Custom`
+- Use in Usuzumi: signature identity specimens through `Meddon Custom`
 - Upstream: Google Fonts, `google/fonts/ofl/meddon`
 - License: SIL Open Font License, Version 1.1
 - Copyright notice from upstream metadata: Copyright 2011 The Meddon Project Authors
