@@ -20,6 +20,7 @@
     })();
   </script>
   <link rel="stylesheet" href="../ui/usuzumi.css">
+  <link rel="stylesheet" href="../ui/usuzumi-signature.css">
   <script src="../ui/usuzumi.js" defer></script>
 </head>
 <body class="uzu-app">
@@ -118,6 +119,9 @@
         <a class="uzu-text-link" href="../DESIGN.md#components">Text link</a>
         <button class="uzu-icon-button" type="button" aria-label="Icon action">
           <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <button class="uzu-icon-button" type="button" data-uzu-tooltip="Tooltip text" aria-label="Tooltip example">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 17v-6m0-4h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
         <button class="uzu-icon-button" type="button" aria-label="Disabled icon action" disabled>
           <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -230,6 +234,12 @@
       <div class="uzu-empty-state uzu-mt-block">
         <div class="uzu-title-pair"><h3>Empty state</h3><p>Empty panels explain the state in text before offering an action.</p></div>
       </div>
+      <div class="uzu-toast-stack uzu-toast-stack-inline uzu-mt-block">
+        <article class="uzu-toast" data-uzu-toast>
+          <div class="uzu-toast-content"><div class="uzu-title-pair"><h3>Saved</h3><p>Toast messages stay compact and dismissible.</p></div></div>
+          <button class="uzu-icon-button uzu-toast-close" type="button" data-uzu-toast-close aria-label="Dismiss toast">x</button>
+        </article>
+      </div>
     </section>
 
     <section class="uzu-section">
@@ -256,7 +266,13 @@
       </div>
       <div class="uzu-grid uzu-grid-2">
         <article class="uzu-popover"><div class="uzu-title-pair"><h3>Popover</h3><p>Compact floating guidance with soft elevation.</p></div></article>
-        <article class="uzu-modal"><div class="uzu-title-pair"><h3>Modal surface</h3><p>Use for focused decisions, not standard cards.</p></div><button class="uzu-button uzu-button-primary uzu-mt-block" type="button">Confirm</button></article>
+        <article class="uzu-modal"><div class="uzu-title-pair"><h3>Modal surface</h3><p>Use for focused decisions, not standard cards.</p></div><button class="uzu-button uzu-button-primary uzu-mt-block" type="button" data-uzu-dialog-target="#preview-dialog">Open dialog</button></article>
+      </div>
+      <div class="uzu-dialog-overlay" data-uzu-dialog-overlay hidden>
+        <section class="uzu-modal" id="preview-dialog" data-uzu-dialog hidden tabindex="-1" aria-labelledby="preview-dialog-title">
+          <div class="uzu-title-pair"><h3 id="preview-dialog-title">Dialog behavior</h3><p>Escape, backdrop clicks, close buttons, and focus return are handled by the library.</p></div>
+          <div class="uzu-dialog-actions"><button class="uzu-button" type="button" data-uzu-dialog-close>Cancel</button><button class="uzu-button uzu-button-primary" type="button" data-uzu-dialog-close>Confirm</button></div>
+        </section>
       </div>
     </section>
 
@@ -338,7 +354,28 @@
 
     <section class="uzu-section">
       <div class="uzu-section-head">
-        <p class="uzu-section-label">14 / Accessibility</p>
+        <p class="uzu-section-label">14 / Disclosure & Loading</p>
+        <h2 class="uzu-section-title">Expandable content and loading states keep the same quiet rhythm.</h2>
+      </div>
+      <div class="uzu-grid uzu-grid-2">
+        <article class="uzu-disclosure" data-uzu-disclosure>
+          <button class="uzu-disclosure-trigger" type="button" data-uzu-disclosure-trigger>Implementation notes</button>
+          <div class="uzu-disclosure-panel" data-uzu-disclosure-panel>
+            Use disclosures for optional details, compact settings, and short documentation blocks.
+          </div>
+        </article>
+        <article class="uzu-card uzu-grid">
+          <div class="uzu-skeleton uzu-skeleton-title"></div>
+          <div class="uzu-skeleton uzu-skeleton-text"></div>
+          <div class="uzu-skeleton uzu-skeleton-text uzu-skeleton-short"></div>
+          <div class="uzu-skeleton uzu-skeleton-block"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="uzu-section">
+      <div class="uzu-section-head">
+        <p class="uzu-section-label">15 / Accessibility</p>
         <h2 class="uzu-section-title">Focus, labels, keyboard access, and color independence are part of the baseline.</h2>
       </div>
       <div class="uzu-grid uzu-grid-2">
@@ -349,7 +386,7 @@
 
     <section class="uzu-section">
       <div class="uzu-section-head">
-        <p class="uzu-section-label">15 / Defaults</p>
+        <p class="uzu-section-label">16 / Defaults</p>
         <h2 class="uzu-section-title">System defaults are applied once by the library.</h2>
       </div>
       <div class="uzu-grid uzu-grid-3">
@@ -361,7 +398,7 @@
 
     <section class="uzu-section">
       <div class="uzu-section-head">
-        <p class="uzu-section-label">16 / Controls & Progress</p>
+        <p class="uzu-section-label">17 / Controls & Progress</p>
         <h2 class="uzu-section-title">Switches and progress indicators share the same quiet surfaces.</h2>
       </div>
       <div class="uzu-grid uzu-grid-2">

@@ -4,7 +4,7 @@
 
 Usuzumi 是一套零构建网页设计系统，适用于安静、克制的编辑型界面、个人页面、应用介绍页、文档页面和小型产品工具。
 
-它提供 `uzu-*` CSS 原语、柔和的单色视觉语言，以及少量无依赖 JavaScript，用于常见 UI 行为。
+它提供 `uzu-*` CSS 原语、柔和的单色视觉语言、可选的签名字体，以及少量无依赖 JavaScript，用于常见 UI 行为。
 
 ## 安装
 
@@ -17,11 +17,17 @@ import "usuzumi/usuzumi.css";
 import "usuzumi/usuzumi.js";
 ```
 
-也可以直接引入文件：
+只有在使用 `.uzu-signature` 或签名字体样张时，才需要额外引入：
+
+```js
+import "usuzumi/usuzumi-signature.css";
+```
+
+CDN 用法：
 
 ```html
-<link rel="stylesheet" href="ui/usuzumi.css">
-<script src="ui/usuzumi.js" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/usuzumi/ui/usuzumi.css">
+<script src="https://cdn.jsdelivr.net/npm/usuzumi/ui/usuzumi.js" defer></script>
 ```
 
 ## 使用
@@ -58,9 +64,27 @@ import "usuzumi/usuzumi.js";
 ## 包含内容
 
 - 颜色、字体、间距、边框、圆角、动效和暗色模式等设计 token。
-- 页面、章节、网格、按钮、卡片、表单、标签页、徽章、提示、表格、浮层和进度等布局与组件原语。
+- 页面、章节、网格、按钮、卡片、表单、标签页、徽章、提示、表格、浮层、进度、骨架屏、toast、dialog、disclosure 和 tooltip 等布局与组件原语。
 - 个人主页、应用介绍页、设计目录、项目列表、产品 mockup 和功能区块等页面模式。
-- 主题切换、语言切换、自定义 select 和 switch 等小型 JavaScript 行为。
+- 主题切换、语言切换、自定义 select、switch、disclosure、dialog 和 toast 关闭等小型 JavaScript 行为。
+
+## 运行时
+
+JavaScript 会在浏览器中自动初始化，也可以安全地在 SSR/Node 环境中 import。动态插入内容后可手动初始化：
+
+```js
+window.Usuzumi.init(container);
+```
+
+自定义事件：
+
+- `uzu-select-change`：`{ value, label, option, select }`
+- `uzu-switch-change`：`{ checked, switch }`
+- `uzu-disclosure-change`：`{ open, disclosure }`
+- `uzu-toast-close`：`{ toast }`
+- `uzu-dialog-open` / `uzu-dialog-close`：`{ dialog, overlay, trigger }`
+
+项目内置 TypeScript 类型声明。
 
 ## 示例
 
@@ -73,6 +97,7 @@ import "usuzumi/usuzumi.js";
 ## 维护
 
 ```bash
+npm run build:css
 npm run validate
 ```
 

@@ -1,5 +1,9 @@
-﻿(function () {
+(function () {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
   let selectCounter = 0;
+  let activeDialog = null;
+  let activeDialogTrigger = null;
 
   const storage = {
     get(key) {
@@ -17,6 +21,19 @@
       }
     }
   };
+
+  function queryAll(root, selector) {
+    const scope = root || document;
+    const matchesRoot = scope instanceof Element && scope.matches(selector) ? [scope] : [];
+    return [...matchesRoot, ...scope.querySelectorAll(selector)];
+  }
+
+  function markInitialized(element, key) {
+    const flag = `uzu${key}Initialized`;
+    if (element.dataset[flag] === 'true') return false;
+    element.dataset[flag] = 'true';
+    return true;
+  }
 
   function syncRootClass() {
     document.documentElement.classList.toggle('uzu-root', document.body && document.body.classList.contains('uzu-app'));
@@ -53,7 +70,7 @@
   function syncThemeToggles(root) {
     const mode = getThemeMode(root.getAttribute('data-theme-mode')) || getResolvedTheme(root.getAttribute('data-theme')) || 'light';
     const theme = getResolvedTheme(root.getAttribute('data-theme')) || resolveTheme(mode);
-    document.querySelectorAll('[data-uzu-theme-toggle]').forEach((toggle) => {
+    queryAll(document, '[data-uzu-theme-toggle]').forEach((toggle) => {
       const target = getThemeRoot(toggle);
       if (target === root) {
         toggle.classList.toggle('is-auto', mode === 'auto');
@@ -90,7 +107,7 @@
 
   function handleThemePreferenceChange() {
     const roots = new Set([document.documentElement]);
-    document.querySelectorAll('[data-uzu-theme-toggle]').forEach((toggle) => {
+    queryAll(document, '[data-uzu-theme-toggle]').forEach((toggle) => {
       roots.add(getThemeRoot(toggle));
     });
     roots.forEach((root) => {
@@ -111,35 +128,22 @@
     document.documentElement.dataset.uzuThemeMediaListener = 'true';
   }
 
-  function initThemeToggles() {
-    document.querySelectorAll('[data-uzu-theme-toggle]').forEach((toggle) => {
-      const root = getThemeRoot(toggle);
-      const key = getThemeKey(root, toggle);
-      if (root.hasAttribute('data-theme-mode')) {
-        syncThemeToggles(root);
+  function initThemeToggles(root = document) {
+    queryAll(root, '[data-uzu-theme-toggle]').forEach((toggle) => {
+      const themeRoot = getThemeRoot(toggle);
+      const key = getThemeKey(themeRoot, toggle);
+      if (themeRoot.hasAttribute('data-theme-mode')) {
+        syncThemeToggles(themeRoot);
       } else {
-        applyTheme(root, getInitialThemeMode(root, key), key);
+        applyTheme(themeRoot, getInitialThemeMode(themeRoot, key), key);
       }
+      if (!markInitialized(toggle, 'ThemeToggle')) return;
       toggle.addEventListener('click', () => {
-        const current = getThemeMode(root.getAttribute('data-theme-mode')) || getResolvedTheme(root.getAttribute('data-theme')) || 'light';
-        applyTheme(root, getNextThemeMode(current), key);
+        const current = getThemeMode(themeRoot.getAttribute('data-theme-mode')) || getResolvedTheme(themeRoot.getAttribute('data-theme')) || 'light';
+        applyTheme(themeRoot, getNextThemeMode(current), key);
       });
     });
     initThemePreferenceListener();
-  }
-
-  function applyLanguage(root, language, key) {
-    root.setAttribute('data-language', language);
-    root.setAttribute('data-uzu-lang', language);
-    root.setAttribute('lang', language === 'zh' ? 'zh-CN' : 'en');
-    if (key) storage.set(key, language);
-    document.querySelectorAll('[data-uzu-language-toggle]').forEach((toggle) => {
-      const target = getLanguageRoot(toggle);
-      if (target === root) {
-        toggle.textContent = language === 'en' ? 'ZH' : 'EN';
-        toggle.setAttribute('aria-label', language === 'en' ? 'Switch to Chinese' : 'Switch to English');
-      }
-    });
   }
 
   function getLanguageRoot(toggle) {
@@ -150,21 +154,36 @@
     }
   }
 
-  function initLanguageToggles() {
-    document.querySelectorAll('[data-uzu-language-toggle]').forEach((toggle) => {
-      const root = getLanguageRoot(toggle);
+  function applyLanguage(root, language, key) {
+    root.setAttribute('data-language', language);
+    root.setAttribute('data-uzu-lang', language);
+    root.setAttribute('lang', language === 'zh' ? 'zh-CN' : 'en');
+    if (key) storage.set(key, language);
+    queryAll(document, '[data-uzu-language-toggle]').forEach((toggle) => {
+      const target = getLanguageRoot(toggle);
+      if (target === root) {
+        toggle.textContent = language === 'en' ? 'ZH' : 'EN';
+        toggle.setAttribute('aria-label', language === 'en' ? 'Switch to Chinese' : 'Switch to English');
+      }
+    });
+  }
+
+  function initLanguageToggles(root = document) {
+    queryAll(root, '[data-uzu-language-toggle]').forEach((toggle) => {
+      const languageRoot = getLanguageRoot(toggle);
       const key = toggle.dataset.uzuLanguageKey || 'usuzumi-language';
-      applyLanguage(root, storage.get(key) || root.getAttribute('data-language') || 'zh', key);
+      applyLanguage(languageRoot, storage.get(key) || languageRoot.getAttribute('data-language') || 'zh', key);
+      if (!markInitialized(toggle, 'LanguageToggle')) return;
       toggle.addEventListener('click', () => {
-        const current = root.getAttribute('data-language') || 'zh';
-        applyLanguage(root, current === 'zh' ? 'en' : 'zh', key);
+        const current = languageRoot.getAttribute('data-language') || 'zh';
+        applyLanguage(languageRoot, current === 'zh' ? 'en' : 'zh', key);
       });
     });
   }
 
   function closeSelect(select) {
     select.classList.remove('is-open');
-    select.querySelectorAll('[data-uzu-select-option]').forEach((option) => {
+    queryAll(select, '[data-uzu-select-option]').forEach((option) => {
       option.classList.remove('is-active');
       option.setAttribute('tabindex', '-1');
     });
@@ -189,7 +208,7 @@
   }
 
   function focusSelectOption(select, index) {
-    const options = [...select.querySelectorAll('[data-uzu-select-option]')];
+    const options = queryAll(select, '[data-uzu-select-option]');
     const trigger = select.querySelector('[data-uzu-select-trigger]');
     if (!options.length) return;
     const nextIndex = (index + options.length) % options.length;
@@ -206,7 +225,7 @@
 
   function openSelect(select, focusIndex) {
     const trigger = select.querySelector('[data-uzu-select-trigger]');
-    const options = [...select.querySelectorAll('[data-uzu-select-option]')];
+    const options = queryAll(select, '[data-uzu-select-option]');
     select.classList.add('is-open');
     if (trigger) trigger.setAttribute('aria-expanded', 'true');
     const selectedIndex = options.findIndex((option) => option.classList.contains('is-selected'));
@@ -272,7 +291,7 @@
 
   function chooseSelectOption(select, option) {
     const trigger = select.querySelector('[data-uzu-select-trigger]');
-    const options = [...select.querySelectorAll('[data-uzu-select-option]')];
+    const options = queryAll(select, '[data-uzu-select-option]');
     const previousValue = select.dataset.uzuSelectValue || getSelectInput(select)?.value || '';
     options.forEach((item) => {
       item.classList.remove('is-selected');
@@ -289,10 +308,10 @@
     if (value !== previousValue) emitSelectChange(select, option, value);
   }
 
-  function initSelects() {
-    document.querySelectorAll('[data-uzu-select]').forEach((select) => {
+  function initSelects(root = document) {
+    queryAll(root, '[data-uzu-select]').forEach((select) => {
       const trigger = select.querySelector('[data-uzu-select-trigger]');
-      const options = [...select.querySelectorAll('[data-uzu-select-option]')];
+      const options = queryAll(select, '[data-uzu-select-option]');
       const menu = select.querySelector('[role="listbox"]');
       if (!trigger || !options.length) return;
 
@@ -311,6 +330,8 @@
         trigger.setAttribute('aria-activedescendant', selected.id);
         syncSelectValue(select, selected);
       }
+
+      if (!markInitialized(select, 'Select')) return;
 
       trigger.addEventListener('click', () => {
         if (trigger.disabled || trigger.getAttribute('aria-disabled') === 'true') return;
@@ -366,10 +387,6 @@
         });
       });
 
-      document.addEventListener('click', (event) => {
-        if (!select.contains(event.target)) closeSelect(select);
-      });
-
       select.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
           closeSelect(select);
@@ -400,10 +417,11 @@
     setSwitchState(control, control.getAttribute('aria-checked') !== 'true');
   }
 
-  function initSwitches() {
-    document.querySelectorAll('[data-uzu-switch]').forEach((control) => {
+  function initSwitches(root = document) {
+    queryAll(root, '[data-uzu-switch]').forEach((control) => {
       const checked = control.getAttribute('aria-checked') === 'true' || control.classList.contains('is-on');
       setSwitchState(control, checked, false);
+      if (!markInitialized(control, 'Switch')) return;
       control.addEventListener('click', () => toggleSwitch(control));
       control.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
@@ -414,15 +432,187 @@
     });
   }
 
-  function init() {
-    syncRootClass();
-    for (const fn of [initThemeToggles, initLanguageToggles, initSelects, initSwitches]) {
-      try { fn(); } catch (e) { console.error("[usuzumi]", e); }
+  function setDisclosureState(disclosure, open, emit = true) {
+    const trigger = disclosure.querySelector('[data-uzu-disclosure-trigger]');
+    const panel = disclosure.querySelector('[data-uzu-disclosure-panel]');
+    disclosure.classList.toggle('is-open', open);
+    if (trigger) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (panel) panel.hidden = !open;
+    if (emit) {
+      disclosure.dispatchEvent(new CustomEvent('uzu-disclosure-change', {
+        bubbles: true,
+        detail: { open, disclosure }
+      }));
+      disclosure.dispatchEvent(new Event('change', { bubbles: true }));
     }
   }
 
+  function initDisclosures(root = document) {
+    queryAll(root, '[data-uzu-disclosure]').forEach((disclosure) => {
+      const trigger = disclosure.querySelector('[data-uzu-disclosure-trigger]');
+      const panel = disclosure.querySelector('[data-uzu-disclosure-panel]');
+      if (!trigger || !panel) return;
+      const panelId = ensureId(panel, 'uzu-disclosure-panel');
+      trigger.setAttribute('aria-controls', panelId);
+      setDisclosureState(disclosure, disclosure.classList.contains('is-open') || trigger.getAttribute('aria-expanded') === 'true', false);
+      if (!markInitialized(disclosure, 'Disclosure')) return;
+      trigger.addEventListener('click', () => {
+        setDisclosureState(disclosure, !disclosure.classList.contains('is-open'));
+      });
+    });
+  }
+
+  function getDialog(selector) {
+    try {
+      return selector ? document.querySelector(selector) : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function getFocusable(dialog) {
+    return queryAll(dialog, 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])')
+      .filter((element) => element.offsetParent !== null || element === document.activeElement);
+  }
+
+  function emitDialogEvent(dialog, name) {
+    dialog.dispatchEvent(new CustomEvent(name, {
+      bubbles: true,
+      detail: {
+        dialog,
+        overlay: dialog.closest('[data-uzu-dialog-overlay]'),
+        trigger: activeDialogTrigger
+      }
+    }));
+  }
+
+  function openDialog(dialog, trigger = null) {
+    if (!dialog) return;
+    activeDialog = dialog;
+    activeDialogTrigger = trigger;
+    const overlay = dialog.closest('[data-uzu-dialog-overlay]');
+    if (overlay) overlay.hidden = false;
+    dialog.hidden = false;
+    dialog.classList.add('is-open');
+    dialog.setAttribute('role', dialog.getAttribute('role') || 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    if (!dialog.hasAttribute('tabindex')) dialog.setAttribute('tabindex', '-1');
+    emitDialogEvent(dialog, 'uzu-dialog-open');
+    const focusable = getFocusable(dialog);
+    (focusable[0] || dialog).focus();
+  }
+
+  function closeDialog(dialog) {
+    if (!dialog) return;
+    const overlay = dialog.closest('[data-uzu-dialog-overlay]');
+    dialog.classList.remove('is-open');
+    dialog.hidden = true;
+    if (overlay) overlay.hidden = true;
+    emitDialogEvent(dialog, 'uzu-dialog-close');
+    if (activeDialogTrigger && typeof activeDialogTrigger.focus === 'function') activeDialogTrigger.focus();
+    if (activeDialog === dialog) activeDialog = null;
+    activeDialogTrigger = null;
+  }
+
+  function initDialogs(root = document) {
+    queryAll(root, '[data-uzu-dialog-target]').forEach((trigger) => {
+      if (!markInitialized(trigger, 'DialogTrigger')) return;
+      trigger.addEventListener('click', () => {
+        openDialog(getDialog(trigger.dataset.uzuDialogTarget), trigger);
+      });
+    });
+
+    queryAll(root, '[data-uzu-dialog-close]').forEach((trigger) => {
+      if (!markInitialized(trigger, 'DialogClose')) return;
+      trigger.addEventListener('click', () => {
+        closeDialog(trigger.closest('[data-uzu-dialog]'));
+      });
+    });
+
+    queryAll(root, '[data-uzu-dialog-overlay]').forEach((overlay) => {
+      if (!markInitialized(overlay, 'DialogOverlay')) return;
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) closeDialog(overlay.querySelector('[data-uzu-dialog]'));
+      });
+    });
+  }
+
+  function closeToast(toast) {
+    toast.classList.add('is-dismissed');
+    toast.dispatchEvent(new CustomEvent('uzu-toast-close', {
+      bubbles: true,
+      detail: { toast }
+    }));
+    window.setTimeout(() => toast.remove(), 180);
+  }
+
+  function initToasts(root = document) {
+    queryAll(root, '[data-uzu-toast]').forEach((toast) => {
+      if (!markInitialized(toast, 'Toast')) return;
+      const timeout = Number(toast.dataset.uzuToastTimeout || 0);
+      queryAll(toast, '[data-uzu-toast-close]').forEach((close) => {
+        close.addEventListener('click', () => closeToast(toast));
+      });
+      if (timeout > 0) window.setTimeout(() => closeToast(toast), timeout);
+    });
+  }
+
+  function handleDocumentClick(event) {
+    queryAll(document, '[data-uzu-select].is-open').forEach((select) => {
+      if (!select.contains(event.target)) closeSelect(select);
+    });
+  }
+
+  function handleDocumentKeydown(event) {
+    if (event.key !== 'Escape') return;
+    if (activeDialog) {
+      event.preventDefault();
+      closeDialog(activeDialog);
+    }
+  }
+
+  function trapDialogFocus(event) {
+    if (event.key !== 'Tab' || !activeDialog) return;
+    const focusable = getFocusable(activeDialog);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  function initGlobalListeners() {
+    if (document.documentElement.dataset.uzuGlobalListeners === 'true') return;
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleDocumentKeydown);
+    document.addEventListener('keydown', trapDialogFocus);
+    document.documentElement.dataset.uzuGlobalListeners = 'true';
+  }
+
+  function init(root = document) {
+    syncRootClass();
+    initGlobalListeners();
+    for (const fn of [initThemeToggles, initLanguageToggles, initSelects, initSwitches, initDisclosures, initDialogs, initToasts]) {
+      try { fn(root); } catch (error) { console.error('[usuzumi]', error); }
+    }
+  }
+
+  window.Usuzumi = {
+    init,
+    applyTheme,
+    applyLanguage,
+    setSwitchState,
+    openDialog,
+    closeDialog
+  };
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => init(), { once: true });
   } else {
     init();
   }

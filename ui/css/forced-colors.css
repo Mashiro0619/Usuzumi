@@ -16,6 +16,10 @@
   .uzu-card-muted,
   .uzu-popover,
   .uzu-modal,
+  .uzu-dialog-overlay,
+  .uzu-toast,
+  .uzu-disclosure,
+  .uzu-skeleton,
   .uzu-alert,
   .uzu-app-preview,
   .uzu-preview-block,
@@ -32,6 +36,7 @@
   /* Form and command controls. */
   .uzu-button,
   .uzu-icon-button,
+  .uzu-disclosure-trigger,
   .uzu-input,
   .uzu-textarea,
   .uzu-select-trigger,

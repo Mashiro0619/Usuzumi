@@ -4,7 +4,7 @@
 
 Usuzumi is a zero-build web design system for quiet editorial interfaces, personal pages, app introductions, documentation, and small product tools.
 
-It provides `uzu-*` CSS primitives, a soft monochrome visual language, and a small dependency-free JavaScript helper for common UI behavior.
+It provides `uzu-*` CSS primitives, a soft monochrome visual language, optional signature typography, and a small dependency-free JavaScript runtime for common UI behavior.
 
 ## Install
 
@@ -17,11 +17,17 @@ import "usuzumi/usuzumi.css";
 import "usuzumi/usuzumi.js";
 ```
 
-You can also link the files directly:
+Load the optional signature font only when using `.uzu-signature` or signature specimens:
+
+```js
+import "usuzumi/usuzumi-signature.css";
+```
+
+CDN usage:
 
 ```html
-<link rel="stylesheet" href="ui/usuzumi.css">
-<script src="ui/usuzumi.js" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/usuzumi/ui/usuzumi.css">
+<script src="https://cdn.jsdelivr.net/npm/usuzumi/ui/usuzumi.js" defer></script>
 ```
 
 ## Usage
@@ -58,9 +64,27 @@ Use `uzu-scope` when adopting Usuzumi inside an existing page:
 ## Included
 
 - Design tokens for color, typography, spacing, borders, radius, motion, and dark mode.
-- Layout and component primitives for pages, sections, grids, buttons, cards, forms, tabs, badges, alerts, tables, overlays, and progress.
+- Layout and component primitives for pages, sections, grids, buttons, cards, forms, tabs, badges, alerts, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, and tooltips.
 - Page patterns for personal homepages, app introduction pages, design catalogs, project lists, mockups, and feature sections.
-- Small JavaScript helpers for theme toggles, language toggles, custom selects, and switches.
+- Small JavaScript helpers for theme toggles, language toggles, custom selects, switches, disclosures, dialogs, and toast dismissal.
+
+## Runtime
+
+The JavaScript runtime auto-initializes in browsers, is safe to import in SSR/Node contexts, and can be rerun for dynamic content:
+
+```js
+window.Usuzumi.init(container);
+```
+
+Custom events:
+
+- `uzu-select-change`: `{ value, label, option, select }`
+- `uzu-switch-change`: `{ checked, switch }`
+- `uzu-disclosure-change`: `{ open, disclosure }`
+- `uzu-toast-close`: `{ toast }`
+- `uzu-dialog-open` / `uzu-dialog-close`: `{ dialog, overlay, trigger }`
+
+Type declarations are included.
 
 ## Examples
 
@@ -73,6 +97,7 @@ The examples can be opened directly in a browser. No build step or development s
 ## Maintenance
 
 ```bash
+npm run build:css
 npm run validate
 ```
 

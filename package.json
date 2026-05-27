@@ -1,6 +1,6 @@
 {
   "name": "usuzumi",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A zero-build web design system for quiet editorial interfaces and small product pages.",
   "keywords": [
     "ui",
@@ -9,8 +9,7 @@
     "design-system",
     "components",
     "zero-build",
-    "theme",
-    "mashiro"
+    "theme"
   ],
   "homepage": "https://github.com/Mashiro0619/Usuzumi#readme",
   "bugs": {
@@ -24,24 +23,32 @@
   "author": "Mashiro0619",
   "type": "module",
   "main": "./ui/usuzumi.js",
+  "types": "./ui/usuzumi.d.ts",
   "style": "./ui/usuzumi.css",
   "unpkg": "./ui/usuzumi.css",
   "jsdelivr": "./ui/usuzumi.css",
   "sideEffects": [
     "./ui/usuzumi.css",
+    "./ui/usuzumi-signature.css",
     "./ui/css/*.css",
     "./ui/usuzumi.js"
   ],
   "exports": {
     ".": {
+      "types": "./ui/usuzumi.d.ts",
       "style": "./ui/usuzumi.css",
       "default": "./ui/usuzumi.js"
     },
     "./usuzumi.css": "./ui/usuzumi.css",
-    "./usuzumi.js": "./ui/usuzumi.js",
+    "./usuzumi-signature.css": "./ui/usuzumi-signature.css",
+    "./usuzumi.js": {
+      "types": "./ui/usuzumi.d.ts",
+      "default": "./ui/usuzumi.js"
+    },
     "./ui/*": "./ui/*"
   },
   "scripts": {
+    "build:css": "node scripts/build-css.mjs",
     "validate": "node scripts/validate.mjs"
   },
   "publishConfig": {

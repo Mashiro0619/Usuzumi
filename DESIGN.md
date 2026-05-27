@@ -18,17 +18,20 @@ Use the single entry files in normal pages:
 
 Package consumers can import the stylesheet as `usuzumi/usuzumi.css` and the behavior script as `usuzumi/usuzumi.js`.
 
-The entry CSS imports the maintainable source files:
+The published `ui/usuzumi.css` file is generated from the maintainable source files. Edit source files in `ui/css/`, then run `npm run build:css`.
 
-- `ui/css/tokens.css`: design tokens, dark mode tokens, font face.
+- `ui/css/tokens.css`: design tokens and dark mode tokens.
+- `ui/css/fonts.css`: optional Meddon signature font face.
 - `ui/css/base.css`: root behavior, focus, selection, scrollbar, forms, links.
 - `ui/css/typography.css`: signature, titles, section labels, title pairs.
-- `ui/css/components.css`: buttons, cards, fields, select, tabs, feedback, tables, overlays, progress.
+- `ui/css/components.css`: buttons, cards, fields, select, tabs, feedback, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, and tooltips.
 - `ui/css/layout.css`: page containers, sections, top bars, grids, hero split, footer.
 - `ui/css/patterns.css`: homepage, app intro, catalog, mockups, token specimens.
 - `ui/css/utilities.css`: small utilities and language visibility helpers.
 - `ui/css/forced-colors.css`: high-contrast mode visibility rules.
-- `ui/usuzumi.js`: theme toggles, language toggles, custom select behavior, switch behavior.
+- `ui/usuzumi-signature.css`: optional signature font entry for `.uzu-signature` and signature specimens.
+- `ui/usuzumi.js`: theme toggles, language toggles, custom selects, switches, disclosures, dialogs, and toast dismissal.
+- `ui/usuzumi.d.ts`: TypeScript declarations for the browser API and custom events.
 
 ## Adoption Modes
 
@@ -66,8 +69,9 @@ All public component classes use the `uzu-` prefix. Do not rely on internal file
 - `.uzu-card`, `.uzu-card-muted`, `.uzu-title-pair`
 - `.uzu-field`, `.uzu-label`, `.uzu-input`, `.uzu-textarea`, `.uzu-select`
 - `.uzu-tabs`, `.uzu-tab`, `.uzu-segmented`, `.uzu-segment`
-- `.uzu-badge`, `.uzu-alert`, `.uzu-table`, `.uzu-popover`, `.uzu-modal`
-- `.uzu-progress`, `.uzu-progress-bar`, `.uzu-progress-circular`
+- `.uzu-badge`, `.uzu-alert`, `.uzu-toast`, `.uzu-table`, `.uzu-popover`, `.uzu-modal`, `.uzu-dialog-overlay`
+- `.uzu-progress`, `.uzu-progress-bar`, `.uzu-progress-circular`, `.uzu-skeleton`
+- `.uzu-disclosure`, `.uzu-disclosure-trigger`, `.uzu-disclosure-panel`, `.uzu-tooltip`
 - `.uzu-page`, `.uzu-section`, `.uzu-section-head`, `.uzu-grid`, `.uzu-hero-split`
 - `.uzu-home-hero`, `.uzu-home-summary`, `.uzu-project-list`, `.uzu-project-row`, `.uzu-project-preview`
 - `.uzu-app-preview`, `.uzu-download-actions`, `.uzu-feature-list`, `.uzu-feature-item`, `.uzu-screen-grid`, `.uzu-screen-card`
@@ -83,6 +87,7 @@ Every interactive component must define the states it exposes. Use native attrib
 - Invalid: use `.is-invalid` on the field wrapper or control, plus `aria-invalid="true"` on the input-like element.
 - Read-only: use `readonly` for text controls and keep the value readable.
 - Empty: use `.uzu-empty-state` for empty panels, lists, and tables.
+- Open/closed: use `.is-open` with `aria-expanded` for disclosures and dialogs.
 
 Do not introduce a visual state without also defining the matching semantic attribute when one exists.
 
@@ -95,7 +100,7 @@ Usuzumi should feel like a carefully typeset independent publication that can al
 - Use `#fbfaf7`, `#efeee9`, `#ebeae6`, and `#e7e6e1` for layered surfaces.
 - Use thin borders and spacing for hierarchy. Standard cards do not float.
 - Use Georgia-based serif typography for almost everything.
-- Use `Meddon Custom` only for signature identity marks.
+- Use `Meddon Custom` only for signature identity marks, and load `usuzumi-signature.css` only when that role is needed.
 - Keep rectangular buttons at 7px radius.
 - Keep the minimum visible radius at 4px.
 - Keep motion quiet: no page entrances, no bouncy easing, no parallax.
@@ -157,7 +162,7 @@ Allowed transitions are limited to `transform`, `color`, `background`, `border-c
 
 | Role | Class | Size | Line Height | Notes |
 |------|-------|------|-------------|-------|
-| Signature | `.uzu-signature` | 124px desktop, 76px mobile, 42px ultra-narrow | 1.05 to 1.18 | Uses `Meddon Custom` only |
+| Signature | `.uzu-signature` | 124px desktop, 76px mobile, 42px ultra-narrow | 1.05 to 1.18 | Requires optional `usuzumi-signature.css` |
 | Hero Title | `.uzu-hero-title` | 132px desktop, 82px mobile | 0.86 | Product or offer name |
 | Page Title | `.uzu-page-title` | 56px desktop, 40px mobile | 1.02 | Documentation or catalog title |
 | Section Title | `.uzu-section-title` | 44px desktop, 34px mobile | 1.08 | Major content sections |
@@ -232,7 +237,20 @@ Top navigation uses `.uzu-topbar` and `.uzu-nav`. Use `.uzu-tabs` for peer secti
 
 ### Feedback
 
-Badges, alerts, and validation use the muted semantic families. Do not use bright red or color alone to communicate state.
+Badges, alerts, toasts, and validation use the muted semantic families. Do not use bright red or color alone to communicate state. Toasts use `.uzu-toast-stack` and `.uzu-toast`; close buttons use `data-uzu-toast-close`.
+
+### Disclosure And Loading
+
+Use disclosures for optional details, compact settings, and short documentation blocks.
+
+```html
+<article class="uzu-disclosure" data-uzu-disclosure>
+  <button class="uzu-disclosure-trigger" type="button" data-uzu-disclosure-trigger>Details</button>
+  <div class="uzu-disclosure-panel" data-uzu-disclosure-panel>Optional content.</div>
+</article>
+```
+
+Use `.uzu-skeleton`, `.uzu-skeleton-title`, `.uzu-skeleton-text`, and `.uzu-skeleton-block` for loading placeholders. Skeletons must preserve layout dimensions and must not replace useful status text when the wait is long.
 
 ### Data
 
@@ -240,7 +258,9 @@ Tables use `.uzu-table-wrap` and `.uzu-table`. Horizontal scrolling is acceptabl
 
 ### Overlays
 
-Use `.uzu-popover` and `.uzu-modal` for static overlay surfaces. Overlay shadows are allowed, but standard cards should remain flat.
+Use `.uzu-popover` and `.uzu-modal` for overlay surfaces. Overlay shadows are allowed, but standard cards should remain flat. Dialog behavior uses `data-uzu-dialog-target`, `data-uzu-dialog-overlay`, `data-uzu-dialog`, and `data-uzu-dialog-close`. The runtime handles Escape, backdrop clicks, focus return, and a small focus trap.
+
+Tooltips use `data-uzu-tooltip` for short supplemental labels. Do not put essential instructions only in tooltips.
 
 ### Progress
 
@@ -257,6 +277,14 @@ Switches use `.uzu-switch` with `data-uzu-switch`, `role="switch"`, and `aria-ch
 ## JavaScript Behaviors
 
 `ui/usuzumi.js` is intentionally small and framework-free.
+
+It auto-initializes in browsers, is safe to import in SSR/Node environments, and can be rerun for dynamic content:
+
+```js
+window.Usuzumi.init(container);
+```
+
+Repeated `init()` calls do not rebind already-initialized controls.
 
 ### Theme Toggle
 
@@ -290,6 +318,14 @@ The script toggles `data-language` and `data-uzu-lang`. Content can be marked wi
 ```
 
 The script supports click to open, click outside to close, Escape to close, ArrowUp/ArrowDown/Home/End navigation, Enter/Space selection, and option selection. It also assigns stable runtime ids, `aria-controls`, `aria-activedescendant`, and `aria-selected` state for the custom select pattern. Selected values are exposed through `data-uzu-select-value`, an optional generated hidden input, `change`, and `uzu-select-change`.
+
+### Custom Events
+
+- `uzu-select-change`: `{ value, label, option, select }`
+- `uzu-switch-change`: `{ checked, switch }`
+- `uzu-disclosure-change`: `{ open, disclosure }`
+- `uzu-toast-close`: `{ toast }`
+- `uzu-dialog-open` / `uzu-dialog-close`: `{ dialog, overlay, trigger }`
 
 ## Page Patterns
 
