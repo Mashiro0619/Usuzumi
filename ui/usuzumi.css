@@ -477,7 +477,6 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 /* ui/css/components.css */
 .uzu-button {
   min-height: 40px;
-  min-width: 96px;
   padding: 8px 12px 9px;
   border: 1px solid color-mix(in srgb, var(--uzu-border) 86%, var(--uzu-fg-strong));
   border-radius: var(--uzu-radius-standard);
@@ -695,13 +694,19 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 .uzu-field {
   display: grid;
-  gap: 7px;
+  gap: 4px;
 }
 
 .uzu-label {
+  align-self: start;
+  margin: 0;
   color: var(--uzu-fg-strong);
   font-size: 13px;
-  line-height: 1.35;
+  line-height: 1.15;
+}
+
+.uzu-field > .uzu-label + :is(.uzu-input, .uzu-textarea, .uzu-select, .uzu-select-trigger) {
+  margin-top: -8px;
 }
 
 .uzu-input,

@@ -217,13 +217,19 @@
 
 .uzu-field {
   display: grid;
-  gap: 7px;
+  gap: 4px;
 }
 
 .uzu-label {
+  align-self: start;
+  margin: 0;
   color: var(--uzu-fg-strong);
   font-size: 13px;
-  line-height: 1.35;
+  line-height: 1.15;
+}
+
+.uzu-field > .uzu-label + :is(.uzu-input, .uzu-textarea, .uzu-select, .uzu-select-trigger) {
+  margin-top: -8px;
 }
 
 .uzu-input,
