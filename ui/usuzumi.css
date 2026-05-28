@@ -483,7 +483,7 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 /* ui/css/components.css */
 .uzu-button {
   min-height: 40px;
-  padding: 8px 12px 9px;
+  padding: 8px 18px 9px;
   border: 1px solid color-mix(in srgb, var(--uzu-border) 86%, var(--uzu-fg-strong));
   border-radius: var(--uzu-radius-standard);
   background: color-mix(in srgb, var(--uzu-surface) 72%, transparent);
@@ -506,6 +506,18 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   border-color: color-mix(in srgb, var(--uzu-fg-strong) 38%, var(--uzu-border));
   background: var(--uzu-surface);
   color: var(--uzu-fg-strong);
+}
+
+.uzu-app a.uzu-button,
+.uzu-scope a.uzu-button {
+  color: var(--uzu-fg-strong);
+  text-decoration: none;
+}
+
+.uzu-app a.uzu-button:hover,
+.uzu-scope a.uzu-button:hover {
+  color: var(--uzu-fg-strong);
+  text-decoration: none;
 }
 
 .uzu-button:disabled,
@@ -545,9 +557,19 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   color: var(--uzu-action-fg);
 }
 
+.uzu-app a.uzu-button-primary,
+.uzu-scope a.uzu-button-primary {
+  color: var(--uzu-action-fg);
+}
+
 .uzu-button-primary:hover {
   border-color: var(--uzu-action-bg);
   background: color-mix(in srgb, var(--uzu-action-bg) 92%, var(--uzu-surface));
+  color: var(--uzu-action-fg);
+}
+
+.uzu-app a.uzu-button-primary:hover,
+.uzu-scope a.uzu-button-primary:hover {
   color: var(--uzu-action-fg);
 }
 
@@ -574,6 +596,91 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   height: 14px;
   display: block;
   flex: 0 0 auto;
+}
+
+.uzu-app .uzu-button,
+.uzu-scope .uzu-button {
+  min-height: 40px;
+  padding: 8px 18px 9px;
+  border: 1px solid color-mix(in srgb, var(--uzu-border) 86%, var(--uzu-fg-strong));
+  border-radius: var(--uzu-radius-standard);
+  background: color-mix(in srgb, var(--uzu-surface) 72%, transparent);
+  color: var(--uzu-fg-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+  transition: background var(--uzu-motion-base) var(--uzu-ease-standard), border-color var(--uzu-motion-base) var(--uzu-ease-standard), color var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-app .uzu-button:hover,
+.uzu-scope .uzu-button:hover {
+  border-color: color-mix(in srgb, var(--uzu-fg-strong) 38%, var(--uzu-border));
+  background: var(--uzu-surface);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-app .uzu-button-primary,
+.uzu-scope .uzu-button-primary {
+  border-color: var(--uzu-action-bg);
+  background: var(--uzu-action-bg);
+  color: var(--uzu-action-fg);
+}
+
+.uzu-app .uzu-button-primary:hover,
+.uzu-scope .uzu-button-primary:hover {
+  border-color: var(--uzu-action-bg);
+  background: color-mix(in srgb, var(--uzu-action-bg) 92%, var(--uzu-surface));
+  color: var(--uzu-action-fg);
+}
+
+.uzu-app .uzu-button-ghost,
+.uzu-scope .uzu-button-ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--uzu-muted);
+}
+
+.uzu-app .uzu-button-ghost:hover,
+.uzu-scope .uzu-button-ghost:hover {
+  border-color: color-mix(in srgb, var(--uzu-fg-strong) 18%, transparent);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 58%, transparent);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-app .uzu-button-danger,
+.uzu-scope .uzu-button-danger {
+  border-color: color-mix(in srgb, var(--uzu-danger) 35%, var(--uzu-border));
+  background: var(--uzu-danger-bg);
+  color: var(--uzu-danger);
+}
+
+.uzu-app .uzu-button-danger:hover,
+.uzu-scope .uzu-button-danger:hover {
+  border-color: color-mix(in srgb, var(--uzu-danger) 52%, var(--uzu-border));
+  background: color-mix(in srgb, var(--uzu-danger-bg) 74%, var(--uzu-surface));
+  color: var(--uzu-danger);
+}
+
+.uzu-app a.uzu-button-ghost,
+.uzu-scope a.uzu-button-ghost,
+.uzu-app a.uzu-button-ghost:hover,
+.uzu-scope a.uzu-button-ghost:hover {
+  color: var(--uzu-muted);
+}
+
+.uzu-app a.uzu-button-danger,
+.uzu-scope a.uzu-button-danger,
+.uzu-app a.uzu-button-danger:hover,
+.uzu-scope a.uzu-button-danger:hover {
+  color: var(--uzu-danger);
 }
 
 .uzu-text-link {
@@ -1279,15 +1386,25 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 }
 
 .uzu-toast {
-  padding: 14px 16px;
+  --uzu-toast-width: 360px;
+  --uzu-toast-inline-padding: 16px;
+  --uzu-toast-content-end-offset: 0px;
+  --uzu-toast-action-size: 28px;
+  --uzu-toast-action-gap: 12px;
+  position: relative;
+  box-sizing: border-box;
+  width: min(var(--uzu-toast-width), 100%);
+  padding: 14px var(--uzu-toast-inline-padding);
   border: 1px solid var(--uzu-border);
   border-radius: var(--uzu-radius-medium);
   background: var(--uzu-surface);
   color: var(--uzu-fg);
   box-shadow: var(--uzu-shadow-popover);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
+  display: block;
+}
+
+.uzu-toast-stack .uzu-toast {
+  width: 100%;
 }
 
 .uzu-toast[data-uzu-toast] {
@@ -1295,21 +1412,33 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 }
 
 .uzu-toast[data-uzu-toast].is-dismissed {
-  display: grid;
+  display: block;
   pointer-events: none;
   animation: uzu-toast-out var(--uzu-motion-base) var(--uzu-ease-standard) forwards;
 }
 
 .uzu-toast-content {
   min-width: 0;
+  max-width: calc(100% - var(--uzu-toast-content-end-offset));
+  overflow-wrap: anywhere;
+}
+
+.uzu-toast:has(.uzu-toast-close) .uzu-toast-content > :first-child > :first-child {
+  padding-right: calc(var(--uzu-toast-action-size) + var(--uzu-toast-action-gap));
 }
 
 .uzu-toast-close {
-  width: 28px;
-  height: 28px;
+  position: absolute;
+  top: 14px;
+  right: calc(var(--uzu-toast-inline-padding) + var(--uzu-toast-content-end-offset));
+  width: var(--uzu-toast-action-size);
+  height: var(--uzu-toast-action-size);
+  font-size: 14px;
+  line-height: 1;
 }
 
 .uzu-disclosure {
+  --uzu-disclosure-panel-block-end-padding: 20px;
   border: 1px solid var(--uzu-border);
   border-radius: var(--uzu-radius-micro);
   background: var(--uzu-surface);
@@ -1347,18 +1476,27 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 }
 
 .uzu-disclosure-panel {
-  padding: 0 14px 14px;
+  max-height: 0;
+  padding: 0 14px;
   color: var(--uzu-muted);
   font-size: 14px;
   line-height: 1.65;
+  opacity: 0;
+  overflow: hidden;
   transform-origin: top center;
 }
 
 .uzu-disclosure.is-open .uzu-disclosure-panel {
+  max-height: var(--uzu-disclosure-panel-height, 240px);
+  padding-bottom: var(--uzu-disclosure-panel-block-end-padding);
+  opacity: 1;
   animation: uzu-disclosure-in var(--uzu-motion-base) var(--uzu-ease-standard);
 }
 
 .uzu-disclosure.is-closing .uzu-disclosure-panel {
+  max-height: 0;
+  padding-bottom: 0;
+  opacity: 0;
   pointer-events: none;
   animation: uzu-disclosure-out var(--uzu-motion-base) var(--uzu-ease-standard) forwards;
 }
@@ -1573,24 +1711,28 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 @keyframes uzu-disclosure-in {
   from {
     opacity: 0;
-    transform: scaleY(.98);
+    max-height: 0;
+    padding-bottom: 0;
   }
 
   to {
     opacity: 1;
-    transform: scaleY(1);
+    max-height: var(--uzu-disclosure-panel-height, 240px);
+    padding-bottom: var(--uzu-disclosure-panel-block-end-padding);
   }
 }
 
 @keyframes uzu-disclosure-out {
   from {
     opacity: 1;
-    transform: scaleY(1);
+    max-height: var(--uzu-disclosure-panel-height, 240px);
+    padding-bottom: var(--uzu-disclosure-panel-block-end-padding);
   }
 
   to {
     opacity: 0;
-    transform: scaleY(.98);
+    max-height: 0;
+    padding-bottom: 0;
   }
 }
 
@@ -1665,7 +1807,8 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
     height: 34px;
   }
 
-  .uzu-button {
+.uzu-app .uzu-button,
+.uzu-scope .uzu-button {
     width: 100%;
   }
 
@@ -1774,6 +1917,7 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 .uzu-grid {
   display: grid;
+  align-content: start;
   gap: 18px;
 }
 
@@ -1829,7 +1973,7 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 @media (max-width: 920px) {
   .uzu-page {
-    width: min(100% - 48px, 760px);
+    width: min(calc(100% - 48px), 760px);
   }
 
   .uzu-hero-split,
@@ -1878,8 +2022,9 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   text-decoration: none;
 }
 
-.uzu-language-toggle {
-  font-size: 11px;
+.uzu-app .uzu-language-toggle,
+.uzu-scope .uzu-language-toggle {
+  font-size: 10px;
   line-height: 1;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -2548,6 +2693,499 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 .uzu-mt-block {
   margin-top: var(--uzu-card-block-gap);
+}
+
+.uzu-preview-catalog {
+  --uzu-preview-section-space: 58px;
+}
+
+.uzu-preview-catalog.uzu-page {
+  width: min(1280px, calc(100% - 40px));
+  padding: 0 0 38px;
+}
+
+.uzu-preview-topbar {
+  min-height: 54px;
+  border-bottom: 1px solid var(--uzu-border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.uzu-preview-nav {
+  margin-left: auto;
+  min-width: 0;
+  justify-content: flex-end;
+  gap: 12px 16px;
+  font-size: 12px;
+}
+
+.uzu-preview-nav a {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.uzu-preview-tools {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.uzu-preview-hero {
+  min-height: 360px;
+  border-bottom: 1px solid var(--uzu-border);
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.uzu-preview-hero-inner {
+  width: min(620px, 100%);
+  display: grid;
+  justify-items: center;
+  gap: 54px;
+  overflow: visible;
+}
+
+.uzu-preview-title {
+  margin: 0;
+  max-width: 100%;
+  color: var(--uzu-fg-strong);
+  font-family: var(--uzu-font-signature);
+  padding-left: .42em;
+  font-size: 104px;
+  font-weight: 400;
+  line-height: 1.32;
+  letter-spacing: 0;
+  overflow: visible;
+}
+
+.uzu-preview-hero .uzu-body-large {
+  max-width: 560px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.uzu-preview-catalog .uzu-section {
+  padding: var(--uzu-preview-section-space) 0;
+}
+
+.uzu-preview-catalog .uzu-section.uzu-no-border {
+  padding-bottom: 14px;
+}
+
+.uzu-preview-catalog .uzu-section.uzu-no-border .uzu-section-head {
+  margin-bottom: 0;
+}
+
+.uzu-preview-catalog .uzu-section.uzu-no-border + .uzu-section {
+  padding-top: 18px;
+}
+
+.uzu-preview-catalog .uzu-section:not(.uzu-no-border) .uzu-section-head {
+  max-width: none;
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.uzu-preview-catalog .uzu-grid,
+.uzu-preview-catalog .uzu-screen-grid {
+  gap: 12px;
+}
+
+.uzu-preview-catalog .uzu-type-list {
+  border-top: 0;
+  gap: 18px;
+}
+
+.uzu-preview-catalog .uzu-type-row {
+  padding: 0;
+  border-bottom: 0;
+  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
+  gap: 24px;
+}
+
+.uzu-preview-group-label {
+  margin: 0 0 10px;
+  color: var(--uzu-muted);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.uzu-preview-group-label.uzu-mt-block {
+  margin-top: 28px;
+}
+
+.uzu-preview-token-meta {
+  display: grid;
+  gap: 2px;
+}
+
+.uzu-preview-token-meta span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.uzu-preview-catalog .uzu-card.uzu-token-card {
+  padding: 0;
+  border-radius: var(--uzu-radius-large);
+  overflow: hidden;
+}
+
+.uzu-preview-catalog .uzu-card.uzu-token-card .uzu-token-swatch {
+  min-height: 92px;
+  border-width: 0 0 1px;
+}
+
+.uzu-preview-catalog .uzu-card.uzu-token-card .uzu-title-pair {
+  padding: 16px 16px 18px;
+}
+
+.uzu-preview-catalog .uzu-card.uzu-token-card .uzu-title-pair.uzu-mt-block {
+  margin-top: 0;
+}
+
+.uzu-preview-catalog .uzu-field {
+  gap: 5px;
+}
+
+.uzu-preview-catalog .uzu-field > .uzu-label + :is(.uzu-input, .uzu-textarea, .uzu-select, .uzu-select-trigger) {
+  margin-top: 0;
+}
+
+.uzu-preview-catalog .uzu-card .uzu-topbar {
+  margin-bottom: 18px;
+}
+
+.uzu-preview-catalog .uzu-table-wrap {
+  scrollbar-width: none;
+}
+
+.uzu-preview-catalog .uzu-table-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.uzu-preview-catalog .uzu-toast-stack-inline {
+  width: min(360px, 100%);
+}
+
+.uzu-preview-catalog .uzu-toast-stack-inline .uzu-toast {
+  box-shadow: none;
+}
+
+.uzu-preview-catalog #loading > .uzu-grid {
+  align-items: start;
+}
+
+.uzu-preview-catalog .uzu-preview-block {
+  aspect-ratio: 16 / 7;
+}
+
+.uzu-preview-catalog .uzu-preview-block::before {
+  inset: 12px;
+}
+
+.uzu-preview-catalog .uzu-preview-block::after {
+  left: 12px;
+  bottom: 12px;
+}
+
+.uzu-preview-catalog .uzu-token-grid {
+  grid-template-columns: repeat(auto-fill, 224px);
+  justify-content: start;
+  gap: 16px;
+}
+
+.uzu-preview-catalog .uzu-type-sample-signature {
+  padding-left: .55em;
+  font-size: 64px;
+  line-height: 1.32;
+}
+
+.uzu-preview-catalog .uzu-type-sample-hero {
+  font-size: 64px;
+  line-height: .92;
+}
+
+.uzu-preview-catalog .uzu-type-sample-page {
+  font-size: 38px;
+  line-height: 1.08;
+}
+
+.uzu-preview-catalog .uzu-type-sample-body {
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.uzu-preview-catalog .uzu-project-row {
+  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.uzu-preview-catalog .uzu-feature-item {
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px 0;
+}
+
+.uzu-preview-catalog .uzu-screen-card {
+  padding: 12px;
+  gap: 10px;
+}
+
+.uzu-preview-catalog .uzu-screen-art {
+  aspect-ratio: 16 / 8;
+}
+
+.uzu-preview-catalog .uzu-project-preview {
+  aspect-ratio: 16 / 8;
+}
+
+.uzu-preview-catalog .uzu-dialog-actions {
+  margin-top: 12px;
+}
+
+.uzu-preview-catalog .uzu-skeleton-title {
+  height: 14px;
+}
+
+.uzu-preview-catalog .uzu-skeleton-text {
+  height: 9px;
+}
+
+.uzu-preview-catalog .uzu-skeleton-block {
+  height: 56px;
+}
+
+.uzu-preview-catalog .uzu-progress-circular svg {
+  width: 48px;
+  height: 48px;
+}
+
+.uzu-preview-catalog .uzu-process {
+  gap: 6px;
+}
+
+.uzu-preview-catalog .uzu-process-step {
+  min-height: 22px;
+  gap: 8px;
+}
+
+.uzu-preview-scale-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.uzu-preview-scale-grid .uzu-card {
+  flex: 0 1 auto;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.uzu-preview-control-row,
+.uzu-scale-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.uzu-preview-control-item,
+.uzu-scale-item {
+  display: inline-grid;
+  justify-items: center;
+  gap: 6px;
+  color: var(--uzu-muted);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.uzu-scale-item .uzu-spacing-sample,
+.uzu-scale-item .uzu-radius-sample {
+  display: block;
+}
+
+@media (max-width: 920px) {
+  .uzu-preview-topbar {
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .uzu-preview-catalog .uzu-token-grid {
+    grid-template-columns: repeat(auto-fill, 214px);
+  }
+
+  .uzu-preview-catalog .uzu-grid-3,
+  .uzu-preview-catalog .uzu-screen-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .uzu-preview-catalog.uzu-page {
+    width: calc(100% - 32px);
+    max-width: calc(100vw - 32px);
+    padding: 0 0 32px;
+  }
+
+  .uzu-preview-catalog .uzu-section {
+    padding: 28px 0;
+  }
+
+  .uzu-preview-topbar {
+    min-height: auto;
+    padding: 12px 0;
+    gap: 10px 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: center;
+  }
+
+  .uzu-preview-nav {
+    width: 100%;
+    max-width: 100%;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-left: 0;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 14px;
+    font-size: 12px;
+    scrollbar-width: none;
+  }
+
+  .uzu-preview-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .uzu-preview-tools {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .uzu-preview-hero {
+    min-height: 260px;
+    place-items: center;
+    padding: 34px 0 44px;
+  }
+
+  .uzu-preview-hero-inner {
+    width: 100%;
+    gap: 30px;
+  }
+
+  .uzu-preview-title {
+    width: auto;
+    max-width: calc(100vw - 44px);
+    padding-left: .18em;
+    font-size: 48px;
+    line-height: 1.24;
+  }
+
+  .uzu-preview-hero .uzu-body-large {
+    max-width: 320px;
+    font-size: 15px;
+  }
+
+  .uzu-preview-catalog .uzu-grid-3,
+  .uzu-preview-catalog .uzu-screen-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .uzu-preview-catalog .uzu-type-list {
+    gap: 22px;
+  }
+
+  .uzu-preview-catalog .uzu-type-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 0;
+  }
+
+  .uzu-preview-catalog .uzu-type-sample-signature {
+    font-size: 48px;
+  }
+
+  .uzu-preview-catalog .uzu-type-sample-hero {
+    font-size: 48px;
+  }
+
+  .uzu-preview-catalog .uzu-type-sample-page {
+    font-size: 32px;
+  }
+
+  .uzu-preview-catalog .uzu-type-sample-body {
+    max-width: 100%;
+    font-size: 15px;
+  }
+
+  .uzu-preview-catalog .uzu-token-grid {
+    grid-template-columns: repeat(2, minmax(0, 174px));
+    gap: 10px;
+  }
+
+  .uzu-preview-control-row {
+    max-width: 100%;
+    overflow-x: visible;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px 12px;
+    padding-bottom: 2px;
+  }
+
+  .uzu-preview-control-item {
+    flex: 0 0 auto;
+    justify-items: start;
+  }
+
+  .uzu-preview-group-label {
+    margin-bottom: 12px;
+  }
+
+  .uzu-preview-group-label.uzu-mt-block {
+    margin-top: 18px;
+  }
+
+  .uzu-preview-catalog .uzu-project-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .uzu-preview-catalog .uzu-project-row {
+    padding: 10px 0;
+  }
+
+  .uzu-preview-catalog .uzu-project-action {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 360px) {
+  .uzu-preview-title {
+    font-size: 40px;
+  }
+
+  .uzu-preview-catalog .uzu-grid-3,
+  .uzu-preview-catalog .uzu-screen-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .uzu-preview-catalog .uzu-token-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
 }
 
 .uzu-no-border {

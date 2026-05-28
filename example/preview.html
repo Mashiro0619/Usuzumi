@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="uzu-root" lang="zh-CN" data-theme="light" data-uzu-theme-key="usuzumi-preview-theme" data-language="zh" data-uzu-lang="zh">
+<html class="uzu-root" lang="zh-CN" data-theme="light" data-theme-mode="light" data-uzu-theme-key="usuzumi-preview-theme" data-language="zh" data-uzu-lang="zh">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +8,7 @@
     (function () {
       var root = document.documentElement;
       var themeKey = root.dataset.uzuThemeKey || "";
-      var mode = root.getAttribute("data-theme-mode") || "auto";
+      var mode = root.getAttribute("data-theme-mode") || "light";
       try {
         mode = (themeKey && window.localStorage.getItem(themeKey)) || mode;
       } catch (_) {}
@@ -38,222 +38,210 @@
   <script src="../ui/usuzumi.js" defer></script>
 </head>
 <body class="uzu-app">
-  <div class="uzu-floating-controls" aria-label="Page settings">
-    <button class="uzu-icon-button uzu-language-toggle" type="button" data-uzu-language-toggle data-uzu-language-key="usuzumi-preview-language" aria-label="Switch language">ZH</button>
-    <button class="uzu-icon-button uzu-theme-toggle" type="button" data-uzu-theme-toggle aria-label="Switch theme">
-      <svg class="uzu-icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
-        <path d="M20.3 15.1A7.6 7.6 0 0 1 8.9 3.7 8.9 8.9 0 1 0 20.3 15.1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-      </svg>
-      <svg class="uzu-icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none">
-        <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.7"/>
-        <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-      </svg>
-    </button>
-  </div>
-
-  <main class="uzu-page">
-    <header class="uzu-section uzu-no-border">
-      <div class="uzu-section-head">
-        <h1 class="uzu-signature">Usuzumi</h1>
-        <p class="uzu-body-large">
-          <span data-lang="zh">一个零构建的界面系统，适用于安静的编辑页面、紧凑的产品面板和文档型工具。本预览仅使用公开的 CSS 包和运行时辅助构建。</span>
-          <span data-lang="en">A zero-build interface system for quiet editorial pages, compact product surfaces, and documentation-like tools. This preview is built only with the public CSS bundle and runtime helpers.</span>
-        </p>
+  <main class="uzu-page uzu-preview-catalog">
+    <header class="uzu-preview-topbar">
+      <nav class="uzu-nav uzu-preview-nav" aria-label="Preview sections">
+        <a href="#colors"><span data-lang="zh">色彩</span><span data-lang="en">Colors</span></a>
+        <a href="#typography"><span data-lang="zh">排版</span><span data-lang="en">Typography</span></a>
+        <a href="#buttons"><span data-lang="zh">按钮</span><span data-lang="en">Buttons</span></a>
+        <a href="#cards"><span data-lang="zh">卡片</span><span data-lang="en">Cards</span></a>
+        <a href="#forms"><span data-lang="zh">表单</span><span data-lang="en">Forms</span></a>
+        <a href="#spacing"><span data-lang="zh">尺寸</span><span data-lang="en">Scale</span></a>
+      </nav>
+      <div class="uzu-preview-tools">
+        <button class="uzu-icon-button uzu-language-toggle" type="button" data-uzu-language-toggle data-uzu-language-key="usuzumi-preview-language" aria-label="Switch language">ZH</button>
+        <button class="uzu-icon-button uzu-theme-toggle" type="button" data-uzu-theme-toggle aria-label="Switch theme">
+          <svg class="uzu-icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+            <path d="M20.3 15.1A7.6 7.6 0 0 1 8.9 3.7 8.9 8.9 0 1 0 20.3 15.1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+          </svg>
+          <svg class="uzu-icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+            <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.7"/>
+            <path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
       </div>
     </header>
 
-    <section class="uzu-section">
+    <section class="uzu-preview-hero" aria-labelledby="preview-title">
+      <div class="uzu-preview-hero-inner">
+        <h1 class="uzu-preview-title" id="preview-title">Usuzumi</h1>
+        <p class="uzu-body-large">
+          <span data-lang="zh">用于查看 Usuzumi 样式和交互状态的预览页。这里集中展示颜色、文字、按钮、表单、弹窗和反馈组件在页面中的效果。</span>
+          <span data-lang="en">A preview for Usuzumi styles and interaction states, showing colors, type, buttons, forms, dialogs, and feedback components in page context.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="uzu-section" id="colors">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">01 / 色彩令牌</span>
-          <span data-lang="en">01 / Color Tokens</span>
+          <span data-lang="zh">01 / 色彩</span>
+          <span data-lang="en">01 / Colors</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">氛围始于纸、墨与克制。</span>
-          <span data-lang="en">The atmosphere starts with paper, ink, and restraint.</span>
+          <span data-lang="zh">颜色样式</span>
+          <span data-lang="en">Color Styles</span>
         </h2>
       </div>
+      <p class="uzu-preview-group-label"><span data-lang="zh">基础颜色</span><span data-lang="en">Core Colors</span></p>
       <div class="uzu-token-grid">
-        <article class="uzu-card">
+        <article class="uzu-card uzu-token-card">
           <div class="uzu-token-swatch uzu-token-paper"></div>
-          <div class="uzu-title-pair uzu-mt-block"><h3>Paper Gray</h3><p>#f4f3f0</p></div>
+          <div class="uzu-title-pair uzu-mt-block"><h3><span data-lang="zh">纸色</span><span data-lang="en">Paper Gray</span></h3><p class="uzu-preview-token-meta"><span>#f4f3f0</span><span>--uzu-bg</span></p></div>
         </article>
-        <article class="uzu-card">
+        <article class="uzu-card uzu-token-card">
           <div class="uzu-token-swatch uzu-token-surface"></div>
-          <div class="uzu-title-pair uzu-mt-block"><h3>Surface</h3><p>#fbfaf7</p></div>
+          <div class="uzu-title-pair uzu-mt-block"><h3><span data-lang="zh">表面</span><span data-lang="en">Surface</span></h3><p class="uzu-preview-token-meta"><span>#fbfaf7</span><span>--uzu-surface</span></p></div>
         </article>
-        <article class="uzu-card">
-          <div class="uzu-token-swatch uzu-token-soft-surface"></div>
-          <div class="uzu-title-pair uzu-mt-block"><h3>Soft Surface</h3><p>#efeee9</p></div>
-        </article>
-        <article class="uzu-card">
-          <div class="uzu-token-swatch uzu-token-muted-surface"></div>
-          <div class="uzu-title-pair uzu-mt-block"><h3>Muted Surface</h3><p>#ebeae6</p></div>
-        </article>
-        <article class="uzu-card">
+        <article class="uzu-card uzu-token-card">
           <div class="uzu-token-swatch uzu-token-strong"></div>
-          <div class="uzu-title-pair uzu-mt-block"><h3>Strong Ink</h3><p>#20201e</p></div>
+          <div class="uzu-title-pair uzu-mt-block"><h3><span data-lang="zh">深墨</span><span data-lang="en">Strong Ink</span></h3><p class="uzu-preview-token-meta"><span>#20201e</span><span>--uzu-fg-strong</span></p></div>
         </article>
-        <article class="uzu-card">
+      </div>
+      <p class="uzu-preview-group-label uzu-mt-block"><span data-lang="zh">界面和反馈</span><span data-lang="en">Interface and Feedback</span></p>
+      <div class="uzu-token-grid">
+        <article class="uzu-card uzu-token-card">
+          <div class="uzu-token-swatch uzu-token-soft-surface"></div>
+          <div class="uzu-title-pair uzu-mt-block"><h3><span data-lang="zh">柔和表面</span><span data-lang="en">Soft Surface</span></h3><p class="uzu-preview-token-meta"><span>#efeee9</span><span>--uzu-surface-soft</span></p></div>
+        </article>
+        <article class="uzu-card uzu-token-card">
+          <div class="uzu-token-swatch uzu-token-muted-surface"></div>
+          <div class="uzu-title-pair uzu-mt-block"><h3><span data-lang="zh">弱化表面</span><span data-lang="en">Muted Surface</span></h3><p class="uzu-preview-token-meta"><span>#ebeae6</span><span>--uzu-surface-muted</span></p></div>
+        </article>
+        <article class="uzu-card uzu-token-card">
           <div class="uzu-token-swatch uzu-token-danger"></div>
-          <div class="uzu-title-pair uzu-mt-block"><h3>Danger Wash</h3><p>#efe3e1</p></div>
+          <div class="uzu-title-pair uzu-mt-block"><h3><span data-lang="zh">错误底色</span><span data-lang="en">Error Wash</span></h3><p class="uzu-preview-token-meta"><span>#efe3e1</span><span>--uzu-danger-bg</span></p></div>
         </article>
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="typography">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
           <span data-lang="zh">02 / 排版</span>
           <span data-lang="en">02 / Typography</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">字体的节奏决定了界面的编辑感。</span>
-          <span data-lang="en">Type gives the interface its editorial pace.</span>
+          <span data-lang="zh">文字层级</span>
+          <span data-lang="en">Type Scale</span>
         </h2>
-        <p class="uzu-body-large">
-          <span data-lang="zh">大字重承载识别与定位。正文保持实用、易读，贴近其所支撑的组件。</span>
-          <span data-lang="en">Large roles carry identity and orientation. Body roles stay practical, readable, and close to the components they support.</span>
-        </p>
       </div>
       <div class="uzu-type-list">
         <article class="uzu-type-row">
           <div class="uzu-title-pair">
-            <h3>Signature</h3>
-            <p>
-              <span data-lang="zh">Meddon Custom 仅用于身份标识和充裕的开放空间。</span>
-              <span data-lang="en">Meddon Custom is reserved for identity moments and generous open space.</span>
-            </p>
+            <h3><span data-lang="zh">品牌字</span><span data-lang="en">Signature</span></h3>
+            <p><span data-lang="zh">只用于名称、标识和需要强调身份的位置。</span><span data-lang="en">Reserved for names, identity marks, and moments where the brand needs emphasis.</span></p>
           </div>
-          <p class="uzu-type-sample uzu-type-sample-signature" style="font-size:56px">Usuzumi</p>
+          <p class="uzu-type-sample uzu-type-sample-signature">Usuzumi</p>
         </article>
         <article class="uzu-type-row">
           <div class="uzu-title-pair">
-            <h3>Hero title</h3>
-            <p>
-              <span data-lang="zh">用于产品名称、价值主张和首屏定位。</span>
-              <span data-lang="en">Use for names, offers, and first-viewport orientation.</span>
-            </p>
+            <h3><span data-lang="zh">展示标题</span><span data-lang="en">Display title</span></h3>
+            <p><span data-lang="zh">用于页面入口或需要快速建立层级的大标题。</span><span data-lang="en">For page entries and large headings that establish hierarchy quickly.</span></p>
           </div>
-          <p class="uzu-type-sample uzu-type-sample-hero">quiet</p>
+          <p class="uzu-type-sample uzu-type-sample-hero">Display</p>
         </article>
         <article class="uzu-type-row">
           <div class="uzu-title-pair">
-            <h3>Page title</h3>
-            <p>
-              <span data-lang="zh">用于目录、规范和主要页面标题。</span>
-              <span data-lang="en">Use for catalogs, specifications, and primary screen headings.</span>
-            </p>
+            <h3><span data-lang="zh">页面标题</span><span data-lang="en">Page title</span></h3>
+            <p><span data-lang="zh">用于章节、文档页和主要内容区标题。</span><span data-lang="en">For sections, documentation pages, and primary content headings.</span></p>
           </div>
-          <p class="uzu-type-sample uzu-type-sample-page">System catalog</p>
+          <p class="uzu-type-sample uzu-type-sample-page">Project page</p>
         </article>
         <article class="uzu-type-row">
           <div class="uzu-title-pair">
-            <h3>Body text</h3>
-            <p>
-              <span data-lang="zh">正文保持宽松的行宽和均匀的间距。</span>
-              <span data-lang="en">Reading copy keeps long lines calm and evenly spaced.</span>
-            </p>
+            <h3><span data-lang="zh">正文</span><span data-lang="en">Body text</span></h3>
+            <p><span data-lang="zh">用于说明、表单提示和卡片里的短句。</span><span data-lang="en">For descriptions, form hints, and short copy inside cards.</span></p>
           </div>
           <p class="uzu-type-sample uzu-type-sample-body">
-            <span data-lang="zh">安静的界面依赖间距、色调和排版节奏，而非装饰。</span>
-            <span data-lang="en">Quiet interfaces rely on spacing, tone, and type rhythm before decoration.</span>
+            <span data-lang="zh">这段正文用来查看字号、行高、换行和中英文混排。</span>
+            <span data-lang="en">This text checks size, line height, wrapping, and mixed-language content.</span>
           </p>
         </article>
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="buttons">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">03 / 间距</span>
-          <span data-lang="en">03 / Spacing</span>
+          <span data-lang="zh">03 / 按钮</span>
+          <span data-lang="en">03 / Buttons</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">间距让密集页面保持可读。</span>
-          <span data-lang="en">Spacing keeps dense pages legible.</span>
+          <span data-lang="zh">按钮状态</span>
+          <span data-lang="en">Button States</span>
+        </h2>
+      </div>
+      <div class="uzu-preview-control-row">
+        <span class="uzu-preview-control-item">
+          <button class="uzu-button uzu-button-primary" type="button"><span data-lang="zh">主要</span><span data-lang="en">Primary</span></button>
+        </span>
+        <span class="uzu-preview-control-item">
+          <button class="uzu-button" type="button"><span data-lang="zh">默认</span><span data-lang="en">Default</span></button>
+        </span>
+        <span class="uzu-preview-control-item">
+          <button class="uzu-button uzu-button-ghost" type="button"><span data-lang="zh">透明</span><span data-lang="en">Ghost</span></button>
+        </span>
+        <span class="uzu-preview-control-item">
+          <button class="uzu-button uzu-button-danger" type="button"><span data-lang="zh">危险</span><span data-lang="en">Danger</span></button>
+        </span>
+        <span class="uzu-preview-control-item">
+          <button class="uzu-button is-loading" type="button" aria-busy="true"><span data-lang="zh">保存中</span><span data-lang="en">Saving</span></button>
+        </span>
+        <span class="uzu-preview-control-item">
+          <button class="uzu-icon-button" type="button" data-uzu-tooltip="Tooltip text" aria-label="Tooltip example">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 17v-6m0-4h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </span>
+      </div>
+    </section>
+
+    <section class="uzu-section" id="cards">
+      <div class="uzu-section-head">
+        <p class="uzu-section-label">
+          <span data-lang="zh">04 / 卡片</span>
+          <span data-lang="en">04 / Cards</span>
+        </p>
+        <h2 class="uzu-section-title">
+          <span data-lang="zh">常用卡片</span>
+          <span data-lang="en">Common Cards</span>
         </h2>
       </div>
       <div class="uzu-grid uzu-grid-3">
-        <article class="uzu-card uzu-center"><div class="uzu-spacing-sample uzu-space-8"></div><p class="uzu-help uzu-mt-block">8px</p></article>
-        <article class="uzu-card uzu-center"><div class="uzu-spacing-sample uzu-space-16"></div><p class="uzu-help uzu-mt-block">16px</p></article>
-        <article class="uzu-card uzu-center"><div class="uzu-spacing-sample uzu-space-24"></div><p class="uzu-help uzu-mt-block">24px</p></article>
-        <article class="uzu-card uzu-center"><div class="uzu-spacing-sample uzu-space-40"></div><p class="uzu-help uzu-mt-block">40px</p></article>
-        <article class="uzu-card uzu-center"><div class="uzu-spacing-sample uzu-space-72"></div><p class="uzu-help uzu-mt-block">72px</p></article>
-      </div>
-    </section>
-
-    <section class="uzu-section">
-      <div class="uzu-section-head">
-        <p class="uzu-section-label">
-          <span data-lang="zh">04 / 圆角</span>
-          <span data-lang="en">04 / Radius</span>
-        </p>
-        <h2 class="uzu-section-title">
-          <span data-lang="zh">圆角柔和，绝不装饰。</span>
-          <span data-lang="en">Corners are soft, never ornamental.</span>
-        </h2>
-      </div>
-      <div class="uzu-grid uzu-grid-3">
-        <article class="uzu-card uzu-center">
-          <div class="uzu-radius-sample uzu-radius-4"></div>
-          <p class="uzu-help uzu-mt-block"><span data-lang="zh">微小 / 4px</span><span data-lang="en">Micro / 4px</span></p>
+        <article class="uzu-card">
+          <div class="uzu-preview-block"></div>
+          <div class="uzu-title-pair uzu-mt-block">
+            <h3><span data-lang="zh">标准卡片</span><span data-lang="en">Standard card</span></h3>
+            <p><span data-lang="zh">用于普通内容块，保留默认边框、背景和内边距。</span><span data-lang="en">For regular content blocks with the default border, background, and padding.</span></p>
+          </div>
         </article>
-        <article class="uzu-card uzu-center">
-          <div class="uzu-radius-sample uzu-radius-7"></div>
-          <p class="uzu-help uzu-mt-block"><span data-lang="zh">标准 / 7px</span><span data-lang="en">Standard / 7px</span></p>
+        <article class="uzu-card uzu-card-muted">
+          <div class="uzu-title-pair">
+            <h3><span data-lang="zh">弱化卡片</span><span data-lang="en">Muted card</span></h3>
+            <p><span data-lang="zh">用于辅助信息，视觉重量更轻。</span><span data-lang="en">For supporting information with a lighter visual weight.</span></p>
+          </div>
+          <span class="uzu-badge uzu-mt-block"><span data-lang="zh">草稿</span><span data-lang="en">Draft</span></span>
         </article>
-        <article class="uzu-card uzu-center">
-          <div class="uzu-radius-sample uzu-radius-10"></div>
-          <p class="uzu-help uzu-mt-block"><span data-lang="zh">中等 / 10px</span><span data-lang="en">Medium / 10px</span></p>
-        </article>
-        <article class="uzu-card uzu-center">
-          <div class="uzu-radius-sample uzu-radius-pill"></div>
-          <p class="uzu-help uzu-mt-block"><span data-lang="zh">胶囊 / 仅限控件</span><span data-lang="en">Pill / controls only</span></p>
+        <article class="uzu-card">
+          <div class="uzu-title-pair">
+            <h3><span data-lang="zh">指标卡片</span><span data-lang="en">Metric card</span></h3>
+            <p><span data-lang="zh">用于显示一个关键数字和它的说明。</span><span data-lang="en">For a key number with a short explanation.</span></p>
+          </div>
+          <p class="uzu-metric-value">72%</p>
+          <p class="uzu-text uzu-muted"><span data-lang="zh">本周进度</span><span data-lang="en">Progress this week</span></p>
         </article>
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="forms">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">05 / 按钮</span>
-          <span data-lang="en">05 / Buttons</span>
+          <span data-lang="zh">05 / 表单</span>
+          <span data-lang="en">05 / Forms</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">指令清晰、紧凑且沉稳。</span>
-          <span data-lang="en">Commands stay clear, compact, and still.</span>
-        </h2>
-      </div>
-      <div class="uzu-card uzu-flex uzu-wrap uzu-gap-3">
-        <button class="uzu-button uzu-button-primary" type="button"><span data-lang="zh">主要</span><span data-lang="en">Primary</span></button>
-        <button class="uzu-button" type="button"><span data-lang="zh">默认</span><span data-lang="en">Default</span></button>
-        <button class="uzu-button uzu-button-ghost" type="button"><span data-lang="zh">幽灵</span><span data-lang="en">Ghost</span></button>
-        <button class="uzu-button uzu-button-danger" type="button"><span data-lang="zh">危险</span><span data-lang="en">Danger</span></button>
-        <button class="uzu-button" type="button" disabled><span data-lang="zh">已禁用</span><span data-lang="en">Disabled</span></button>
-        <button class="uzu-button is-loading" type="button" aria-busy="true"><span data-lang="zh">保存中</span><span data-lang="en">Saving</span></button>
-        <a class="uzu-text-link" href="../DESIGN.md#components"><span data-lang="zh">文字链接</span><span data-lang="en">Text link</span></a>
-        <button class="uzu-icon-button" type="button" aria-label="Icon action">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-        <button class="uzu-icon-button" type="button" data-uzu-tooltip="Tooltip text" aria-label="Tooltip example">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 17v-6m0-4h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-        <button class="uzu-icon-button" type="button" aria-label="Disabled icon action" disabled>
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-    </section>
-
-    <section class="uzu-section">
-      <div class="uzu-section-head">
-        <p class="uzu-section-label">
-          <span data-lang="zh">06 / 表单</span>
-          <span data-lang="en">06 / Forms</span>
-        </p>
-        <h2 class="uzu-section-title">
-          <span data-lang="zh">表单控件共享统一的几何尺度。</span>
-          <span data-lang="en">Form controls share one measured geometry.</span>
+          <span data-lang="zh">表单控件</span>
+          <span data-lang="en">Form Controls</span>
         </h2>
       </div>
       <div class="uzu-grid uzu-grid-2">
@@ -261,12 +249,12 @@
           <div class="uzu-field">
             <label class="uzu-label" for="preview-project-name"><span data-lang="zh">项目名称</span><span data-lang="en">Project name</span></label>
             <input class="uzu-input" id="preview-project-name" placeholder="未命名项目" aria-describedby="preview-project-name-help">
-            <span class="uzu-help" id="preview-project-name-help"><span data-lang="zh">标签始终可见且靠近输入框。</span><span data-lang="en">Labels stay visible and close to the field.</span></span>
+            <span class="uzu-help" id="preview-project-name-help"><span data-lang="zh">标签、输入框和提示文字的常见排列。</span><span data-lang="en">A common field layout with label, input, and hint text.</span></span>
           </div>
           <div class="uzu-field is-invalid">
             <label class="uzu-label" for="preview-email">Email</label>
             <input class="uzu-input" id="preview-email" value="name" aria-invalid="true" aria-describedby="preview-email-help">
-            <span class="uzu-help" id="preview-email-help"><span data-lang="zh">验证文案保持简短具体。</span><span data-lang="en">Validation copy stays short and specific.</span></span>
+            <span class="uzu-help" id="preview-email-help"><span data-lang="zh">错误状态会同时改变边框和提示文字。</span><span data-lang="en">The error state updates both the border and helper text.</span></span>
           </div>
           <div class="uzu-field">
             <span class="uzu-label" id="preview-density-label"><span data-lang="zh">密度</span><span data-lang="en">Density</span></span>
@@ -279,54 +267,45 @@
               </div>
             </div>
           </div>
-          <div class="uzu-field">
-            <label class="uzu-label" for="preview-readonly-token"><span data-lang="zh">只读令牌</span><span data-lang="en">Read-only token</span></label>
-            <input class="uzu-input" id="preview-readonly-token" value="--uzu-surface" readonly>
-          </div>
         </article>
         <article class="uzu-card uzu-grid">
-          <label class="uzu-check-row"><input type="checkbox" checked> <span><span data-lang="zh">启用安静通知</span><span data-lang="en">Enable quiet notifications</span></span></label>
-          <label class="uzu-check-row"><input type="checkbox" disabled> <span><span data-lang="zh">已禁用的复选框</span><span data-lang="en">Disabled checkbox</span></span></label>
-          <label class="uzu-check-row"><input type="radio" name="mode" checked> <span><span data-lang="zh">适中模式</span><span data-lang="en">Balanced mode</span></span></label>
+          <label class="uzu-check-row"><input type="checkbox" checked> <span><span data-lang="zh">启用通知</span><span data-lang="en">Enable notifications</span></span></label>
+          <label class="uzu-check-row"><input type="checkbox" disabled> <span><span data-lang="zh">不可选项目</span><span data-lang="en">Unavailable option</span></span></label>
+          <label class="uzu-check-row"><input type="radio" name="mode" checked> <span><span data-lang="zh">默认模式</span><span data-lang="en">Default mode</span></span></label>
           <div class="uzu-check-row"><button class="uzu-switch is-on" type="button" data-uzu-switch aria-checked="true" aria-label="Sync enabled"></button><span><span data-lang="zh">同步已启用</span><span data-lang="en">Sync enabled</span></span></div>
-          <div class="uzu-check-row"><button class="uzu-switch is-disabled" type="button" data-uzu-switch aria-checked="false" aria-disabled="true" aria-label="Disabled switch" disabled></button><span><span data-lang="zh">已禁用的开关</span><span data-lang="en">Disabled switch</span></span></div>
           <div class="uzu-field">
             <label class="uzu-label" for="preview-notes"><span data-lang="zh">备注</span><span data-lang="en">Notes</span></label>
-            <textarea class="uzu-textarea" id="preview-notes" placeholder="简短说明"></textarea>
-          </div>
-          <div class="uzu-field">
-            <label class="uzu-label" for="preview-disabled-field"><span data-lang="zh">已禁用字段</span><span data-lang="en">Disabled field</span></label>
-            <input class="uzu-input" id="preview-disabled-field" value="Unavailable" disabled>
+            <textarea class="uzu-textarea" id="preview-notes" placeholder="补充说明"></textarea>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="navigation">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">07 / 导航</span>
-          <span data-lang="en">07 / Navigation</span>
+          <span data-lang="zh">06 / 导航</span>
+          <span data-lang="en">06 / Navigation</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">导航标记状态而不移动界面。</span>
-          <span data-lang="en">Navigation marks state without shifting the surface.</span>
+          <span data-lang="zh">页面切换</span>
+          <span data-lang="en">Page Navigation</span>
         </h2>
       </div>
       <div class="uzu-grid uzu-grid-2">
         <article class="uzu-card">
           <div class="uzu-topbar">
-            <a class="uzu-brand-link" href="preview.html">Usuzumi</a>
+            <span class="uzu-brand-link">Usuzumi</span>
             <nav class="uzu-nav" aria-label="Catalog navigation">
               <a href="../DESIGN.md#adoption-modes"><span data-lang="zh">概述</span><span data-lang="en">Overview</span></a>
               <a href="../DESIGN.md#components"><span data-lang="zh">组件</span><span data-lang="en">Components</span></a>
-              <a href="../DESIGN.md#do"><span data-lang="zh">指南</span><span data-lang="en">Guidelines</span></a>
+              <a href="../DESIGN.md#do"><span data-lang="zh">用法</span><span data-lang="en">Usage</span></a>
             </nav>
           </div>
           <div class="uzu-tabs" data-uzu-tabs>
             <button class="uzu-tab is-active" type="button" data-uzu-tab-value="foundation" aria-selected="true"><span data-lang="zh">基础</span><span data-lang="en">Foundation</span></button>
             <button class="uzu-tab" type="button" data-uzu-tab-value="components" aria-selected="false"><span data-lang="zh">组件</span><span data-lang="en">Components</span></button>
-            <button class="uzu-tab" type="button" data-uzu-tab-value="patterns" aria-selected="false"><span data-lang="zh">模式</span><span data-lang="en">Patterns</span></button>
+            <button class="uzu-tab" type="button" data-uzu-tab-value="patterns" aria-selected="false"><span data-lang="zh">页面</span><span data-lang="en">Pages</span></button>
             <button class="uzu-tab" type="button" disabled><span data-lang="zh">已禁用</span><span data-lang="en">Disabled</span></button>
           </div>
         </article>
@@ -341,93 +320,97 @@
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="spacing">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">08 / 卡片</span>
-          <span data-lang="en">08 / Cards</span>
+          <span data-lang="zh">07 / 尺寸</span>
+          <span data-lang="en">07 / Scale</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">卡片为物件、摘要和小决策提供框架。</span>
-          <span data-lang="en">Cards frame artifacts, summaries, and small decisions.</span>
+          <span data-lang="zh">间距和圆角</span>
+          <span data-lang="en">Spacing and Radius</span>
         </h2>
       </div>
-      <div class="uzu-grid uzu-grid-3">
-        <article class="uzu-card">
-          <div class="uzu-preview-block"></div>
-          <div class="uzu-title-pair uzu-mt-block">
-            <h3><span data-lang="zh">标准卡片</span><span data-lang="en">Standard card</span></h3>
-            <p><span data-lang="zh">一个用于承载内容的简单表面。</span><span data-lang="en">A simple surface for bounded content.</span></p>
-          </div>
-        </article>
-        <article class="uzu-card uzu-card-muted">
-          <div class="uzu-title-pair">
-            <h3><span data-lang="zh">弱化卡片</span><span data-lang="en">Muted card</span></h3>
-            <p><span data-lang="zh">次要面板在不消失的前提下后退一步。</span><span data-lang="en">Secondary panels step back without disappearing.</span></p>
-          </div>
-          <span class="uzu-badge uzu-mt-block"><span data-lang="zh">草稿</span><span data-lang="en">Draft</span></span>
-        </article>
+      <div class="uzu-preview-scale-grid">
         <article class="uzu-card">
           <div class="uzu-title-pair">
-            <h3><span data-lang="zh">指标卡片</span><span data-lang="en">Metric card</span></h3>
-            <p><span data-lang="zh">数字保持可读而不显得喧闹。</span><span data-lang="en">Numbers remain readable without becoming loud.</span></p>
+            <h3><span data-lang="zh">间距</span><span data-lang="en">Spacing</span></h3>
+            <p><span data-lang="zh">用于分隔控件、卡片和页面区块的常用距离。</span><span data-lang="en">Common distances for separating controls, cards, and page sections.</span></p>
           </div>
-          <p class="uzu-metric-value">72%</p>
-          <p class="uzu-text uzu-muted"><span data-lang="zh">本周完成度</span><span data-lang="en">Completion this week</span></p>
+          <div class="uzu-scale-row uzu-mt-block">
+            <span class="uzu-scale-item"><span class="uzu-spacing-sample uzu-space-8"></span><span>8px</span></span>
+            <span class="uzu-scale-item"><span class="uzu-spacing-sample uzu-space-16"></span><span>16px</span></span>
+            <span class="uzu-scale-item"><span class="uzu-spacing-sample uzu-space-24"></span><span>24px</span></span>
+            <span class="uzu-scale-item"><span class="uzu-spacing-sample uzu-space-40"></span><span>40px</span></span>
+            <span class="uzu-scale-item"><span class="uzu-spacing-sample uzu-space-72"></span><span>72px</span></span>
+          </div>
+        </article>
+        <article class="uzu-card">
+          <div class="uzu-title-pair">
+            <h3><span data-lang="zh">圆角</span><span data-lang="en">Radius</span></h3>
+            <p><span data-lang="zh">用于按钮、卡片、输入框和标签的边角半径。</span><span data-lang="en">Corner radius values for buttons, cards, inputs, and badges.</span></p>
+          </div>
+          <div class="uzu-scale-row uzu-mt-block">
+            <span class="uzu-scale-item"><span class="uzu-radius-sample uzu-radius-4"></span><span>4px</span></span>
+            <span class="uzu-scale-item"><span class="uzu-radius-sample uzu-radius-7"></span><span>7px</span></span>
+            <span class="uzu-scale-item"><span class="uzu-radius-sample uzu-radius-10"></span><span>10px</span></span>
+            <span class="uzu-scale-item"><span class="uzu-radius-sample uzu-radius-14"></span><span>14px</span></span>
+            <span class="uzu-scale-item"><span class="uzu-radius-sample uzu-radius-pill"></span><span>Pill</span></span>
+          </div>
         </article>
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="data">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">09 / 数据</span>
-          <span data-lang="en">09 / Data</span>
+          <span data-lang="zh">08 / 表格</span>
+          <span data-lang="en">08 / Tables</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">数据保持紧凑同时保留层级。</span>
-          <span data-lang="en">Data stays compact while preserving hierarchy.</span>
+          <span data-lang="zh">表格样式</span>
+          <span data-lang="en">Table Styles</span>
         </h2>
       </div>
-      <div class="uzu-card uzu-table-wrap">
+      <div class="uzu-table-wrap">
         <table class="uzu-table">
           <thead>
             <tr>
-              <th><span data-lang="zh">令牌</span><span data-lang="en">Token</span></th>
-              <th><span data-lang="zh">角色</span><span data-lang="en">Role</span></th>
-              <th><span data-lang="zh">状态</span><span data-lang="en">Status</span></th>
+              <th><span data-lang="zh">名称</span><span data-lang="en">Name</span></th>
+              <th><span data-lang="zh">用途</span><span data-lang="en">Use</span></th>
+              <th><span data-lang="zh">类型</span><span data-lang="en">Type</span></th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>--uzu-bg</td>
-              <td><span data-lang="zh">页面基底</span><span data-lang="en">Page foundation</span></td>
-              <td><span data-lang="zh">必需</span><span data-lang="en">Required</span></td>
+              <td><span data-lang="zh">页面背景</span><span data-lang="en">Page background</span></td>
+              <td><span data-lang="zh">基础</span><span data-lang="en">Base</span></td>
             </tr>
             <tr>
               <td>--uzu-border</td>
-              <td><span data-lang="zh">组件边界</span><span data-lang="en">Component boundary</span></td>
-              <td><span data-lang="zh">必需</span><span data-lang="en">Required</span></td>
+              <td><span data-lang="zh">组件边框</span><span data-lang="en">Component border</span></td>
+              <td><span data-lang="zh">基础</span><span data-lang="en">Base</span></td>
             </tr>
             <tr>
               <td>--uzu-danger-bg</td>
-              <td><span data-lang="zh">危险反馈底色</span><span data-lang="en">Danger feedback wash</span></td>
-              <td><span data-lang="zh">语义</span><span data-lang="en">Semantic</span></td>
+              <td><span data-lang="zh">错误提示背景</span><span data-lang="en">Error message background</span></td>
+              <td><span data-lang="zh">状态</span><span data-lang="en">State</span></td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="feedback">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">10 / 状态指示</span>
-          <span data-lang="en">10 / Status Indicators</span>
+          <span data-lang="zh">09 / 反馈</span>
+          <span data-lang="en">09 / Feedback</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">反馈是语义化的、低饱和的、以文字为主的。</span>
-          <span data-lang="en">Feedback is semantic, muted, and text-led.</span>
+          <span data-lang="zh">状态和消息</span>
+          <span data-lang="en">Status and Messages</span>
         </h2>
       </div>
       <div class="uzu-grid uzu-grid-3">
@@ -439,55 +422,22 @@
         <article class="uzu-alert uzu-alert-info">
           <div class="uzu-title-pair">
             <h3><span data-lang="zh">信息</span><span data-lang="en">Information</span></h3>
-            <p><span data-lang="zh">提示以文字为先，其次才是色调。</span><span data-lang="en">Alerts rely on text first, then tone.</span></p>
+            <p><span data-lang="zh">用于普通说明或轻量提醒。</span><span data-lang="en">For general notes and lightweight reminders.</span></p>
           </div>
         </article>
         <article class="uzu-alert uzu-alert-danger">
           <div class="uzu-title-pair">
             <h3><span data-lang="zh">验证</span><span data-lang="en">Validation</span></h3>
-            <p><span data-lang="zh">关键状态用克制代替饱和。</span><span data-lang="en">Critical states use restraint instead of saturation.</span></p>
+            <p><span data-lang="zh">用于需要用户注意的错误或风险。</span><span data-lang="en">For errors or risks that need attention.</span></p>
           </div>
         </article>
-      </div>
-      <div class="uzu-grid uzu-grid-3 uzu-mt-block">
-        <aside class="uzu-callout uzu-callout-note">
-          <h3 class="uzu-callout-title"><span data-lang="zh">上下文注释</span><span data-lang="en">Context note</span></h3>
-          <p><span data-lang="zh">Callout 承载上下文而不假装紧急。</span><span data-lang="en">Callouts hold context without pretending to be urgent.</span></p>
-        </aside>
-        <aside class="uzu-callout uzu-callout-info">
-          <h3 class="uzu-callout-title"><span data-lang="zh">系统附注</span><span data-lang="en">System aside</span></h3>
-          <p><span data-lang="zh">当信息属于阅读流时，使用中性提示。</span><span data-lang="en">Use neutral notes when the message belongs to the reading flow.</span></p>
-        </aside>
-        <aside class="uzu-callout uzu-callout-warning uzu-callout-compact">
-          <h3 class="uzu-callout-title"><span data-lang="zh">时间风险</span><span data-lang="en">Timing risk</span></h3>
-          <p><span data-lang="zh">紧凑提示适合密集设置和参考页面。</span><span data-lang="en">Compact notes fit inside dense settings and reference pages.</span></p>
-        </aside>
-      </div>
-    </section>
-
-    <section class="uzu-section">
-      <div class="uzu-section-head">
-        <p class="uzu-section-label">
-          <span data-lang="zh">11 / 空状态与提示</span>
-          <span data-lang="en">11 / Empty and Toast</span>
-        </p>
-        <h2 class="uzu-section-title">
-          <span data-lang="zh">空状态说明缺失了什么；提示是短暂的、可关闭的。</span>
-          <span data-lang="en">Empty panels explain what is missing; toasts are transient and dismissible.</span>
-        </h2>
-      </div>
-      <div class="uzu-empty-state">
-        <div class="uzu-title-pair">
-          <h3><span data-lang="zh">空状态</span><span data-lang="en">Empty state</span></h3>
-          <p><span data-lang="zh">空面板在给出下一步操作前先说明缺失了什么。</span><span data-lang="en">Empty panels explain what is missing before offering the next action.</span></p>
-        </div>
       </div>
       <div class="uzu-toast-stack uzu-toast-stack-inline uzu-mt-block">
         <article class="uzu-toast" data-uzu-toast>
           <div class="uzu-toast-content">
             <div class="uzu-title-pair">
               <h3><span data-lang="zh">已保存</span><span data-lang="en">Saved</span></h3>
-              <p><span data-lang="zh">短暂消息保持紧凑且可关闭。</span><span data-lang="en">Transient messages stay compact and dismissible.</span></p>
+              <p><span data-lang="zh">保存完成后的短消息，用户可以手动关闭。</span><span data-lang="en">A short message after saving, with a manual close action.</span></p>
             </div>
           </div>
           <button class="uzu-icon-button uzu-toast-close" type="button" data-uzu-toast-close aria-label="Dismiss toast">x</button>
@@ -495,28 +445,28 @@
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="overlays">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">12 / 浮层</span>
-          <span data-lang="en">12 / Overlays</span>
+          <span data-lang="zh">10 / 浮层</span>
+          <span data-lang="en">10 / Overlays</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">浮层出现时不跳动。</span>
-          <span data-lang="en">Floating surfaces appear without jumping.</span>
+          <span data-lang="zh">浮层和弹窗</span>
+          <span data-lang="en">Popover and Dialog</span>
         </h2>
       </div>
       <div class="uzu-grid uzu-grid-2">
         <article class="uzu-popover">
           <div class="uzu-title-pair">
             <h3>Popover</h3>
-            <p><span data-lang="zh">紧凑的浮动引导，带有柔和的抬高感。</span><span data-lang="en">Compact floating guidance with soft elevation.</span></p>
+            <p><span data-lang="zh">用于临时说明的小面板。</span><span data-lang="en">A small panel for temporary supporting information.</span></p>
           </div>
         </article>
         <article class="uzu-modal">
           <div class="uzu-title-pair">
-            <h3><span data-lang="zh">对话框表面</span><span data-lang="en">Dialog surface</span></h3>
-            <p><span data-lang="zh">用于需要暂停周围页面的聚焦决策。</span><span data-lang="en">Use for focused decisions that should pause the surrounding page.</span></p>
+            <h3><span data-lang="zh">弹窗</span><span data-lang="en">Dialog</span></h3>
+            <p><span data-lang="zh">用于需要用户确认或完成操作的内容。</span><span data-lang="en">For content that needs confirmation or a focused action.</span></p>
           </div>
           <button class="uzu-button uzu-button-primary uzu-mt-block" type="button" data-uzu-dialog-target="#preview-dialog">
             <span data-lang="zh">打开对话框</span><span data-lang="en">Open dialog</span>
@@ -526,8 +476,8 @@
       <div class="uzu-dialog-overlay" data-uzu-dialog-overlay hidden>
         <section class="uzu-modal" id="preview-dialog" data-uzu-dialog hidden tabindex="-1" aria-labelledby="preview-dialog-title">
           <div class="uzu-title-pair">
-            <h3 id="preview-dialog-title"><span data-lang="zh">对话框行为</span><span data-lang="en">Dialog behavior</span></h3>
-            <p><span data-lang="zh">Escape、背景点击、关闭按钮、焦点返回和关闭时序均由运行时处理。</span><span data-lang="en">Escape, backdrop clicks, close buttons, focus return, and close timing are handled by the runtime.</span></p>
+            <h3 id="preview-dialog-title"><span data-lang="zh">关闭方式</span><span data-lang="en">Close behavior</span></h3>
+            <p><span data-lang="zh">可以用 Esc、背景点击或按钮关闭，关闭后焦点会回到打开按钮。</span><span data-lang="en">Close with Escape, backdrop click, or a button. Focus returns to the opener.</span></p>
           </div>
           <div class="uzu-dialog-actions">
             <button class="uzu-button" type="button" data-uzu-dialog-close><span data-lang="zh">取消</span><span data-lang="en">Cancel</span></button>
@@ -537,22 +487,22 @@
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="progress">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">13 / 进度</span>
-          <span data-lang="en">13 / Progress</span>
+          <span data-lang="zh">11 / 进度</span>
+          <span data-lang="en">11 / Progress</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">进度解释状态变化，不喧宾夺主。</span>
-          <span data-lang="en">Motion explains state changes without taking the stage.</span>
+          <span data-lang="zh">加载和进度</span>
+          <span data-lang="en">Loading and Progress</span>
         </h2>
       </div>
       <div class="uzu-grid uzu-grid-2">
         <article class="uzu-card uzu-grid">
           <div class="uzu-title-pair">
-            <h3><span data-lang="zh">处理中</span><span data-lang="en">Processing</span></h3>
-            <p><span data-lang="zh">不定进度条和活动点表示耗时未知的工作。</span><span data-lang="en">Indeterminate progress and activity dots show work when duration is unknown.</span></p>
+            <h3><span data-lang="zh">正在处理</span><span data-lang="en">Processing</span></h3>
+            <p><span data-lang="zh">用于等待时间不确定的任务。</span><span data-lang="en">For tasks where the remaining time is unknown.</span></p>
           </div>
           <div class="uzu-progress uzu-progress-indeterminate" role="progressbar" aria-label="Syncing changes"><span class="uzu-progress-bar"></span></div>
           <span class="uzu-activity" role="status" aria-label="Syncing">
@@ -563,8 +513,8 @@
         </article>
         <article class="uzu-card uzu-grid">
           <div class="uzu-title-pair">
-            <h3><span data-lang="zh">确定性进度</span><span data-lang="en">Determinate progress</span></h3>
-            <p><span data-lang="zh">线性进度条和环形进度用精确数值表示完成比例。</span><span data-lang="en">Linear and circular progress show exact completion ratios.</span></p>
+            <h3><span data-lang="zh">已知进度</span><span data-lang="en">Known progress</span></h3>
+            <p><span data-lang="zh">用于可以显示完成比例的任务。</span><span data-lang="en">For tasks where completion can be measured.</span></p>
           </div>
           <div class="uzu-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="64"><span class="uzu-progress-bar"></span></div>
           <span class="uzu-progress-circular" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72">
@@ -575,36 +525,32 @@
           </span>
         </article>
       </div>
-      <div class="uzu-grid uzu-grid-2 uzu-mt-block">
-        <article class="uzu-card">
-          <ol class="uzu-process" aria-label="Publish progress">
-            <li class="uzu-process-step is-complete"><span data-lang="zh">验证令牌</span><span data-lang="en">Validate tokens</span></li>
-            <li class="uzu-process-step is-active" aria-current="step"><span data-lang="zh">构建 CSS 包</span><span data-lang="en">Build CSS bundle</span></li>
-            <li class="uzu-process-step"><span data-lang="zh">打包发布</span><span data-lang="en">Package release</span></li>
-          </ol>
-        </article>
-      </div>
+      <ol class="uzu-process uzu-mt-block" aria-label="Publish progress">
+        <li class="uzu-process-step is-complete"><span data-lang="zh">检查样式</span><span data-lang="en">Check styles</span></li>
+        <li class="uzu-process-step is-active" aria-current="step"><span data-lang="zh">生成文件</span><span data-lang="en">Build files</span></li>
+        <li class="uzu-process-step"><span data-lang="zh">准备发布</span><span data-lang="en">Prepare release</span></li>
+      </ol>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="loading">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">14 / 展开与加载</span>
-          <span data-lang="en">14 / Disclosure and Loading</span>
+          <span data-lang="zh">12 / 展开和占位</span>
+          <span data-lang="en">12 / Disclosure and Placeholder</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">可展开内容和加载状态保持同一节奏。</span>
-          <span data-lang="en">Expandable content and loading states keep the same rhythm.</span>
+          <span data-lang="zh">展开面板和占位内容</span>
+          <span data-lang="en">Disclosure and Placeholder Content</span>
         </h2>
       </div>
       <div class="uzu-grid uzu-grid-2">
         <article class="uzu-disclosure" data-uzu-disclosure>
           <button class="uzu-disclosure-trigger" type="button" data-uzu-disclosure-trigger>
-            <span data-lang="zh">实现说明</span><span data-lang="en">Implementation notes</span>
+            <span data-lang="zh">更多内容</span><span data-lang="en">More details</span>
           </button>
           <div class="uzu-disclosure-panel" data-uzu-disclosure-panel>
-            <span data-lang="zh">使用展开组件展示可选细节、紧凑设置和简短参考说明。</span>
-            <span data-lang="en">Use disclosures for optional details, compact settings, and short reference notes.</span>
+            <span data-lang="zh">这里可以放默认隐藏的说明、设置或补充信息。</span>
+            <span data-lang="en">Use this area for details, settings, or supporting information hidden by default.</span>
           </div>
         </article>
         <article class="uzu-card uzu-grid">
@@ -616,77 +562,15 @@
       </div>
     </section>
 
-    <section class="uzu-section">
+    <section class="uzu-section" id="patterns">
       <div class="uzu-section-head">
         <p class="uzu-section-label">
-          <span data-lang="zh">15 / 无障碍</span>
-          <span data-lang="en">15 / Accessibility</span>
+          <span data-lang="zh">13 / 页面示例</span>
+          <span data-lang="en">13 / Page Examples</span>
         </p>
         <h2 class="uzu-section-title">
-          <span data-lang="zh">无障碍是组件契约的一部分。</span>
-          <span data-lang="en">Accessibility is part of the component contract.</span>
-        </h2>
-      </div>
-      <div class="uzu-grid uzu-grid-2">
-        <article class="uzu-card">
-          <div class="uzu-title-pair">
-            <h3><span data-lang="zh">焦点可见</span><span data-lang="en">Focus visible</span></h3>
-            <p><span data-lang="zh">键盘焦点使用柔和的墨水色调环。</span><span data-lang="en">Keyboard focus uses a soft ink-tinted ring.</span></p>
-          </div>
-          <button class="uzu-button uzu-mt-block" type="button"><span data-lang="zh">可聚焦控件</span><span data-lang="en">Focusable control</span></button>
-        </article>
-        <article class="uzu-card">
-          <div class="uzu-title-pair">
-            <h3><span data-lang="zh">颜色独立</span><span data-lang="en">Color independence</span></h3>
-            <p><span data-lang="zh">状态组件包含可读标签，而非仅依赖颜色。</span><span data-lang="en">Status components include readable labels, not color alone.</span></p>
-          </div>
-          <span class="uzu-badge uzu-badge-success uzu-mt-block"><span data-lang="zh">已保存</span><span data-lang="en">Saved</span></span>
-        </article>
-      </div>
-    </section>
-
-    <section class="uzu-section">
-      <div class="uzu-section-head">
-        <p class="uzu-section-label">
-          <span data-lang="zh">16 / 系统默认值</span>
-          <span data-lang="en">16 / System Defaults</span>
-        </p>
-        <h2 class="uzu-section-title">
-          <span data-lang="zh">系统默认值让页面显得有意为之。</span>
-          <span data-lang="en">System defaults make the page feel intentional.</span>
-        </h2>
-      </div>
-      <div class="uzu-grid uzu-grid-3">
-        <article class="uzu-card">
-          <div class="uzu-title-pair">
-            <h3><span data-lang="zh">文本选择</span><span data-lang="en">Selection</span></h3>
-            <p><span data-lang="zh">文本选择使用柔和的墨水底色。</span><span data-lang="en">Text selection uses a soft ink wash.</span></p>
-          </div>
-        </article>
-        <article class="uzu-card uzu-scroll">
-          <div class="uzu-title-pair">
-            <h3><span data-lang="zh">滚动条</span><span data-lang="en">Scrollbars</span></h3>
-            <p><span data-lang="zh">滚动条保持窄且纸色。</span><span data-lang="en">Scrollbars stay narrow and paper-toned.</span></p>
-          </div>
-        </article>
-        <article class="uzu-card">
-          <div class="uzu-title-pair">
-            <h3><span data-lang="zh">占位符</span><span data-lang="en">Placeholders</span></h3>
-            <p><span data-lang="zh">提示保持可读，不与输入文本争抢注意力。</span><span data-lang="en">Hints stay legible without competing with input text.</span></p>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="uzu-section">
-      <div class="uzu-section-head">
-        <p class="uzu-section-label">
-          <span data-lang="zh">17 / 布局模式</span>
-          <span data-lang="en">17 / Layout Patterns</span>
-        </p>
-        <h2 class="uzu-section-title">
-          <span data-lang="zh">这些模式组合页面，无需私有的 CSS 孤岛。</span>
-          <span data-lang="en">Patterns compose pages without private CSS islands.</span>
+          <span data-lang="zh">页面布局</span>
+          <span data-lang="en">Page Layouts</span>
         </h2>
       </div>
       <div class="uzu-project-list">
@@ -696,11 +580,11 @@
           </div>
           <div class="uzu-project-copy">
             <div class="uzu-title-pair">
-              <h3><span data-lang="zh">产品页面</span><span data-lang="en">Product page</span></h3>
-              <p><span data-lang="zh">英雄区域、操作按钮、产品模型图、功能节奏和屏幕预览。</span><span data-lang="en">Hero, actions, mockup, feature rhythm, and screen previews.</span></p>
+              <h3><span data-lang="zh">产品页</span><span data-lang="en">Product page</span></h3>
+              <p><span data-lang="zh">包含标题、主要操作、预览图和内容分组。</span><span data-lang="en">Includes a title, primary actions, preview media, and content groups.</span></p>
             </div>
           </div>
-          <a class="uzu-text-link uzu-project-action" href="../DESIGN.md#page-patterns"><span data-lang="zh">查看模式</span><span data-lang="en">View pattern</span></a>
+          <a class="uzu-text-link uzu-project-action" href="../DESIGN.md#page-patterns"><span data-lang="zh">查看说明</span><span data-lang="en">View notes</span></a>
         </article>
         <article class="uzu-project-row">
           <div class="uzu-project-media">
@@ -708,27 +592,11 @@
           </div>
           <div class="uzu-project-copy">
             <div class="uzu-title-pair">
-              <h3><span data-lang="zh">目录页面</span><span data-lang="en">Catalog page</span></h3>
-              <p><span data-lang="zh">令牌、组件、状态、无障碍和默认值一览无余。</span><span data-lang="en">Tokens, components, states, accessibility, and defaults in one scan.</span></p>
+              <h3><span data-lang="zh">总览页</span><span data-lang="en">Overview page</span></h3>
+              <p><span data-lang="zh">集中展示颜色、组件、状态和页面默认样式。</span><span data-lang="en">Collects colors, components, states, and default page styles.</span></p>
             </div>
           </div>
-          <a class="uzu-text-link uzu-project-action" href="../DESIGN.md#page-patterns"><span data-lang="zh">查看模式</span><span data-lang="en">View pattern</span></a>
-        </article>
-      </div>
-      <div class="uzu-feature-list uzu-mt-block">
-        <article class="uzu-feature-item">
-          <span class="uzu-feature-index">01</span>
-          <div class="uzu-title-pair">
-            <h3><span data-lang="zh">功能列表</span><span data-lang="en">Feature list</span></h3>
-            <p><span data-lang="zh">当文案比容器更重要时，使用列表节奏。</span><span data-lang="en">Use list rhythm when the copy matters more than the frame.</span></p>
-          </div>
-        </article>
-        <article class="uzu-feature-item">
-          <span class="uzu-feature-index">02</span>
-          <div class="uzu-title-pair">
-            <h3><span data-lang="zh">屏幕卡片</span><span data-lang="en">Screen cards</span></h3>
-            <p><span data-lang="zh">当对象是具体的屏幕或物件时，使用有边界的卡片。</span><span data-lang="en">Use bounded cards when the object is a concrete screen or artifact.</span></p>
-          </div>
+          <a class="uzu-text-link uzu-project-action" href="../DESIGN.md#page-patterns"><span data-lang="zh">查看说明</span><span data-lang="en">View notes</span></a>
         </article>
       </div>
       <div class="uzu-screen-grid uzu-mt-block">
@@ -736,21 +604,21 @@
           <div class="uzu-screen-art uzu-screen-art-today"><span class="uzu-screen-mark"></span></div>
           <div class="uzu-title-pair">
             <h3><span data-lang="zh">概览</span><span data-lang="en">Overview</span></h3>
-            <p><span data-lang="zh">主要屏幕摘要。</span><span data-lang="en">Primary screen summary.</span></p>
+            <p><span data-lang="zh">用于查看核心信息。</span><span data-lang="en">For reviewing key information.</span></p>
           </div>
         </article>
         <article class="uzu-screen-card">
           <div class="uzu-screen-art uzu-screen-art-plan"><span class="uzu-screen-mark"></span></div>
           <div class="uzu-title-pair">
             <h3><span data-lang="zh">撰写</span><span data-lang="en">Compose</span></h3>
-            <p><span data-lang="zh">专注的创作流程。</span><span data-lang="en">Focused creation flow.</span></p>
+            <p><span data-lang="zh">用于输入和整理内容。</span><span data-lang="en">For entering and arranging content.</span></p>
           </div>
         </article>
         <article class="uzu-screen-card">
           <div class="uzu-screen-art uzu-screen-art-review"><span class="uzu-screen-mark"></span></div>
           <div class="uzu-title-pair">
             <h3><span data-lang="zh">回顾</span><span data-lang="en">Review</span></h3>
-            <p><span data-lang="zh">结果和状态查看。</span><span data-lang="en">Outcome and status view.</span></p>
+            <p><span data-lang="zh">用于检查结果和当前状态。</span><span data-lang="en">For checking results and current status.</span></p>
           </div>
         </article>
       </div>
@@ -759,9 +627,7 @@
     <footer class="uzu-footer">
       <span>Usuzumi</span>
       <span class="uzu-divider">·</span>
-      <a href="../DESIGN.md">DESIGN.md</a>
-      <span class="uzu-divider">·</span>
-      <a href="index.html"><span data-lang="zh">示例页面</span><span data-lang="en">Example pages</span></a>
+      <a href="https://github.com/Mashiro0619/Usuzumi">Mashiro0619/Usuzumi</a>
     </footer>
   </main>
 </body>

@@ -1,6 +1,6 @@
 ﻿.uzu-button {
   min-height: 40px;
-  padding: 8px 12px 9px;
+  padding: 8px 18px 9px;
   border: 1px solid color-mix(in srgb, var(--uzu-border) 86%, var(--uzu-fg-strong));
   border-radius: var(--uzu-radius-standard);
   background: color-mix(in srgb, var(--uzu-surface) 72%, transparent);
@@ -23,6 +23,18 @@
   border-color: color-mix(in srgb, var(--uzu-fg-strong) 38%, var(--uzu-border));
   background: var(--uzu-surface);
   color: var(--uzu-fg-strong);
+}
+
+.uzu-app a.uzu-button,
+.uzu-scope a.uzu-button {
+  color: var(--uzu-fg-strong);
+  text-decoration: none;
+}
+
+.uzu-app a.uzu-button:hover,
+.uzu-scope a.uzu-button:hover {
+  color: var(--uzu-fg-strong);
+  text-decoration: none;
 }
 
 .uzu-button:disabled,
@@ -62,9 +74,19 @@
   color: var(--uzu-action-fg);
 }
 
+.uzu-app a.uzu-button-primary,
+.uzu-scope a.uzu-button-primary {
+  color: var(--uzu-action-fg);
+}
+
 .uzu-button-primary:hover {
   border-color: var(--uzu-action-bg);
   background: color-mix(in srgb, var(--uzu-action-bg) 92%, var(--uzu-surface));
+  color: var(--uzu-action-fg);
+}
+
+.uzu-app a.uzu-button-primary:hover,
+.uzu-scope a.uzu-button-primary:hover {
   color: var(--uzu-action-fg);
 }
 
@@ -91,6 +113,91 @@
   height: 14px;
   display: block;
   flex: 0 0 auto;
+}
+
+.uzu-app .uzu-button,
+.uzu-scope .uzu-button {
+  min-height: 40px;
+  padding: 8px 18px 9px;
+  border: 1px solid color-mix(in srgb, var(--uzu-border) 86%, var(--uzu-fg-strong));
+  border-radius: var(--uzu-radius-standard);
+  background: color-mix(in srgb, var(--uzu-surface) 72%, transparent);
+  color: var(--uzu-fg-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+  transition: background var(--uzu-motion-base) var(--uzu-ease-standard), border-color var(--uzu-motion-base) var(--uzu-ease-standard), color var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-app .uzu-button:hover,
+.uzu-scope .uzu-button:hover {
+  border-color: color-mix(in srgb, var(--uzu-fg-strong) 38%, var(--uzu-border));
+  background: var(--uzu-surface);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-app .uzu-button-primary,
+.uzu-scope .uzu-button-primary {
+  border-color: var(--uzu-action-bg);
+  background: var(--uzu-action-bg);
+  color: var(--uzu-action-fg);
+}
+
+.uzu-app .uzu-button-primary:hover,
+.uzu-scope .uzu-button-primary:hover {
+  border-color: var(--uzu-action-bg);
+  background: color-mix(in srgb, var(--uzu-action-bg) 92%, var(--uzu-surface));
+  color: var(--uzu-action-fg);
+}
+
+.uzu-app .uzu-button-ghost,
+.uzu-scope .uzu-button-ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--uzu-muted);
+}
+
+.uzu-app .uzu-button-ghost:hover,
+.uzu-scope .uzu-button-ghost:hover {
+  border-color: color-mix(in srgb, var(--uzu-fg-strong) 18%, transparent);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 58%, transparent);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-app .uzu-button-danger,
+.uzu-scope .uzu-button-danger {
+  border-color: color-mix(in srgb, var(--uzu-danger) 35%, var(--uzu-border));
+  background: var(--uzu-danger-bg);
+  color: var(--uzu-danger);
+}
+
+.uzu-app .uzu-button-danger:hover,
+.uzu-scope .uzu-button-danger:hover {
+  border-color: color-mix(in srgb, var(--uzu-danger) 52%, var(--uzu-border));
+  background: color-mix(in srgb, var(--uzu-danger-bg) 74%, var(--uzu-surface));
+  color: var(--uzu-danger);
+}
+
+.uzu-app a.uzu-button-ghost,
+.uzu-scope a.uzu-button-ghost,
+.uzu-app a.uzu-button-ghost:hover,
+.uzu-scope a.uzu-button-ghost:hover {
+  color: var(--uzu-muted);
+}
+
+.uzu-app a.uzu-button-danger,
+.uzu-scope a.uzu-button-danger,
+.uzu-app a.uzu-button-danger:hover,
+.uzu-scope a.uzu-button-danger:hover {
+  color: var(--uzu-danger);
 }
 
 .uzu-text-link {
@@ -796,15 +903,25 @@
 }
 
 .uzu-toast {
-  padding: 14px 16px;
+  --uzu-toast-width: 360px;
+  --uzu-toast-inline-padding: 16px;
+  --uzu-toast-content-end-offset: 0px;
+  --uzu-toast-action-size: 28px;
+  --uzu-toast-action-gap: 12px;
+  position: relative;
+  box-sizing: border-box;
+  width: min(var(--uzu-toast-width), 100%);
+  padding: 14px var(--uzu-toast-inline-padding);
   border: 1px solid var(--uzu-border);
   border-radius: var(--uzu-radius-medium);
   background: var(--uzu-surface);
   color: var(--uzu-fg);
   box-shadow: var(--uzu-shadow-popover);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
+  display: block;
+}
+
+.uzu-toast-stack .uzu-toast {
+  width: 100%;
 }
 
 .uzu-toast[data-uzu-toast] {
@@ -812,21 +929,33 @@
 }
 
 .uzu-toast[data-uzu-toast].is-dismissed {
-  display: grid;
+  display: block;
   pointer-events: none;
   animation: uzu-toast-out var(--uzu-motion-base) var(--uzu-ease-standard) forwards;
 }
 
 .uzu-toast-content {
   min-width: 0;
+  max-width: calc(100% - var(--uzu-toast-content-end-offset));
+  overflow-wrap: anywhere;
+}
+
+.uzu-toast:has(.uzu-toast-close) .uzu-toast-content > :first-child > :first-child {
+  padding-right: calc(var(--uzu-toast-action-size) + var(--uzu-toast-action-gap));
 }
 
 .uzu-toast-close {
-  width: 28px;
-  height: 28px;
+  position: absolute;
+  top: 14px;
+  right: calc(var(--uzu-toast-inline-padding) + var(--uzu-toast-content-end-offset));
+  width: var(--uzu-toast-action-size);
+  height: var(--uzu-toast-action-size);
+  font-size: 14px;
+  line-height: 1;
 }
 
 .uzu-disclosure {
+  --uzu-disclosure-panel-block-end-padding: 20px;
   border: 1px solid var(--uzu-border);
   border-radius: var(--uzu-radius-micro);
   background: var(--uzu-surface);
@@ -864,18 +993,27 @@
 }
 
 .uzu-disclosure-panel {
-  padding: 0 14px 14px;
+  max-height: 0;
+  padding: 0 14px;
   color: var(--uzu-muted);
   font-size: 14px;
   line-height: 1.65;
+  opacity: 0;
+  overflow: hidden;
   transform-origin: top center;
 }
 
 .uzu-disclosure.is-open .uzu-disclosure-panel {
+  max-height: var(--uzu-disclosure-panel-height, 240px);
+  padding-bottom: var(--uzu-disclosure-panel-block-end-padding);
+  opacity: 1;
   animation: uzu-disclosure-in var(--uzu-motion-base) var(--uzu-ease-standard);
 }
 
 .uzu-disclosure.is-closing .uzu-disclosure-panel {
+  max-height: 0;
+  padding-bottom: 0;
+  opacity: 0;
   pointer-events: none;
   animation: uzu-disclosure-out var(--uzu-motion-base) var(--uzu-ease-standard) forwards;
 }
@@ -1090,24 +1228,28 @@
 @keyframes uzu-disclosure-in {
   from {
     opacity: 0;
-    transform: scaleY(.98);
+    max-height: 0;
+    padding-bottom: 0;
   }
 
   to {
     opacity: 1;
-    transform: scaleY(1);
+    max-height: var(--uzu-disclosure-panel-height, 240px);
+    padding-bottom: var(--uzu-disclosure-panel-block-end-padding);
   }
 }
 
 @keyframes uzu-disclosure-out {
   from {
     opacity: 1;
-    transform: scaleY(1);
+    max-height: var(--uzu-disclosure-panel-height, 240px);
+    padding-bottom: var(--uzu-disclosure-panel-block-end-padding);
   }
 
   to {
     opacity: 0;
-    transform: scaleY(.98);
+    max-height: 0;
+    padding-bottom: 0;
   }
 }
 
@@ -1182,7 +1324,8 @@
     height: 34px;
   }
 
-  .uzu-button {
+.uzu-app .uzu-button,
+.uzu-scope .uzu-button {
     width: 100%;
   }
 

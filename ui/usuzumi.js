@@ -699,6 +699,18 @@
     });
   }
 
+  function parseLengthValue(value) {
+    return Number.parseFloat(value) || 0;
+  }
+
+  function syncDisclosurePanelHeight(panel) {
+    if (!panel) return;
+    const style = window.getComputedStyle(panel);
+    const targetPadding = parseLengthValue(style.getPropertyValue('--uzu-disclosure-panel-block-end-padding'));
+    const currentPadding = parseLengthValue(style.paddingBottom);
+    panel.style.setProperty('--uzu-disclosure-panel-height', `${panel.scrollHeight + Math.max(0, targetPadding - currentPadding)}px`);
+  }
+
   function setDisclosureState(disclosure, open, emit = true) {
     const trigger = disclosure.querySelector('[data-uzu-disclosure-trigger]');
     const panel = disclosure.querySelector('[data-uzu-disclosure-panel]');
@@ -710,10 +722,12 @@
     if (trigger) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open) {
       disclosure.classList.remove('is-closing');
-      disclosure.classList.add('is-open');
       if (panel) panel.hidden = false;
+      syncDisclosurePanelHeight(panel);
+      disclosure.classList.add('is-open');
     } else {
       if (disclosure.classList.contains('is-open')) {
+        syncDisclosurePanelHeight(panel);
         disclosure.classList.remove('is-open');
         disclosure.classList.add('is-closing');
         const finish = () => {

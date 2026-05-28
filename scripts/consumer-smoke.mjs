@@ -437,7 +437,10 @@ async function browserSmoke() {
 </head>
 <body class="uzu-app">
   <main class="uzu-page">
-    <button class="uzu-button" type="button">Hover target</button>
+    <button id="consumer-button" class="uzu-button" type="button">Hover target</button>
+    <button id="consumer-primary" class="uzu-button uzu-button-primary" type="button">Primary</button>
+    <a id="consumer-ghost" class="uzu-button uzu-button-ghost" href="#ghost">Ghost</a>
+    <a id="consumer-danger" class="uzu-button uzu-button-danger" href="#danger">Danger</a>
     <button class="uzu-icon-button" type="button" data-uzu-tooltip="Tooltip text" aria-label="Tooltip target">?</button>
     <div class="uzu-tabs" data-uzu-tabs>
       <button class="uzu-tab is-active" type="button" data-uzu-tab-value="one" aria-selected="true">One</button>
@@ -476,7 +479,12 @@ async function browserSmoke() {
       <li class="uzu-process-step">Package release</li>
     </ol>
     <article class="uzu-toast" data-uzu-toast>
-      <div class="uzu-toast-content">Saved</div>
+      <div class="uzu-toast-content">
+        <div class="uzu-title-pair">
+          <h3>Saved</h3>
+          <p>Dismissible toast message with a longer body line for wrapping checks.</p>
+        </div>
+      </div>
       <button class="uzu-icon-button uzu-toast-close" type="button" data-uzu-toast-close aria-label="Dismiss toast">x</button>
     </article>
     <button class="uzu-button" type="button" data-uzu-dialog-target="#consumer-dialog">Open dialog</button>
@@ -572,6 +580,7 @@ async function browserSmoke() {
       const selectExpandedAfterClose = selectTrigger.getAttribute('aria-expanded');
       click(disclosureTrigger);
       const disclosureOpenAnimation = getComputedStyle(disclosurePanel).animationName;
+      const disclosurePanelTargetHeight = Number.parseFloat(disclosurePanel.style.getPropertyValue('--uzu-disclosure-panel-height'));
       click(disclosureTrigger);
       const disclosureCloseAnimation = getComputedStyle(disclosurePanel).animationName;
       const disclosureClosing = disclosure.classList.contains('is-closing');
@@ -587,7 +596,11 @@ async function browserSmoke() {
       });
       click(dialogTrigger);
       const style = getComputedStyle(document.querySelector('.uzu-callout'));
-      const buttonTransform = getComputedStyle(document.querySelector('.uzu-button')).transform;
+      const consumerButton = getComputedStyle(document.querySelector('#consumer-button'));
+      const consumerPrimary = getComputedStyle(document.querySelector('#consumer-primary'));
+      const consumerGhost = getComputedStyle(document.querySelector('#consumer-ghost'));
+      const consumerDanger = getComputedStyle(document.querySelector('#consumer-danger'));
+      const buttonTransform = consumerButton.transform;
       const tabsIndicator = getComputedStyle(tabs, '::after');
       const segmentedIndicator = getComputedStyle(segmented, '::before');
       const progressBar = getComputedStyle(document.querySelector('.uzu-progress-indeterminate .uzu-progress-bar'));
@@ -597,6 +610,20 @@ async function browserSmoke() {
       const dialogOpenAnimation = getComputedStyle(dialog).animationName;
       const dialogOpenTransform = getComputedStyle(dialog).transform;
       const toast = document.querySelector('[data-uzu-toast]');
+      const toastContent = toast.querySelector('.uzu-toast-content');
+      const toastClose = toast.querySelector('.uzu-toast-close');
+      const toastTitle = toast.querySelector('h3');
+      const toastWidthDefault = toast.getBoundingClientRect().width;
+      const toastLeftDefault = toast.getBoundingClientRect().left;
+      const toastRightDefault = toast.getBoundingClientRect().right;
+      const toastContentLeftDefault = toastContent.getBoundingClientRect().left;
+      const toastContentRightDefault = toastContent.getBoundingClientRect().right;
+      const toastCloseRightDefault = toastClose.getBoundingClientRect().right;
+      const toastCloseWidth = toastClose.getBoundingClientRect().width;
+      const toastTitlePaddingRight = Number.parseFloat(getComputedStyle(toastTitle).paddingRight);
+      toast.style.setProperty('--uzu-toast-content-end-offset', '8px');
+      const toastContentRightCustom = toastContent.getBoundingClientRect().right;
+      const toastCloseRightCustom = toastClose.getBoundingClientRect().right;
       const toastOpenTransform = getComputedStyle(toast).transform;
       const tooltipTransform = getComputedStyle(document.querySelector('[data-uzu-tooltip]'), '::after').transform;
       click(dialog.querySelector('[data-uzu-dialog-close]'));
@@ -630,6 +657,7 @@ async function browserSmoke() {
         selectExpandedAfterClose,
         disclosureOpenAnimation,
         disclosureCloseAnimation,
+        disclosurePanelTargetHeight,
         disclosureClosing,
         disclosureHiddenWhileClosing,
         buttonTransform,
@@ -641,9 +669,25 @@ async function browserSmoke() {
         dialogCloseAnimation,
         dialogOpenTransform,
         dialogCloseTransform,
+        toastWidthDefault,
+        toastLeftDefault,
+        toastRightDefault,
+        toastContentLeftDefault,
+        toastContentRightDefault,
+        toastCloseRightDefault,
+        toastContentRightCustom,
+        toastCloseRightCustom,
+        toastCloseWidth,
+        toastTitlePaddingRight,
         toastOpenTransform,
         toastCloseTransform,
         tooltipTransform,
+        consumerButtonFontSize: consumerButton.fontSize,
+        consumerButtonHeight: Math.round(document.querySelector('#consumer-button').getBoundingClientRect().height),
+        consumerPrimaryBackground: consumerPrimary.backgroundColor,
+        consumerPrimaryColor: consumerPrimary.color,
+        consumerGhostColor: consumerGhost.color,
+        consumerDangerColor: consumerDanger.color,
         dialogClosing,
         dialogHiddenWhileClosing,
         secondDialogOpen: secondDialog.classList.contains('is-open'),
@@ -671,6 +715,7 @@ async function browserSmoke() {
     if (value.selectOpenTransform !== 'none') throw new Error('Browser consumer select menu should not shift or scale while opening');
     if (!value.selectClosing || value.selectExpandedAfterClose !== 'false') throw new Error('Browser consumer select did not keep a closing state with collapsed ARIA');
     if (value.disclosureOpenAnimation !== 'uzu-disclosure-in' || value.disclosureCloseAnimation !== 'uzu-disclosure-out') throw new Error('Browser consumer disclosure did not animate open and close');
+    if (!(value.disclosurePanelTargetHeight > 0)) throw new Error('Browser consumer disclosure did not set a measured panel height');
     if (!value.disclosureClosing || value.disclosureHiddenWhileClosing) throw new Error('Browser consumer disclosure did not stay visible while closing');
     if (value.buttonTransform !== 'none') throw new Error('Browser consumer button hover/base transform should not move the button');
     if (value.calloutBorderStyle === 'none') throw new Error('Browser consumer CSS did not style callouts');
@@ -680,8 +725,18 @@ async function browserSmoke() {
     if (value.dialogOpenAnimation !== 'uzu-dialog-surface-in') throw new Error('Browser consumer dialog did not animate on open');
     if (value.dialogCloseAnimation !== 'uzu-dialog-surface-out') throw new Error('Browser consumer dialog did not animate on close');
     if (value.dialogOpenTransform !== 'none' || value.dialogCloseTransform !== 'none') throw new Error('Browser consumer dialog should not shift or scale while opening or closing');
+    if (Math.round(value.toastWidthDefault) !== 360) throw new Error('Browser consumer toast should use the default compact width');
+    if (Math.abs(value.toastContentRightDefault - value.toastCloseRightDefault) > 1) throw new Error('Browser consumer toast close button should align to the content boundary');
+    if (Math.abs((value.toastContentLeftDefault - value.toastLeftDefault) - (value.toastRightDefault - value.toastContentRightDefault)) > 1) throw new Error('Browser consumer toast should keep balanced left and right padding by default');
+    if (Math.abs(value.toastContentRightCustom - value.toastCloseRightCustom) > 1) throw new Error('Browser consumer toast custom boundary should keep the close button aligned');
+    if (value.toastContentRightDefault - value.toastContentRightCustom < 7) throw new Error('Browser consumer toast custom boundary variable did not change the content edge');
+    if (Math.round(value.toastCloseWidth) !== 28 || value.toastTitlePaddingRight < 40) throw new Error('Browser consumer toast close affordance should keep title text clear');
     if (value.toastOpenTransform !== 'none' || value.toastCloseTransform !== 'none') throw new Error('Browser consumer toast should not shift or scale while opening or closing');
     if (!value.tooltipTransform.startsWith('matrix(1, 0, 0, 1,') || !value.tooltipTransform.endsWith(', 0)')) throw new Error('Browser consumer tooltip should only keep its static centering transform');
+    if (value.consumerButtonFontSize !== '13px' || value.consumerButtonHeight !== 40) throw new Error('Browser consumer button size did not return to the default metrics');
+    if (value.consumerPrimaryBackground !== 'rgb(47, 47, 44)' || value.consumerPrimaryColor !== 'rgb(247, 246, 241)') throw new Error('Browser consumer primary button colors are wrong');
+    if (value.consumerGhostColor !== 'rgb(104, 104, 102)') throw new Error('Browser consumer ghost button link color is wrong');
+    if (value.consumerDangerColor !== 'rgb(122, 77, 74)') throw new Error('Browser consumer danger button link color is wrong');
     if (!value.dialogClosing || value.dialogHiddenWhileClosing || !value.overlayClosing) throw new Error('Browser consumer dialog did not stay visible while closing');
     if (!value.secondDialogOpen || !value.focusedSecondDialog) throw new Error('Browser consumer second dialog did not remain active while first dialog closed');
     if (value.closeEventsBeforeAnimationEnd !== 0 || value.closeEventTriggerAfterAnimation !== 'first-trigger') throw new Error('Browser consumer dialog close event used the wrong trigger during overlapping dialog animation');
