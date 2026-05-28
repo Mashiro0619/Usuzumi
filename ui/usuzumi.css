@@ -337,10 +337,17 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   max-width: 100%;
   color: var(--uzu-fg-strong);
   font-family: var(--uzu-font-signature);
-  font-size: 124px;
+  padding-left: .55em;
+  font-size: 120px;
   font-weight: 400;
-  line-height: 1.05;
+  line-height: 1.42;
   letter-spacing: 0;
+}
+
+.uzu-signature + .uzu-body-large {
+  margin-top: 72px;
+  font-size: 16px;
+  line-height: 1.75;
 }
 
 .uzu-hero-title {
@@ -448,8 +455,8 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   }
 
   .uzu-signature {
-    font-size: 76px;
-    line-height: 1.12;
+    font-size: 82px;
+    line-height: 1.42;
   }
 
   .uzu-page-title {
@@ -463,8 +470,7 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 @media (max-width: 430px) {
   .uzu-signature {
-    font-size: 58px;
-    line-height: 1.18;
+    font-size: 60px;
   }
 }
 
