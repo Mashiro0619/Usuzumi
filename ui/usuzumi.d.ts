@@ -26,6 +26,14 @@ declare global {
     index: number;
   }
 
+  interface UsuzumiPaginationChangeDetail {
+    value: string;
+    page: HTMLElement;
+    pagination: HTMLElement;
+    index: number;
+    panel: HTMLElement | null;
+  }
+
   interface UsuzumiSwitchChangeDetail {
     checked: boolean;
     switch: HTMLElement;
@@ -51,6 +59,7 @@ declare global {
     applyTheme(root: HTMLElement, mode: UsuzumiThemeMode, key?: string, persist?: boolean): void;
     applyLanguage(root: HTMLElement, language: UsuzumiLanguage, key?: string): void;
     setSwitchState(control: HTMLElement, checked: boolean, emit?: boolean): void;
+    setPaginationPage(pagination: HTMLElement, page: HTMLElement | string, emit?: boolean): void;
     openDialog(dialog: HTMLElement, trigger?: HTMLElement | null): void;
     closeDialog(dialog: HTMLElement): void;
   }
@@ -63,6 +72,7 @@ declare global {
     "uzu-select-change": CustomEvent<UsuzumiSelectChangeDetail>;
     "uzu-tabs-change": CustomEvent<UsuzumiTabsChangeDetail>;
     "uzu-segmented-change": CustomEvent<UsuzumiSegmentedChangeDetail>;
+    "uzu-pagination-change": CustomEvent<UsuzumiPaginationChangeDetail>;
     "uzu-switch-change": CustomEvent<UsuzumiSwitchChangeDetail>;
     "uzu-disclosure-change": CustomEvent<UsuzumiDisclosureChangeDetail>;
     "uzu-toast-close": CustomEvent<UsuzumiToastCloseDetail>;

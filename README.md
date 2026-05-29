@@ -129,9 +129,9 @@ Runtime-written variables for tab indicators, segmented indicators, and measured
 ## Included
 
 - Design tokens for color, typography, spacing, borders, radius, motion, and dark mode.
-- Layout and component primitives for pages, sections, grids, buttons, cards, forms, tabs, badges, alert presets, callouts, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, and tooltips.
+- Layout and component primitives for pages, sections, grids, buttons, toolbars, breadcrumbs, pagination, cards, stats, forms, tabs, badges, separators, code, keyboard hints, alert presets, callouts, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, and tooltips.
 - Page patterns for personal homepages, app introduction pages, design catalogs, project lists, mockups, and feature sections.
-- Small JavaScript helpers for theme toggles, language toggles, custom selects, tabs, segmented controls, switches, disclosures, dialogs, and toast dismissal.
+- Small JavaScript helpers for theme toggles, language toggles, custom selects, tabs, segmented controls, pagination, switches, disclosures, dialogs, and toast dismissal.
 
 ## Runtime
 
@@ -146,6 +146,7 @@ Custom events:
 - `uzu-select-change`: `{ value, label, option, select }`
 - `uzu-tabs-change`: `{ value, tab, tabs, index, panel }`
 - `uzu-segmented-change`: `{ value, segment, segmented, index }`
+- `uzu-pagination-change`: `{ value, page, pagination, index, panel }`
 - `uzu-switch-change`: `{ checked, switch }`
 - `uzu-disclosure-change`: `{ open, disclosure }`
 - `uzu-toast-close`: `{ toast }`
@@ -155,9 +156,9 @@ Type declarations are included.
 
 ## Examples
 
-- [Design system catalog](https://github.com/Mashiro0619/Usuzumi/blob/main/example/preview.html)
-- [Personal homepage example](https://github.com/Mashiro0619/Usuzumi/blob/main/example/index.html)
-- [App introduction example](https://github.com/Mashiro0619/Usuzumi/blob/main/example/app-introduction.html)
+- [Homepage and component showcase](https://github.com/Mashiro0619/Usuzumi/blob/main/example/index.html)
+- [Personal homepage example](https://github.com/Mashiro0619/Usuzumi/blob/main/example/example-1.html)
+- [App introduction example](https://github.com/Mashiro0619/Usuzumi/blob/main/example/example-2.html)
 
 The examples can be opened directly in a browser. No build step or development server is required.
 
@@ -170,7 +171,7 @@ npm run build:css
 npm run validate
 ```
 
-`npm run validate` checks source guardrails, then packs the library and installs it into a temporary consumer project to verify package exports, CSS files, type declarations, CDN-style `ui/*` paths, browser runtime behavior, and preview layout smoke checks.
+`npm run validate` checks source guardrails, then packs the library and installs it into a temporary consumer project to verify package exports, CSS files, type declarations, CDN-style `ui/*` paths, browser runtime behavior, and site layout smoke checks.
 
 The runtime library has no dependencies. See [DESIGN.md](DESIGN.md) for the full design specification.
 

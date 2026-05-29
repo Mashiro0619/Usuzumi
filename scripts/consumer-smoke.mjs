@@ -370,6 +370,13 @@ assert(packageJson.exports['./usuzumi-signature.css'] === './ui/usuzumi-signatur
 const css = readPackageFile(packageRoot, 'ui/usuzumi.css');
 assert(css.includes('.uzu-app'), 'Published CSS is missing app styles');
 assert(css.includes('.uzu-callout'), 'Published CSS is missing callout styles');
+assert(css.includes('.uzu-toolbar'), 'Published CSS is missing toolbar styles');
+assert(css.includes('.uzu-breadcrumb'), 'Published CSS is missing breadcrumb styles');
+assert(css.includes('.uzu-pagination'), 'Published CSS is missing pagination styles');
+assert(css.includes('.uzu-page-panel'), 'Published CSS is missing pagination panel styles');
+assert(css.includes('.uzu-stat'), 'Published CSS is missing stat styles');
+assert(css.includes('.uzu-code'), 'Published CSS is missing inline code styles');
+assert(css.includes('.uzu-kbd'), 'Published CSS is missing keyboard hint styles');
 assert(css.includes('.uzu-segment[aria-pressed="true"]'), 'Published CSS is missing segmented ARIA active styles');
 assert(css.includes('.uzu-progress-indeterminate'), 'Published CSS is missing indeterminate progress styles');
 assert(css.includes('.uzu-activity-dot'), 'Published CSS is missing activity indicator styles');
@@ -379,11 +386,13 @@ const js = readPackageFile(packageRoot, 'ui/usuzumi.js');
 assert(js.includes('window.Usuzumi'), 'Runtime does not expose window.Usuzumi');
 assert(js.includes('data-uzu-tabs'), 'Runtime is missing tabs initialization support');
 assert(js.includes('data-uzu-segmented'), 'Runtime is missing segmented initialization support');
+assert(js.includes('data-uzu-pagination'), 'Runtime is missing pagination initialization support');
 
 const dts = readPackageFile(packageRoot, 'ui/usuzumi.d.ts');
 assert(dts.includes('interface UsuzumiApi'), 'Types are missing UsuzumiApi');
 assert(dts.includes('"uzu-tabs-change"'), 'Types are missing tabs event declarations');
 assert(dts.includes('"uzu-segmented-change"'), 'Types are missing segmented event declarations');
+assert(dts.includes('"uzu-pagination-change"'), 'Types are missing pagination event declarations');
 
 const signatureCss = readPackageFile(packageRoot, 'ui/usuzumi-signature.css');
 assert(signatureCss.includes('./css/fonts.css'), 'Signature CSS must import packaged fonts.css');
@@ -434,15 +443,67 @@ async function browserSmoke() {
   <meta charset="utf-8">
   <link rel="stylesheet" href="./node_modules/usuzumi/ui/usuzumi.css">
   <script src="./node_modules/usuzumi/ui/usuzumi.js" defer></script>
+  <script>try { localStorage.setItem('consumer-theme', 'dark'); } catch (_) {}</script>
 </head>
 <body class="uzu-app">
   <main class="uzu-page">
+    <section id="consumer-theme-root" class="uzu-scope" data-theme="light" data-uzu-theme-key="consumer-theme">
+      <button id="consumer-theme-toggle" class="uzu-icon-button" type="button" data-uzu-theme-toggle data-uzu-theme-target="#consumer-theme-root" aria-label="Theme">T</button>
+    </section>
     <button id="consumer-button" class="uzu-button" type="button">Hover target</button>
     <button id="consumer-primary" class="uzu-button uzu-button-primary" type="button">Primary</button>
     <a id="consumer-ghost" class="uzu-button uzu-button-ghost" href="#ghost">Ghost</a>
     <a id="consumer-danger" class="uzu-button uzu-button-danger" href="#danger">Danger</a>
     <button class="uzu-icon-button" type="button" data-uzu-tooltip="Tooltip text" aria-label="Tooltip target">?</button>
     <button id="consumer-tooltip-zh" class="uzu-icon-button" type="button" data-uzu-tooltip="短提示" aria-label="Chinese tooltip target">?</button>
+    <nav aria-label="Consumer breadcrumb">
+      <ol class="uzu-breadcrumb" id="consumer-breadcrumb">
+        <li><a href="#home">Home</a></li>
+        <li><span aria-current="page">Components</span></li>
+      </ol>
+    </nav>
+    <div class="uzu-toolbar" id="consumer-toolbar" role="toolbar" aria-label="Consumer actions">
+      <div class="uzu-toolbar-group">
+        <button class="uzu-button uzu-button-primary" id="consumer-toolbar-button" type="button">New</button>
+        <button class="uzu-button" type="button">Import</button>
+      </div>
+      <div class="uzu-toolbar-group">
+        <button class="uzu-icon-button" type="button" aria-label="List view">≡</button>
+      </div>
+    </div>
+    <article class="uzu-stat" id="consumer-stat">
+      <p class="uzu-stat-label">Components</p>
+      <p class="uzu-stat-value">42</p>
+      <p class="uzu-stat-note">Public primitives.</p>
+    </article>
+    <p><code class="uzu-code" id="consumer-code">.uzu-scope</code> <kbd class="uzu-kbd" id="consumer-kbd">Ctrl</kbd></p>
+    <hr class="uzu-separator" id="consumer-separator">
+    <span class="uzu-separator-vertical" id="consumer-separator-vertical" aria-hidden="true"></span>
+    <nav aria-label="Consumer pagination">
+      <ol class="uzu-pagination" id="consumer-pagination" data-uzu-pagination data-uzu-pagination-target="#consumer-page-panels">
+        <li><button class="uzu-page-button" type="button" data-uzu-page-prev aria-label="Previous page">‹</button></li>
+        <li><button class="uzu-page-button" type="button" data-uzu-page="1" aria-current="page">1</button></li>
+        <li><button class="uzu-page-button" type="button" data-uzu-page="2">2</button></li>
+        <li><button class="uzu-page-button" type="button" data-uzu-page-next aria-label="Next page">›</button></li>
+      </ol>
+    </nav>
+    <div id="consumer-page-panels">
+      <article class="uzu-page-panel" data-uzu-page-panel="1">
+        First page
+        <div data-uzu-page-panel="nested">Nested panel should stay visible.</div>
+      </article>
+      <article class="uzu-page-panel" data-uzu-page-panel="2" hidden>Second page</article>
+    </div>
+    <a class="uzu-page-button" id="consumer-page-link" href="#linked-page">Linked page</a>
+    <nav aria-label="Disabled page pagination">
+      <ol class="uzu-pagination" id="consumer-disabled-pagination" data-uzu-pagination>
+        <li><button class="uzu-page-button" type="button" data-uzu-page-prev aria-label="Previous page">‹</button></li>
+        <li><button class="uzu-page-button" type="button" data-uzu-page="1" aria-current="page">1</button></li>
+        <li><button class="uzu-page-button is-disabled" type="button" data-uzu-page="2" aria-disabled="true">2</button></li>
+        <li><button class="uzu-page-button" type="button" data-uzu-page="3">3</button></li>
+        <li><button class="uzu-page-button" type="button" data-uzu-page-next aria-label="Next page">›</button></li>
+      </ol>
+    </nav>
     <div class="uzu-tabs" data-uzu-tabs>
       <button class="uzu-tab is-active" type="button" data-uzu-tab-value="one" aria-selected="true"><span data-lang="zh">一</span><span data-lang="en">One</span></button>
       <button class="uzu-tab" type="button" data-uzu-tab-value="two" aria-selected="false"><span data-lang="zh">第二项</span><span data-lang="en">Two</span></button>
@@ -595,8 +656,10 @@ async function browserSmoke() {
     const expression = `(async () => {
       const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       const events = [];
+      const themeToggle = document.querySelector('#consumer-theme-toggle');
       const tabs = document.querySelector('[data-uzu-tabs]');
       const segmented = document.querySelector('[data-uzu-segmented]');
+      const paginationRoot = document.querySelector('#consumer-pagination');
       const select = document.querySelector('[data-uzu-select]');
       const selectTrigger = document.querySelector('[data-uzu-select-trigger]');
       const selectMenu = document.querySelector('.uzu-select-menu');
@@ -605,11 +668,25 @@ async function browserSmoke() {
       const disclosurePanel = document.querySelector('[data-uzu-disclosure-panel]');
       tabs.addEventListener('uzu-tabs-change', (event) => events.push(event.detail.value));
       segmented.addEventListener('uzu-segmented-change', (event) => events.push(event.detail.value));
+      paginationRoot.addEventListener('uzu-pagination-change', (event) => events.push('page:' + event.detail.value));
       const click = (element) => element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
       const secondTab = tabs.querySelector('[data-uzu-tab-value="two"]');
       const betaSegment = segmented.querySelector('[data-uzu-segment-value="beta"]');
       click(secondTab);
       click(betaSegment);
+      const secondPage = paginationRoot.querySelector('[data-uzu-page="2"]');
+      const nextPage = paginationRoot.querySelector('[data-uzu-page-next]');
+      click(secondPage);
+      const paginationPage = paginationRoot.dataset.uzuPaginationPage;
+      const paginationSecondCurrent = secondPage.getAttribute('aria-current');
+      const paginationSecondPanelHidden = document.querySelector('[data-uzu-page-panel="2"]').hidden;
+      const paginationFirstPanelHidden = document.querySelector('[data-uzu-page-panel="1"]').hidden;
+      const nestedPanelHidden = document.querySelector('[data-uzu-page-panel="nested"]').hidden;
+      const paginationNextDisabled = nextPage.getAttribute('aria-disabled');
+      const disabledPaginationRoot = document.querySelector('#consumer-disabled-pagination');
+      click(disabledPaginationRoot.querySelector('[data-uzu-page-next]'));
+      const disabledPaginationPage = disabledPaginationRoot.dataset.uzuPaginationPage;
+      const disabledPaginationActiveText = disabledPaginationRoot.querySelector('[aria-current="page"]').textContent.trim();
       click(selectTrigger);
       const selectOpenAnimation = getComputedStyle(selectMenu).animationName;
       click(selectTrigger);
@@ -650,6 +727,25 @@ async function browserSmoke() {
       const consumerGhost = getComputedStyle(document.querySelector('#consumer-ghost'));
       const consumerDanger = getComputedStyle(document.querySelector('#consumer-danger'));
       const buttonTransform = consumerButton.transform;
+      const breadcrumb = getComputedStyle(document.querySelector('#consumer-breadcrumb'));
+      const toolbar = document.querySelector('#consumer-toolbar');
+      const toolbarStyle = getComputedStyle(toolbar);
+      const toolbarButton = document.querySelector('#consumer-toolbar-button');
+      const toolbarButtonStyle = getComputedStyle(toolbarButton);
+      const stat = getComputedStyle(document.querySelector('#consumer-stat'));
+      const statValue = getComputedStyle(document.querySelector('.uzu-stat-value'));
+      const codeStyle = getComputedStyle(document.querySelector('#consumer-code'));
+      const kbdStyle = getComputedStyle(document.querySelector('#consumer-kbd'));
+      const separator = document.querySelector('#consumer-separator');
+      const separatorStyle = getComputedStyle(separator);
+      const verticalSeparator = document.querySelector('#consumer-separator-vertical');
+      const verticalSeparatorStyle = getComputedStyle(verticalSeparator);
+      const pagination = getComputedStyle(paginationRoot);
+      const plainPageButton = document.querySelector('#consumer-page-link');
+      const plainPageButtonStyle = getComputedStyle(plainPageButton);
+      const pageButton = document.querySelector('.uzu-page-button[aria-current="page"]');
+      const pageButtonStyle = getComputedStyle(pageButton);
+      const pagePanelStyle = getComputedStyle(document.querySelector('[data-uzu-page-panel="2"]'));
       const tabsIndicator = getComputedStyle(tabs, '::after');
       const segmentedIndicator = getComputedStyle(segmented, '::before');
       const segmentedWidthBeforeLanguage = Number.parseFloat(segmentedIndicator.width);
@@ -710,6 +806,8 @@ async function browserSmoke() {
       return {
         hasApi: Boolean(window.Usuzumi && window.Usuzumi.init),
         rootClass: document.documentElement.classList.contains('uzu-root'),
+        restoredTheme: document.querySelector('#consumer-theme-root').getAttribute('data-theme'),
+        themeToggleDark: themeToggle.classList.contains('is-dark'),
         tabValue: tabs.dataset.uzuTabsValue,
         tabSelected: tabs.querySelector('[data-uzu-tab-value="two"]').getAttribute('aria-selected'),
         tabsIndicator: tabs.dataset.uzuTabsIndicator,
@@ -782,6 +880,34 @@ async function browserSmoke() {
         consumerPrimaryColor: consumerPrimary.color,
         consumerGhostColor: consumerGhost.color,
         consumerDangerColor: consumerDanger.color,
+        breadcrumbDisplay: breadcrumb.display,
+        toolbarDisplay: toolbarStyle.display,
+        toolbarButtonWidth: Math.round(toolbarButton.getBoundingClientRect().width),
+        toolbarButtonBackground: toolbarButtonStyle.backgroundColor,
+        statDisplay: stat.display,
+        statValueFontSize: statValue.fontSize,
+        codeFontFamily: codeStyle.fontFamily,
+        kbdHeight: Math.round(document.querySelector('#consumer-kbd').getBoundingClientRect().height),
+        separatorHeight: Math.round(separator.getBoundingClientRect().height),
+        separatorBackground: separatorStyle.backgroundColor,
+        verticalSeparatorWidth: Math.round(verticalSeparator.getBoundingClientRect().width),
+        verticalSeparatorHeight: Math.round(verticalSeparator.getBoundingClientRect().height),
+        verticalSeparatorBackground: verticalSeparatorStyle.backgroundColor,
+        paginationDisplay: pagination.display,
+        paginationPage,
+        paginationSecondCurrent,
+        paginationSecondPanelHidden,
+        paginationFirstPanelHidden,
+        nestedPanelHidden,
+        paginationNextDisabled,
+        disabledPaginationPage,
+        disabledPaginationActiveText,
+        plainPageButtonColor: plainPageButtonStyle.color,
+        plainPageButtonTextDecoration: plainPageButtonStyle.textDecorationLine,
+        pageButtonWidth: Math.round(pageButton.getBoundingClientRect().width),
+        pageButtonBackground: pageButtonStyle.backgroundColor,
+        pageButtonColor: pageButtonStyle.color,
+        pagePanelAnimation: pagePanelStyle.animationName,
         dialogClosing,
         dialogHiddenWhileClosing,
         secondDialogOpen: secondDialog.classList.contains('is-open'),
@@ -799,6 +925,7 @@ async function browserSmoke() {
     const value = evaluation.result.value;
     if (!value.hasApi) throw new Error('Browser consumer page did not expose window.Usuzumi');
     if (!value.rootClass) throw new Error('Browser consumer page did not keep uzu-root');
+    if (value.restoredTheme !== 'dark' || !value.themeToggleDark) throw new Error('Browser consumer theme did not restore the saved mode');
     if (value.tabValue !== 'two' || value.tabSelected !== 'true') throw new Error('Browser consumer tabs did not respond');
     if (value.tabsIndicator !== 'true' || value.tabsIndicatorWidth <= 0) throw new Error('Browser consumer tabs did not expose animated indicator metrics');
     if (value.tabsIndicatorTransform === 'none') throw new Error('Browser consumer tabs indicator did not move');
@@ -846,10 +973,28 @@ async function browserSmoke() {
     if (value.consumerPrimaryBackground !== 'rgb(47, 47, 44)' || value.consumerPrimaryColor !== 'rgb(247, 246, 241)') throw new Error('Browser consumer primary button colors are wrong');
     if (value.consumerGhostColor !== 'rgb(104, 104, 102)') throw new Error('Browser consumer ghost button link color is wrong');
     if (value.consumerDangerColor !== 'rgb(122, 77, 74)') throw new Error('Browser consumer danger button link color is wrong');
+    if (value.breadcrumbDisplay !== 'flex') throw new Error('Browser consumer breadcrumb did not use flex layout');
+    if (value.toolbarDisplay !== 'flex') throw new Error('Browser consumer toolbar did not use flex layout');
+    if (value.toolbarButtonWidth <= 40 || value.toolbarButtonWidth >= 180) throw new Error('Browser consumer toolbar button width is not stable');
+    if (value.toolbarButtonBackground !== 'rgb(47, 47, 44)') throw new Error('Browser consumer toolbar primary button styling is wrong');
+    if (value.statDisplay !== 'grid' || value.statValueFontSize !== '34px') throw new Error('Browser consumer stat styles are wrong');
+    if (!value.codeFontFamily.toLowerCase().includes('mono')) throw new Error('Browser consumer code should use a monospace stack');
+    if (value.kbdHeight < 24) throw new Error('Browser consumer keyboard hint height is too small');
+    if (value.separatorHeight !== 1 || value.separatorBackground !== 'rgb(229, 228, 224)') throw new Error('Browser consumer separator styling is wrong');
+    if (value.verticalSeparatorWidth !== 1 || value.verticalSeparatorHeight !== 24 || value.verticalSeparatorBackground !== 'rgb(229, 228, 224)') throw new Error('Browser consumer vertical separator styling is wrong');
+    if (value.paginationDisplay !== 'flex') throw new Error('Browser consumer pagination did not use flex layout');
+    if (value.paginationPage !== '2' || value.paginationSecondCurrent !== 'page') throw new Error('Browser consumer pagination did not update active page');
+    if (value.paginationSecondPanelHidden || !value.paginationFirstPanelHidden) throw new Error('Browser consumer pagination did not switch panels');
+    if (value.nestedPanelHidden) throw new Error('Browser consumer pagination should not hide nested page panels');
+    if (value.paginationNextDisabled !== 'true') throw new Error('Browser consumer pagination did not disable next on the final page');
+    if (value.disabledPaginationPage !== '3' || value.disabledPaginationActiveText !== '3') throw new Error('Browser consumer pagination did not skip disabled pages');
+    if (value.pagePanelAnimation !== 'uzu-page-panel-in') throw new Error('Browser consumer pagination panel animation is missing');
+    if (value.plainPageButtonColor !== 'rgb(104, 104, 102)' || value.plainPageButtonTextDecoration !== 'none') throw new Error('Browser consumer plain page links should keep page button styling');
+    if (value.pageButtonWidth < 36 || value.pageButtonWidth > 52 || value.pageButtonBackground !== 'rgb(32, 32, 30)' || value.pageButtonColor !== 'rgb(247, 246, 241)') throw new Error('Browser consumer active page button styling is wrong');
     if (!value.dialogClosing || value.dialogHiddenWhileClosing || !value.overlayClosing) throw new Error('Browser consumer dialog did not stay visible while closing');
     if (!value.secondDialogOpen || !value.focusedSecondDialog) throw new Error('Browser consumer second dialog did not remain active while first dialog closed');
     if (value.closeEventsBeforeAnimationEnd !== 0 || value.closeEventTriggerAfterAnimation !== 'first-trigger') throw new Error('Browser consumer dialog close event used the wrong trigger during overlapping dialog animation');
-    if (JSON.stringify(value.events) !== JSON.stringify(['two', 'beta'])) throw new Error('Browser consumer events did not fire');
+    if (JSON.stringify(value.events) !== JSON.stringify(['two', 'beta', 'page:2'])) throw new Error('Browser consumer events did not fire');
 
     await cdp.send('Emulation.setEmulatedMedia', {
       features: [{ name: 'prefers-reduced-motion', value: 'reduce' }]

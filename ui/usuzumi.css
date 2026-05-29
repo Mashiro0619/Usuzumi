@@ -728,6 +728,63 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   display: block;
 }
 
+.uzu-toolbar {
+  padding: 10px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-medium);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 62%, var(--uzu-surface));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.uzu-toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.uzu-breadcrumb {
+  margin: 0;
+  padding: 0;
+  color: var(--uzu-muted);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 1.45;
+  list-style: none;
+}
+
+.uzu-breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.uzu-breadcrumb li:not(:last-child)::after {
+  content: "/";
+  color: var(--uzu-soft);
+}
+
+.uzu-breadcrumb a {
+  color: var(--uzu-muted);
+  text-decoration: none;
+}
+
+.uzu-breadcrumb a:hover {
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-breadcrumb [aria-current="page"] {
+  color: var(--uzu-fg-strong);
+}
+
 .uzu-theme-toggle .uzu-icon-sun,
 .uzu-theme-toggle.is-dark .uzu-icon-moon {
   display: none;
@@ -775,6 +832,38 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 .uzu-card-muted {
   border-color: var(--uzu-border-soft);
   background: var(--uzu-surface-soft);
+}
+
+.uzu-stat {
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-micro);
+  background: var(--uzu-surface);
+  display: grid;
+  gap: 6px;
+}
+
+.uzu-stat-label {
+  margin: 0;
+  color: var(--uzu-subtle);
+  font-size: 12px;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.uzu-stat-value {
+  margin: 0;
+  color: var(--uzu-fg-strong);
+  font-size: 34px;
+  line-height: 1.05;
+}
+
+.uzu-stat-note {
+  margin: 0;
+  color: var(--uzu-muted);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .uzu-field {
@@ -1048,6 +1137,52 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   color: var(--uzu-danger);
 }
 
+.uzu-separator {
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background: var(--uzu-border-soft);
+  margin: var(--uzu-card-block-gap) 0;
+  flex: 0 0 auto;
+}
+
+.uzu-separator-vertical {
+  width: 1px;
+  height: 24px;
+  border: 0;
+  background: var(--uzu-border-soft);
+  display: inline-block;
+  margin: 0 var(--uzu-space-1);
+  flex: 0 0 auto;
+  align-self: center;
+  vertical-align: middle;
+}
+
+.uzu-code,
+.uzu-kbd {
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-micro);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 68%, var(--uzu-surface));
+  color: var(--uzu-fg-strong);
+  font-family: var(--uzu-font-mono);
+  font-size: .88em;
+  line-height: 1.3;
+}
+
+.uzu-code {
+  padding: 2px 6px;
+}
+
+.uzu-kbd {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 3px 6px;
+  box-shadow: inset 0 -1px 0 var(--uzu-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .uzu-alert {
   --uzu-alert-max-width: 520px;
   --uzu-alert-border-color: var(--uzu-border);
@@ -1277,6 +1412,79 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 .uzu-table th {
   color: var(--uzu-subtle);
   font-weight: 400;
+}
+
+.uzu-pagination {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.uzu-page-button {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-standard);
+  background: var(--uzu-surface);
+  color: var(--uzu-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+  transition: background var(--uzu-motion-base) var(--uzu-ease-standard), border-color var(--uzu-motion-base) var(--uzu-ease-standard), color var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-app a.uzu-page-button,
+.uzu-scope a.uzu-page-button {
+  color: var(--uzu-muted);
+  text-decoration: none;
+}
+
+.uzu-page-button:hover {
+  border-color: var(--uzu-border-strong);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-app a.uzu-page-button:hover,
+.uzu-scope a.uzu-page-button:hover {
+  color: var(--uzu-fg-strong);
+  text-decoration: none;
+}
+
+.uzu-page-button.is-active,
+.uzu-page-button[aria-current="page"] {
+  border-color: var(--uzu-fg-strong);
+  background: var(--uzu-fg-strong);
+  color: var(--uzu-action-fg);
+}
+
+.uzu-app a.uzu-page-button.is-active,
+.uzu-scope a.uzu-page-button.is-active,
+.uzu-app a.uzu-page-button[aria-current="page"],
+.uzu-scope a.uzu-page-button[aria-current="page"] {
+  color: var(--uzu-action-fg);
+}
+
+.uzu-page-button:disabled,
+.uzu-page-button[aria-disabled="true"],
+.uzu-page-button.is-disabled {
+  opacity: .48;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.uzu-page-panel {
+  animation: uzu-page-panel-in var(--uzu-motion-base) var(--uzu-ease-standard);
 }
 
 .uzu-popover,
@@ -1805,6 +2013,16 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   }
 }
 
+@keyframes uzu-page-panel-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 640px) {
   .uzu-floating-controls {
     top: 16px;
@@ -1819,6 +2037,11 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 .uzu-app .uzu-button,
 .uzu-scope .uzu-button {
     width: 100%;
+  }
+
+  .uzu-toolbar .uzu-button,
+  .uzu-pagination .uzu-page-button {
+    width: auto;
   }
 
   .uzu-dialog-overlay {

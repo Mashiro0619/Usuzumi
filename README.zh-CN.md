@@ -129,9 +129,9 @@ Tabs 指示条、Segmented 指示条、Disclosure 实测高度等由运行时写
 ## 包含内容
 
 - 颜色、字体、间距、边框、圆角、动效和暗色模式等设计 token。
-- 页面、章节、网格、按钮、卡片、表单、标签页、徽章、Alert 预设、callout、表格、浮层、进度、骨架屏、toast、dialog、disclosure 和 tooltip 等布局与组件原语。
+- 页面、章节、网格、按钮、工具栏、面包屑、分页、卡片、指标、表单、标签页、徽章、分割线、代码、快捷键提示、Alert 预设、callout、表格、浮层、进度、骨架屏、toast、dialog、disclosure 和 tooltip 等布局与组件原语。
 - 个人主页、应用介绍页、设计目录、项目列表、产品 mockup 和功能区块等页面模式。
-- 主题切换、语言切换、自定义 select、标签页、分段控件、switch、disclosure、dialog 和 toast 关闭等小型 JavaScript 行为。
+- 主题切换、语言切换、自定义 select、标签页、分段控件、分页、switch、disclosure、dialog 和 toast 关闭等小型 JavaScript 行为。
 
 ## 运行时
 
@@ -146,6 +146,7 @@ window.Usuzumi.init(container);
 - `uzu-select-change`：`{ value, label, option, select }`
 - `uzu-tabs-change`：`{ value, tab, tabs, index, panel }`
 - `uzu-segmented-change`：`{ value, segment, segmented, index }`
+- `uzu-pagination-change`：`{ value, page, pagination, index, panel }`
 - `uzu-switch-change`：`{ checked, switch }`
 - `uzu-disclosure-change`：`{ open, disclosure }`
 - `uzu-toast-close`：`{ toast }`
@@ -155,9 +156,9 @@ window.Usuzumi.init(container);
 
 ## 示例
 
-- [设计系统目录](https://github.com/Mashiro0619/Usuzumi/blob/main/example/preview.html)
-- [个人主页示例](https://github.com/Mashiro0619/Usuzumi/blob/main/example/index.html)
-- [应用介绍页示例](https://github.com/Mashiro0619/Usuzumi/blob/main/example/app-introduction.html)
+- [官网与组件展示](https://github.com/Mashiro0619/Usuzumi/blob/main/example/index.html)
+- [个人主页示例](https://github.com/Mashiro0619/Usuzumi/blob/main/example/example-1.html)
+- [应用介绍页示例](https://github.com/Mashiro0619/Usuzumi/blob/main/example/example-2.html)
 
 示例文件可以直接在浏览器中打开，不需要构建步骤或开发服务器。
 
@@ -170,7 +171,7 @@ npm run build:css
 npm run validate
 ```
 
-`npm run validate` 会先检查源码约束，然后将库打包并安装到临时外部项目中，验证 package exports、CSS 文件、类型声明、CDN 风格的 `ui/*` 路径、浏览器运行时行为和 preview 布局 smoke check。
+`npm run validate` 会先检查源码约束，然后将库打包并安装到临时外部项目中，验证 package exports、CSS 文件、类型声明、CDN 风格的 `ui/*` 路径、浏览器运行时行为和官网布局 smoke check。
 
 运行时库没有依赖。完整设计规范见 [DESIGN.md](DESIGN.md)。
 

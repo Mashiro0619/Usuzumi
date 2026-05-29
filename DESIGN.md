@@ -68,10 +68,11 @@ All public component classes use the `uzu-` prefix. Do not rely on internal file
 - `.uzu-button`, `.uzu-button-primary`, `.uzu-button-ghost`, `.uzu-button-danger`
 - `.uzu-text-link`
 - `.uzu-icon-button`, `.uzu-theme-toggle`, `.uzu-floating-controls`
-- `.uzu-card`, `.uzu-card-muted`, `.uzu-title-pair`
+- `.uzu-toolbar`, `.uzu-toolbar-group`, `.uzu-breadcrumb`, `.uzu-pagination`, `.uzu-page-button`
+- `.uzu-card`, `.uzu-card-muted`, `.uzu-title-pair`, `.uzu-stat`, `.uzu-stat-label`, `.uzu-stat-value`, `.uzu-stat-note`
 - `.uzu-field`, `.uzu-label`, `.uzu-input`, `.uzu-textarea`, `.uzu-select`
 - `.uzu-tabs`, `.uzu-tab`, `.uzu-segmented`, `.uzu-segment`
-- `.uzu-badge`, `.uzu-alert`, `.uzu-alert-info`, `.uzu-alert-success`, `.uzu-alert-warning`, `.uzu-alert-danger`, `.uzu-callout`, `.uzu-callout-title`, `.uzu-toast`, `.uzu-table`, `.uzu-popover`, `.uzu-modal`, `.uzu-dialog-overlay`
+- `.uzu-badge`, `.uzu-separator`, `.uzu-separator-vertical`, `.uzu-code`, `.uzu-kbd`, `.uzu-alert`, `.uzu-alert-info`, `.uzu-alert-success`, `.uzu-alert-warning`, `.uzu-alert-danger`, `.uzu-callout`, `.uzu-callout-title`, `.uzu-toast`, `.uzu-table`, `.uzu-popover`, `.uzu-modal`, `.uzu-dialog-overlay`
 - `.uzu-progress`, `.uzu-progress-bar`, `.uzu-progress-indeterminate`, `.uzu-progress-circular`, `.uzu-skeleton`
 - `.uzu-activity`, `.uzu-activity-dot`, `.uzu-process`, `.uzu-process-step`
 - `.uzu-disclosure`, `.uzu-disclosure-trigger`, `.uzu-disclosure-panel`, `.uzu-tooltip`
@@ -350,6 +351,54 @@ Use `.uzu-callout` for editorial notes, constraints, and secondary context that 
 </aside>
 ```
 
+### Navigation And Tools
+
+Use `.uzu-breadcrumb` for page hierarchy, `.uzu-toolbar` with `.uzu-toolbar-group` for local actions, and `.uzu-pagination` with `.uzu-page-button` for paged lists. Mark the current breadcrumb or page with `aria-current="page"`. Add `data-uzu-pagination` when the runtime should manage active page state, previous/next buttons, and optional `data-uzu-page-panel` content. Toolbars may use native buttons, links styled as `.uzu-button`, or icon buttons when the action has an accessible name.
+
+```html
+<nav aria-label="Breadcrumb">
+  <ol class="uzu-breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><span aria-current="page">Settings</span></li>
+  </ol>
+</nav>
+
+<div class="uzu-toolbar" role="toolbar" aria-label="List actions">
+  <div class="uzu-toolbar-group">
+    <button class="uzu-button uzu-button-primary" type="button">New</button>
+    <button class="uzu-button" type="button">Import</button>
+  </div>
+</div>
+
+<div id="page-panels">
+  <article class="uzu-page-panel" data-uzu-page-panel="1">Page one</article>
+  <article class="uzu-page-panel" data-uzu-page-panel="2" hidden>Page two</article>
+</div>
+
+<nav aria-label="Pagination">
+  <ol class="uzu-pagination" data-uzu-pagination data-uzu-pagination-target="#page-panels">
+    <li><button class="uzu-page-button" type="button" data-uzu-page-prev>Previous</button></li>
+    <li><button class="uzu-page-button" type="button" data-uzu-page="1" aria-current="page">1</button></li>
+    <li><button class="uzu-page-button" type="button" data-uzu-page="2">2</button></li>
+    <li><button class="uzu-page-button" type="button" data-uzu-page-next>Next</button></li>
+  </ol>
+</nav>
+```
+
+### Compact Data
+
+Use `.uzu-stat` for small metric summaries. Use `.uzu-separator` or `.uzu-separator-vertical` for explicit divisions inside compact surfaces. Use `.uzu-code` for inline identifiers and `.uzu-kbd` for keyboard hints.
+
+```html
+<article class="uzu-stat">
+  <p class="uzu-stat-label">Components</p>
+  <p class="uzu-stat-value">42</p>
+  <p class="uzu-stat-note">Public primitives.</p>
+</article>
+
+<p>Use <code class="uzu-code">.uzu-scope</code> and press <kbd class="uzu-kbd">Ctrl</kbd> <kbd class="uzu-kbd">K</kbd>.</p>
+```
+
 ### Disclosure And Loading
 
 Use disclosures for optional details, compact settings, and short documentation blocks. Runtime-managed disclosures keep the panel visible during close animation before applying `hidden`.
@@ -457,11 +506,16 @@ The script keeps `.is-active`, `aria-selected`, roving `tabindex`, and the anima
 
 Segmented controls use `data-uzu-segmented` and `.uzu-segment`. The script keeps `.is-active`, `aria-pressed`, and the animated selected backing synchronized, supports the same arrow-key navigation, and emits `uzu-segmented-change`.
 
+### Runtime Pagination
+
+Pagination uses `data-uzu-pagination` and page buttons with `data-uzu-page`. Previous and next controls use `data-uzu-page-prev` and `data-uzu-page-next`. When `data-uzu-pagination-target` points to a container, child panels with matching `data-uzu-page-panel` values are shown or hidden with the active page. The script keeps `.is-active`, `aria-current`, disabled previous/next state, and emits `uzu-pagination-change`.
+
 ### Custom Events
 
 - `uzu-select-change`: `{ value, label, option, select }`
 - `uzu-tabs-change`: `{ value, tab, tabs, index, panel }`
 - `uzu-segmented-change`: `{ value, segment, segmented, index }`
+- `uzu-pagination-change`: `{ value, page, pagination, index, panel }`
 - `uzu-switch-change`: `{ checked, switch }`
 - `uzu-disclosure-change`: `{ open, disclosure }`
 - `uzu-toast-close`: `{ toast }`

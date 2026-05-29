@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outputDir = path.join(root, '.tmp', 'visual-regression');
-const previewUrl = pathToFileURL(path.join(root, 'example', 'preview.html')).href;
+const siteUrl = pathToFileURL(path.join(root, 'example', 'index.html')).href;
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -317,7 +317,7 @@ async function waitForBrowser(profile) {
   throw new Error('Browser did not expose a DevTools endpoint');
 }
 
-async function openPreview(cdp, viewport) {
+async function openSite(cdp, viewport) {
   await cdp.send('Runtime.enable');
   await cdp.send('Page.enable');
   await cdp.send('Emulation.setDeviceMetricsOverride', {
@@ -326,7 +326,7 @@ async function openPreview(cdp, viewport) {
     deviceScaleFactor: 1,
     mobile: viewport.mobile
   });
-  await cdp.send('Page.navigate', { url: previewUrl });
+  await cdp.send('Page.navigate', { url: siteUrl });
   await delay(900);
 }
 
@@ -363,6 +363,16 @@ function checkMetrics(metrics, label) {
   assert(metrics.dialogOpenAnimation === 'uzu-dialog-surface-in', `${label}: dialog open animation is missing`);
   assert(metrics.dialogCloseAnimation === 'uzu-dialog-surface-out', `${label}: dialog close animation is missing`);
   assert(metrics.dialogOpenTransform === 'none' && metrics.dialogCloseTransform === 'none', `${label}: dialog should not shift or scale while animating`);
+  assert(metrics.toolbarDisplay === 'flex', `${label}: toolbar layout is not active`);
+  assert(metrics.toolbarButtonWidth > 40 && metrics.toolbarButtonWidth < Math.min(180, metrics.viewportWidth - 32), `${label}: toolbar button width is unstable`);
+  assert(metrics.paginationDisplay === 'flex', `${label}: pagination layout is not active`);
+  assert(metrics.pageButtonWidth >= 36 && metrics.pageButtonWidth < 80, `${label}: page button width is unstable`);
+  assert(metrics.paginationPage === '2' && metrics.paginationActiveText === '2', `${label}: pagination did not update active page`);
+  assert(metrics.paginationPanelTwoVisible, `${label}: pagination did not show the requested panel`);
+  assert(metrics.statDisplay === 'grid' && metrics.statValueFontSize === '34px', `${label}: stat styles are not active`);
+  assert(metrics.separatorHeight === 1, `${label}: separator height is wrong`);
+  assert(metrics.verticalSeparatorWidth === 1 && metrics.verticalSeparatorHeight === 24, `${label}: vertical separator geometry is wrong`);
+  assert(metrics.kbdHeight >= 24, `${label}: keyboard hint height is too small`);
 }
 
 const visualExpression = `(async () => {
@@ -391,6 +401,16 @@ const visualExpression = `(async () => {
   const tabs = document.querySelector('[data-uzu-tabs]');
   const activeTab = tabs.querySelector('[aria-selected="true"]');
   const footerIconBox = rect('.uzu-footer svg');
+  const toolbar = document.querySelector('.uzu-toolbar');
+  const toolbarButtonBox = rect('.uzu-toolbar .uzu-button');
+  const pagination = document.querySelector('.uzu-pagination');
+  const pageButtonBox = rect('.uzu-page-button[aria-current="page"]');
+  const paginationPageTwo = pagination.querySelector('[data-uzu-page="2"]');
+  const statStyle = getComputedStyle(document.querySelector('.uzu-stat'));
+  const statValueStyle = getComputedStyle(document.querySelector('.uzu-stat-value'));
+  const separatorBox = rect('.uzu-separator');
+  const verticalSeparatorBox = rect('.uzu-separator-vertical');
+  const kbdBox = rect('.uzu-kbd');
   const disclosure = document.querySelector('[data-uzu-disclosure]');
   const disclosureTrigger = disclosure.querySelector('[data-uzu-disclosure-trigger]');
   const disclosurePanel = disclosure.querySelector('[data-uzu-disclosure-panel]');
@@ -402,13 +422,18 @@ const visualExpression = `(async () => {
   click(disclosureTrigger);
   await wait(320);
 
+  click(paginationPageTwo);
+  await wait(80);
+  const paginationPanelTwo = document.querySelector('[data-uzu-page-panel="2"]');
+  const paginationEventValue = pagination.dataset.uzuPaginationPage;
+
   window.Usuzumi.applyLanguage(document.documentElement, 'en');
   await wait(100);
   const segmentedIndicatorAfterLanguage = getComputedStyle(segmented, '::before');
   const tabsIndicatorAfterLanguage = getComputedStyle(tabs, '::after');
 
-  const dialogTrigger = document.querySelector('[data-uzu-dialog-target="#new-preview-dialog"]');
-  const dialog = document.querySelector('#new-preview-dialog');
+  const dialogTrigger = document.querySelector('[data-uzu-dialog-target="#site-dialog"]');
+  const dialog = document.querySelector('#site-dialog');
   click(dialogTrigger);
   await wait(80);
   const dialogOpenAnimation = getComputedStyle(dialog).animationName;
@@ -434,6 +459,19 @@ const visualExpression = `(async () => {
     tabsActiveWidthAfterLanguage: activeTab.getBoundingClientRect().width,
     footerIconWidth: footerIconBox.width,
     footerIconHeight: footerIconBox.height,
+    toolbarDisplay: getComputedStyle(toolbar).display,
+    toolbarButtonWidth: toolbarButtonBox.width,
+    paginationDisplay: getComputedStyle(pagination).display,
+    pageButtonWidth: pageButtonBox.width,
+    paginationPage: paginationEventValue,
+    paginationPanelTwoVisible: Boolean(paginationPanelTwo && !paginationPanelTwo.hidden),
+    paginationActiveText: pagination.querySelector('[aria-current="page"]')?.textContent.trim() || '',
+    statDisplay: statStyle.display,
+    statValueFontSize: statValueStyle.fontSize,
+    separatorHeight: separatorBox.height,
+    verticalSeparatorWidth: verticalSeparatorBox.width,
+    verticalSeparatorHeight: verticalSeparatorBox.height,
+    kbdHeight: kbdBox.height,
     disclosureClosedHeight,
     disclosureOpenHeight,
     disclosurePanelHiddenAfterClose: disclosurePanel.hidden,
@@ -446,7 +484,7 @@ const visualExpression = `(async () => {
 
 const browser = findBrowserExecutable();
 if (!browser) {
-  console.log('Preview visual regression skipped: no Chromium/Chrome/Edge executable found.');
+  console.log('Site visual regression skipped: no Chromium/Chrome/Edge executable found.');
   process.exit(0);
 }
 
@@ -475,15 +513,15 @@ try {
     { name: 'desktop', width: 1280, height: 900, mobile: false },
     { name: 'mobile', width: 390, height: 844, mobile: true }
   ]) {
-    const target = await requestJson(port, `/json/new?${encodeURIComponent(previewUrl)}`, 'PUT');
+    const target = await requestJson(port, `/json/new?${encodeURIComponent(siteUrl)}`, 'PUT');
     const cdp = await connectCdp(target.webSocketDebuggerUrl);
-    await openPreview(cdp, viewport);
+    await openSite(cdp, viewport);
     await capture(cdp, `${viewport.name}.png`);
     const metrics = await evaluate(cdp, visualExpression);
     checkMetrics(metrics, viewport.name);
     cdp.close();
   }
-  console.log(`Preview visual regression passed. Screenshots: ${path.relative(root, outputDir).replaceAll(path.sep, '/')}`);
+  console.log(`Site visual regression passed. Screenshots: ${path.relative(root, outputDir).replaceAll(path.sep, '/')}`);
 } finally {
   child.kill();
   await delay(250);
