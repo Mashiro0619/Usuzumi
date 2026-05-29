@@ -785,58 +785,6 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   color: var(--uzu-fg-strong);
 }
 
-.uzu-doc-nav {
-  display: grid;
-  gap: 22px;
-}
-
-.uzu-doc-nav-section {
-  display: grid;
-  gap: 4px;
-}
-
-.uzu-doc-nav-title {
-  margin: 0 0 4px;
-  color: var(--uzu-subtle);
-  font-size: 13px;
-  line-height: 1.35;
-}
-
-.uzu-doc-nav a {
-  min-height: 36px;
-  padding: 7px 10px;
-  color: var(--uzu-fg);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-}
-
-.uzu-doc-nav a:hover,
-.uzu-doc-nav a:focus-visible {
-  background: var(--uzu-surface-soft);
-  color: var(--uzu-fg-strong);
-}
-
-.uzu-doc-nav a[aria-current="page"] {
-  background: var(--uzu-surface-soft);
-  color: var(--uzu-fg-strong);
-}
-
-.uzu-doc-nav-en {
-  color: var(--uzu-soft);
-  font-size: 12px;
-  line-height: 1;
-}
-
-.uzu-doc-nav-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: var(--uzu-radius-pill);
-  background: var(--uzu-accent, var(--uzu-success));
-  flex: 0 0 auto;
-}
-
 .uzu-theme-toggle .uzu-icon-sun,
 .uzu-theme-toggle.is-dark .uzu-icon-moon {
   display: none;
@@ -1233,6 +1181,63 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.uzu-code-block {
+  min-width: 0;
+  max-width: 100%;
+  position: relative;
+}
+
+.uzu-code-block pre,
+pre.uzu-code-block-body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  max-height: var(--uzu-code-block-max-height, 430px);
+  box-sizing: border-box;
+  margin: 0;
+  overflow: auto;
+  padding: var(--uzu-code-block-padding, 14px 52px 14px 16px);
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-micro);
+  background: var(--uzu-surface-inset);
+  color: var(--uzu-fg);
+  font-family: var(--uzu-font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.uzu-code-block-copy {
+  width: var(--uzu-code-block-copy-size, 28px);
+  height: var(--uzu-code-block-copy-size, 28px);
+  min-width: var(--uzu-code-block-copy-size, 28px);
+  min-height: var(--uzu-code-block-copy-size, 28px);
+  padding: 0;
+  position: absolute;
+  top: var(--uzu-code-block-copy-offset, 8px);
+  right: var(--uzu-code-block-copy-offset, 8px);
+  z-index: 1;
+  border-radius: var(--uzu-radius-pill);
+}
+
+.uzu-code-block-copy svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.uzu-code-block-copy [data-uzu-code-copy-label] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .uzu-alert {
@@ -2144,13 +2149,13 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 /* ui/css/layout.css */
 .uzu-page {
-  width: min(1120px, calc(100% - 48px));
+  width: min(var(--uzu-page-max-width, 1120px), calc(100% - 48px));
   margin: 0 auto;
   padding: 56px 0 60px;
 }
 
 .uzu-page-narrow {
-  width: min(960px, calc(100% - 48px));
+  width: min(var(--uzu-page-narrow-max-width, 960px), calc(100% - 48px));
 }
 
 .uzu-section {
@@ -2169,6 +2174,28 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+}
+
+.uzu-section-centered {
+  text-align: center;
+}
+
+.uzu-section-centered .uzu-section-head,
+.uzu-section-centered .uzu-download-actions {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.uzu-section-centered .uzu-section-head {
+  align-items: center;
+}
+
+.uzu-section-centered .uzu-body-large {
+  text-align: center;
+}
+
+.uzu-section-centered .uzu-download-actions {
+  justify-content: center;
 }
 
 .uzu-topbar {
@@ -2192,11 +2219,21 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 .uzu-nav a {
   color: var(--uzu-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   text-decoration: none;
 }
 
 .uzu-nav a:hover {
   color: var(--uzu-fg-strong);
+}
+
+.uzu-nav svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  display: block;
 }
 
 .uzu-grid {
@@ -2215,25 +2252,6 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 .uzu-grid-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.uzu-doc-layout {
-  display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-  gap: 36px;
-  align-items: start;
-}
-
-.uzu-doc-sidebar {
-  max-height: calc(100vh - 72px);
-  position: sticky;
-  top: 32px;
-  overflow: auto;
-  padding-right: 12px;
-}
-
-.uzu-doc-main {
-  min-width: 0;
 }
 
 .uzu-hero-split {
@@ -2286,21 +2304,13 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 @media (max-width: 920px) {
   .uzu-page {
-    width: min(calc(100% - 48px), 760px);
+    width: min(var(--uzu-page-max-width, 760px), calc(100% - 48px));
   }
 
   .uzu-hero-split,
-  .uzu-doc-layout,
   .uzu-grid-2,
   .uzu-grid-3 {
     grid-template-columns: 1fr;
-  }
-
-  .uzu-doc-sidebar {
-    max-height: none;
-    position: static;
-    overflow: visible;
-    padding-right: 0;
   }
 
   .uzu-hero-split {
@@ -2311,7 +2321,7 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 
 @media (max-width: 640px) {
   .uzu-page {
-    width: calc(100% - 44px);
+    width: min(var(--uzu-page-max-width, calc(100% - 44px)), calc(100% - 44px));
     max-width: calc(100vw - 44px);
     padding: 56px 0 40px;
   }
@@ -2361,7 +2371,13 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 }
 
 .uzu-download-actions .uzu-button {
-  flex: 1 1 150px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 520px) {
+  .uzu-download-actions .uzu-button {
+    flex: 1 1 100%;
+  }
 }
 
 .uzu-app-hero-copy {
@@ -2712,6 +2728,269 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
   overflow: auto;
 }
 
+.uzu-doc-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 36px;
+  align-items: start;
+}
+
+.uzu-doc-sidebar {
+  max-height: calc(100vh - 72px);
+  position: sticky;
+  top: 32px;
+  overflow: auto;
+  padding-right: 12px;
+}
+
+.uzu-doc-main {
+  min-width: 0;
+}
+
+.uzu-doc-main > .uzu-footer {
+  margin-top: 56px;
+}
+
+.uzu-doc-brand {
+  color: var(--uzu-fg-strong);
+  font-family: var(--uzu-font-signature);
+  font-size: var(--uzu-doc-brand-size, 34px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.uzu-panel-nav {
+  border-bottom: 0;
+  display: grid;
+  gap: 22px;
+}
+
+.uzu-panel-nav-section {
+  display: grid;
+  gap: 4px;
+}
+
+.uzu-panel-nav-title {
+  margin: 0 0 4px;
+  color: var(--uzu-subtle);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.uzu-panel-nav-button {
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: var(--uzu-radius-micro);
+  background: transparent;
+  color: var(--uzu-fg);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+}
+
+.uzu-panel-nav-button:hover,
+.uzu-panel-nav-button:focus-visible,
+.uzu-panel-nav-button.is-active,
+.uzu-panel-nav-button[aria-pressed="true"] {
+  background: var(--uzu-surface-soft);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-panel-nav-meta {
+  margin-left: auto;
+  color: var(--uzu-soft);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.uzu-doc-panel {
+  min-width: 0;
+  animation: uzu-page-panel-in var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-doc-panel[hidden],
+.uzu-doc-preview[hidden],
+.uzu-doc-code-panel[hidden] {
+  display: none;
+}
+
+.uzu-doc-panel .uzu-section-head {
+  margin-bottom: 22px;
+}
+
+.uzu-doc-note {
+  max-width: 720px;
+}
+
+.uzu-doc-guidance-block {
+  margin-bottom: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.uzu-doc-guidance {
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-micro);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 48%, var(--uzu-surface));
+}
+
+.uzu-doc-guidance h3 {
+  margin: 0 0 8px;
+  color: var(--uzu-fg-strong);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.uzu-doc-guidance ul {
+  margin: 0;
+  padding-left: 1.15em;
+  color: var(--uzu-muted);
+  display: grid;
+  gap: 5px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.uzu-doc-interface {
+  min-width: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.uzu-doc-interface h3 {
+  margin: 0;
+  color: var(--uzu-fg-strong);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.uzu-doc-interface-group {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(108px, 0.18fr) minmax(0, 1fr);
+  gap: 10px 14px;
+  align-items: start;
+}
+
+.uzu-doc-interface-label {
+  margin: 0;
+  color: var(--uzu-subtle);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.uzu-doc-classes,
+.uzu-doc-meta,
+.uzu-doc-interface-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.uzu-doc-interface-values {
+  min-width: 0;
+}
+
+.uzu-doc-demo {
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.uzu-doc-demo-tabs {
+  gap: 18px;
+}
+
+.uzu-doc-example {
+  min-width: 0;
+  max-width: 100%;
+  padding: 18px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-micro);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 54%, var(--uzu-surface));
+  display: grid;
+  gap: 16px;
+}
+
+.uzu-doc-example-inline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.uzu-doc-preview,
+.uzu-doc-code-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.uzu-prose {
+  color: var(--uzu-fg);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.uzu-prose > :first-child {
+  margin-top: 0;
+}
+
+.uzu-prose > :last-child {
+  margin-bottom: 0;
+}
+
+.uzu-prose p,
+.uzu-prose ul,
+.uzu-prose ol {
+  margin: 0 0 14px;
+}
+
+.uzu-prose ul,
+.uzu-prose ol {
+  padding-left: 1.25em;
+}
+
+.uzu-prose li + li {
+  margin-top: 4px;
+}
+
+.uzu-prose h1,
+.uzu-prose h2,
+.uzu-prose h3 {
+  margin: 24px 0 10px;
+  color: var(--uzu-fg-strong);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.uzu-prose h1 {
+  font-size: 36px;
+}
+
+.uzu-prose h2 {
+  font-size: 28px;
+}
+
+.uzu-prose h3 {
+  font-size: 20px;
+}
+
+.uzu-prose .uzu-code-block {
+  margin: 16px 0;
+}
+
 .uzu-token-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -2908,6 +3187,17 @@ body.uzu-app::-webkit-scrollbar-thumb:hover,
 @media (max-width: 920px) {
   .uzu-screen-grid {
     grid-template-columns: 1fr;
+  }
+
+  .uzu-doc-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .uzu-doc-sidebar {
+    max-height: min(360px, 42vh);
+    position: static;
+    overflow: auto;
+    padding-right: 8px;
   }
 }
 

@@ -54,12 +54,21 @@ declare global {
     trigger: HTMLElement | null;
   }
 
+  interface UsuzumiPanelNavDetail {
+    target: string;
+    control: HTMLElement;
+    panel: HTMLElement;
+    nav: HTMLElement;
+  }
+
   interface UsuzumiApi {
     init(root?: ParentNode): void;
     applyTheme(root: HTMLElement, mode: UsuzumiThemeMode, key?: string, persist?: boolean): void;
     applyLanguage(root: HTMLElement, language: UsuzumiLanguage, key?: string): void;
     setSwitchState(control: HTMLElement, checked: boolean, emit?: boolean): void;
     setPaginationPage(pagination: HTMLElement, page: HTMLElement | string, emit?: boolean): void;
+    renderMarkdown(markdown: string): DocumentFragment;
+    initCodeCopy(root?: ParentNode): void;
     openDialog(dialog: HTMLElement, trigger?: HTMLElement | null): void;
     closeDialog(dialog: HTMLElement): void;
   }
@@ -78,5 +87,7 @@ declare global {
     "uzu-toast-close": CustomEvent<UsuzumiToastCloseDetail>;
     "uzu-dialog-open": CustomEvent<UsuzumiDialogDetail>;
     "uzu-dialog-close": CustomEvent<UsuzumiDialogDetail>;
+    "uzu-panel-nav-change": CustomEvent<UsuzumiPanelNavDetail>;
+    "uzu-panel-show": CustomEvent<UsuzumiPanelNavDetail>;
   }
 }

@@ -349,6 +349,7 @@ async function capture(cdp, filename) {
 
 function checkMetrics(metrics, label) {
   assert(!metrics.hasHorizontalOverflow, `${label}: page has horizontal overflow`);
+  assert(metrics.hashNavigationOpenedPanel, `${label}: component hash navigation did not open the requested panel`);
   assert(metrics.toastWidth <= Math.min(362, metrics.viewportWidth - 32), `${label}: toast is too wide`);
   assert(Math.abs(metrics.toastCloseRight - metrics.toastContentRight) <= 1, `${label}: toast close button is not aligned to content`);
   assert(metrics.toastPaddingBalance <= 1, `${label}: toast horizontal padding is unbalanced`);
@@ -358,6 +359,10 @@ function checkMetrics(metrics, label) {
   assert(Math.abs(metrics.tabsIndicatorWidthAfterLanguage - metrics.tabsActiveWidthAfterLanguage) <= 1, `${label}: tabs indicator did not refresh after language change`);
   assert(metrics.footerIconWidth >= 13 && metrics.footerIconHeight >= 13, `${label}: GitHub icon is too small`);
   assert(Math.abs(metrics.footerIconWidth - metrics.footerIconHeight) <= 1, `${label}: GitHub icon is distorted`);
+  assert(metrics.docBrandFontSize >= 16 && metrics.docBrandFontSize <= 20, `${label}: component-page brand size is outside the compact override range`);
+  assert(metrics.publicInterfaceCount >= 1, `${label}: component details do not expose public interface sections`);
+  assert(metrics.buttonInterfaceHasIconButton, `${label}: button detail is missing icon button interface coverage`);
+  assert(metrics.pageInterfaceHasWidthVariable, `${label}: page detail is missing page width variables`);
   assert(metrics.disclosureClosedHeight < metrics.disclosureOpenHeight - 16, `${label}: disclosure does not reduce height when collapsed`);
   assert(metrics.disclosurePanelHiddenAfterClose, `${label}: disclosure panel is not hidden after closing`);
   assert(metrics.dialogOpenAnimation === 'uzu-dialog-surface-in', `${label}: dialog open animation is missing`);
@@ -373,6 +378,9 @@ function checkMetrics(metrics, label) {
   assert(metrics.separatorHeight === 1, `${label}: separator height is wrong`);
   assert(metrics.verticalSeparatorWidth === 1 && metrics.verticalSeparatorHeight === 24, `${label}: vertical separator geometry is wrong`);
   assert(metrics.kbdHeight >= 24, `${label}: keyboard hint height is too small`);
+  assert(metrics.codeBlockWidth <= metrics.codePanelWidth + 1, `${label}: code block overflows its panel`);
+  assert(metrics.codePanelRight <= metrics.mainRight + 1, `${label}: code panel extends past the content column`);
+  assert(metrics.codeSnippetHasRuntimeState === false, `${label}: code snippet leaks runtime-only state`);
 }
 
 const visualExpression = `(async () => {
@@ -384,34 +392,99 @@ const visualExpression = `(async () => {
     return { top: value.top, right: value.right, bottom: value.bottom, left: value.left, width: value.width, height: value.height };
   };
   const click = (element) => element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+  const showComponent = async (target) => {
+    const control = document.querySelector('[data-uzu-panel-target="' + target + '"]');
+    if (!control) throw new Error('Missing component control: ' + target);
+    click(control);
+    await wait(160);
+    const panel = document.querySelector(target);
+    if (!panel || panel.hidden) throw new Error('Component panel did not open: ' + target);
+    return panel;
+  };
 
   window.Usuzumi.applyLanguage(document.documentElement, 'zh');
   await wait(80);
 
-  const toast = document.querySelector('.uzu-toast[data-uzu-toast]');
+  window.location.hash = '#component-tabs';
+  await wait(160);
+  const hashPanel = document.querySelector('#component-tabs');
+  const hashControl = document.querySelector('[data-uzu-panel-target="#component-tabs"]');
+  const hashNavigationOpenedPanel = Boolean(hashPanel && !hashPanel.hidden && hashControl?.getAttribute('aria-pressed') === 'true');
+
+  const toastPanel = await showComponent('#component-toast');
+  const toast = toastPanel.querySelector('.uzu-toast[data-uzu-toast]');
   const toastBox = rect(toast);
   const toastContentBox = rect(toast.querySelector('.uzu-toast-content'));
   const toastCloseBox = rect(toast.querySelector('.uzu-toast-close'));
-  const field = document.querySelector('.uzu-field');
+
+  const fieldPanel = await showComponent('#component-input');
+  const field = fieldPanel.querySelector('.uzu-field');
   const fieldLabelBox = rect(field.querySelector('.uzu-label'));
   const fieldInputBox = rect(field.querySelector('.uzu-input'));
-  const segmented = document.querySelector('[data-uzu-segmented]');
+
+  const segmentedPanel = await showComponent('#component-segmented');
+  const segmented = segmentedPanel.querySelector('[data-uzu-segmented]');
   const activeSegment = segmented.querySelector('[aria-pressed="true"]');
   const segmentedIndicator = getComputedStyle(segmented, '::before');
-  const tabs = document.querySelector('[data-uzu-tabs]');
-  const activeTab = tabs.querySelector('[aria-selected="true"]');
+  const segmentedIndicatorWidth = Number.parseFloat(segmentedIndicator.width);
+  const segmentedActiveWidth = activeSegment.getBoundingClientRect().width;
   const footerIconBox = rect('.uzu-footer svg');
-  const toolbar = document.querySelector('.uzu-toolbar');
-  const toolbarButtonBox = rect('.uzu-toolbar .uzu-button');
-  const pagination = document.querySelector('.uzu-pagination');
-  const pageButtonBox = rect('.uzu-page-button[aria-current="page"]');
+  const docBrandFontSize = Number.parseFloat(getComputedStyle(document.querySelector('.uzu-doc-brand')).fontSize);
+
+  window.Usuzumi.applyLanguage(document.documentElement, 'en');
+  await wait(120);
+  const segmentedIndicatorAfterLanguage = getComputedStyle(segmented, '::before');
+  const segmentedIndicatorWidthAfterLanguage = Number.parseFloat(segmentedIndicatorAfterLanguage.width);
+  const segmentedActiveWidthAfterLanguage = activeSegment.getBoundingClientRect().width;
+
+  window.Usuzumi.applyLanguage(document.documentElement, 'zh');
+  await wait(80);
+  const tabsPanel = await showComponent('#component-tabs');
+  const tabs = tabsPanel.querySelector('.uzu-doc-preview [data-uzu-tabs]');
+  window.Usuzumi.applyLanguage(document.documentElement, 'en');
+  await wait(120);
+  const activeTab = tabs.querySelector('[aria-selected="true"]');
+  const tabsIndicatorAfterLanguage = getComputedStyle(tabs, '::after');
+  const tabsIndicatorWidthAfterLanguage = Number.parseFloat(tabsIndicatorAfterLanguage.width);
+  const tabsActiveWidthAfterLanguage = activeTab.getBoundingClientRect().width;
+  const tabsCodeControl = tabsPanel.querySelector('[data-uzu-tab-target="#component-tabs-code"]');
+  click(tabsCodeControl);
+  await wait(160);
+  const tabsCodePanel = tabsPanel.querySelector('#component-tabs-code');
+  const tabsCodeBlock = tabsCodePanel.querySelector('.uzu-code-block-body');
+  const tabsCodeText = tabsCodeBlock.textContent;
+  const tabsCodePanelBox = rect(tabsCodePanel);
+  const tabsCodeBlockBox = rect(tabsCodeBlock);
+  const componentMainBox = rect('.uzu-doc-main');
+  const codeSnippetHasRuntimeState = /data-uzu-(tabs|segmented)-(initialized|indicator|value)|role="tab(list)?"|tabindex=/.test(tabsCodeText);
+  const buttonPanel = await showComponent('#component-button');
+  const buttonInterfaceText = buttonPanel.querySelector('.uzu-doc-interface')?.textContent || '';
+  const pagePanelRoot = await showComponent('#component-page');
+  const pageInterfaceText = pagePanelRoot.querySelector('.uzu-doc-interface')?.textContent || '';
+  const publicInterfaceCount = document.querySelectorAll('.uzu-doc-interface').length;
+
+  const toolbarPanel = await showComponent('#component-toolbar');
+  const toolbar = toolbarPanel.querySelector('.uzu-toolbar');
+  const toolbarButtonBox = rect(toolbar.querySelector('.uzu-button'));
+
+  const paginationPanel = await showComponent('#component-pagination');
+  const pagination = paginationPanel.querySelector('.uzu-pagination');
+  const pageButtonBox = rect(pagination.querySelector('.uzu-page-button[aria-current="page"]'));
   const paginationPageTwo = pagination.querySelector('[data-uzu-page="2"]');
-  const statStyle = getComputedStyle(document.querySelector('.uzu-stat'));
-  const statValueStyle = getComputedStyle(document.querySelector('.uzu-stat-value'));
-  const separatorBox = rect('.uzu-separator');
-  const verticalSeparatorBox = rect('.uzu-separator-vertical');
-  const kbdBox = rect('.uzu-kbd');
-  const disclosure = document.querySelector('[data-uzu-disclosure]');
+
+  const statPanel = await showComponent('#component-stat');
+  const statStyle = getComputedStyle(statPanel.querySelector('.uzu-stat'));
+  const statValueStyle = getComputedStyle(statPanel.querySelector('.uzu-stat-value'));
+
+  const separatorPanel = await showComponent('#component-separator');
+  const separatorBox = rect(separatorPanel.querySelector('.uzu-separator'));
+  const verticalSeparatorBox = rect(separatorPanel.querySelector('.uzu-separator-vertical'));
+
+  const codePanel = await showComponent('#component-code');
+  const kbdBox = rect(codePanel.querySelector('.uzu-kbd'));
+
+  const disclosurePanelRoot = await showComponent('#component-disclosure');
+  const disclosure = disclosurePanelRoot.querySelector('[data-uzu-disclosure]');
   const disclosureTrigger = disclosure.querySelector('[data-uzu-disclosure-trigger]');
   const disclosurePanel = disclosure.querySelector('[data-uzu-disclosure-panel]');
   const disclosureClosedHeight = rect(disclosure).height;
@@ -424,14 +497,10 @@ const visualExpression = `(async () => {
 
   click(paginationPageTwo);
   await wait(80);
-  const paginationPanelTwo = document.querySelector('[data-uzu-page-panel="2"]');
+  const paginationPanelTwo = paginationPanel.querySelector('[data-uzu-page-panel="2"]');
   const paginationEventValue = pagination.dataset.uzuPaginationPage;
 
-  window.Usuzumi.applyLanguage(document.documentElement, 'en');
-  await wait(100);
-  const segmentedIndicatorAfterLanguage = getComputedStyle(segmented, '::before');
-  const tabsIndicatorAfterLanguage = getComputedStyle(tabs, '::after');
-
+  await showComponent('#component-dialog');
   const dialogTrigger = document.querySelector('[data-uzu-dialog-target="#site-dialog"]');
   const dialog = document.querySelector('#site-dialog');
   click(dialogTrigger);
@@ -446,19 +515,30 @@ const visualExpression = `(async () => {
   return {
     viewportWidth: document.documentElement.clientWidth,
     hasHorizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth > 1,
+    hashNavigationOpenedPanel,
     toastWidth: toastBox.width,
     toastContentRight: toastContentBox.right,
     toastCloseRight: toastCloseBox.right,
     toastPaddingBalance: Math.abs((toastContentBox.left - toastBox.left) - (toastBox.right - toastContentBox.right)),
     fieldLabelToInputGap: fieldInputBox.top - fieldLabelBox.bottom,
-    segmentedIndicatorWidth: Number.parseFloat(segmentedIndicator.width),
-    segmentedActiveWidth: activeSegment.getBoundingClientRect().width,
-    segmentedIndicatorWidthAfterLanguage: Number.parseFloat(segmentedIndicatorAfterLanguage.width),
-    segmentedActiveWidthAfterLanguage: activeSegment.getBoundingClientRect().width,
-    tabsIndicatorWidthAfterLanguage: Number.parseFloat(tabsIndicatorAfterLanguage.width),
-    tabsActiveWidthAfterLanguage: activeTab.getBoundingClientRect().width,
+    segmentedIndicatorWidth,
+    segmentedActiveWidth,
+    segmentedIndicatorWidthAfterLanguage,
+    segmentedActiveWidthAfterLanguage,
+    tabsIndicatorWidthAfterLanguage,
+    tabsActiveWidthAfterLanguage,
+    codePanelWidth: tabsCodePanelBox.width,
+    codePanelRight: tabsCodePanelBox.right,
+    codeBlockWidth: tabsCodeBlockBox.width,
+    codePanelScrollWidth: tabsCodeBlock.scrollWidth,
+    mainRight: componentMainBox.right,
+    codeSnippetHasRuntimeState,
     footerIconWidth: footerIconBox.width,
     footerIconHeight: footerIconBox.height,
+    docBrandFontSize,
+    publicInterfaceCount,
+    buttonInterfaceHasIconButton: buttonInterfaceText.includes('.uzu-icon-button'),
+    pageInterfaceHasWidthVariable: pageInterfaceText.includes('--uzu-page-max-width') && pageInterfaceText.includes('--uzu-page-narrow-max-width'),
     toolbarDisplay: getComputedStyle(toolbar).display,
     toolbarButtonWidth: toolbarButtonBox.width,
     paginationDisplay: getComputedStyle(pagination).display,

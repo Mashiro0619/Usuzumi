@@ -9,6 +9,7 @@
   const dialogCloseTimers = new WeakMap();
   const toastCloseTimers = new WeakMap();
   const indicatorInstantTimers = new WeakMap();
+  const codeCopyDefaultContent = new WeakMap();
 
   const storage = {
     get(key) {
@@ -26,6 +27,29 @@
       }
     }
   };
+
+  function fallbackCopyText(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    document.body.append(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      return Promise.resolve();
+    } finally {
+      textarea.remove();
+    }
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(() => fallbackCopyText(text));
+    }
+    return fallbackCopyText(text);
+  }
 
   function queryAll(root, selector) {
     const scope = root || document;
@@ -554,6 +578,7 @@
     });
     tabsRoot.dataset.uzuTabsValue = value;
     setControlIndicator(tabsRoot, nextTab, 'tabs');
+    if (panel) queueIndicatorRefresh(panel, true);
 
     if (emit && value !== previousValue) {
       tabsRoot.dispatchEvent(new CustomEvent('uzu-tabs-change', {
@@ -1059,6 +1084,309 @@
     });
   }
 
+  function getPanelNavTarget(control) {
+    return control.dataset.uzuPanelTarget || '';
+  }
+
+  function getPanelNavControl(root, target) {
+    return getScopedControls(root, '[data-uzu-panel-target]', '[data-uzu-panel-nav]')
+      .find((control) => getPanelNavTarget(control) === target);
+  }
+
+  function getPanelNavPanel(target) {
+    if (!target) return null;
+    try {
+      return document.querySelector(target);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function getPanelNavPanels(root, panel) {
+    const panels = getScopedControls(root, '[data-uzu-panel-target]', '[data-uzu-panel-nav]')
+      .map((item) => getPanelNavPanel(getPanelNavTarget(item)))
+      .filter(Boolean);
+    if (panels.length) return [...new Set(panels)];
+    const selector = root.dataset.uzuPanelSelector || '.uzu-doc-panel';
+    const scope = root.closest(root.dataset.uzuPanelScope || '.uzu-doc-layout, .uzu-scope, main, body') || root.parentElement || document;
+    return queryAll(scope, selector).filter((item) => item === panel || item.parentElement === panel.parentElement);
+  }
+
+  function showPanelNavTarget(root, control, options = {}) {
+    const target = getPanelNavTarget(control);
+    if (!target || isControlDisabled(control)) return null;
+    const panel = getPanelNavPanel(target);
+    if (!panel) return null;
+    const controls = getScopedControls(root, '[data-uzu-panel-target]', '[data-uzu-panel-nav]');
+    controls.forEach((item) => {
+      const isActive = item === control;
+      item.classList.toggle('is-active', isActive);
+      item.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+    getPanelNavPanels(root, panel).forEach((item) => {
+      item.hidden = item !== panel;
+    });
+    if (options.updateHash && window.location.hash !== target) {
+      window.history.pushState(null, '', target);
+    }
+    root.dispatchEvent(new CustomEvent('uzu-panel-nav-change', {
+      bubbles: true,
+      detail: { target, control, panel, nav: root }
+    }));
+    panel.dispatchEvent(new CustomEvent('uzu-panel-show', {
+      bubbles: true,
+      detail: { target, control, panel, nav: root }
+    }));
+    queueIndicatorRefresh(panel, true);
+    return panel;
+  }
+
+  function showPanelNavFromHash(root) {
+    const target = window.location.hash;
+    if (!target) return false;
+    const control = getPanelNavControl(root, target);
+    if (!control) return false;
+    showPanelNavTarget(root, control);
+    return true;
+  }
+
+  function initPanelNavs(root = document) {
+    queryAll(root, '[data-uzu-panel-nav]').forEach((nav) => {
+      const controls = getScopedControls(nav, '[data-uzu-panel-target]', '[data-uzu-panel-nav]');
+      if (!controls.length) return;
+      const openedFromHash = nav.dataset.uzuPanelHash === 'true' && showPanelNavFromHash(nav);
+      if (!openedFromHash) {
+        const active = controls.find((control) => control.classList.contains('is-active') || control.getAttribute('aria-pressed') === 'true') || controls[0];
+        showPanelNavTarget(nav, active);
+      }
+
+      if (!markInitialized(nav, 'PanelNav')) return;
+      nav.addEventListener('click', (event) => {
+        const control = getScopedEventControl(event, '[data-uzu-panel-target]', nav, '[data-uzu-panel-nav]');
+        if (!control) return;
+        showPanelNavTarget(nav, control, { updateHash: nav.dataset.uzuPanelHash === 'true' });
+      });
+      if (nav.dataset.uzuPanelHash === 'true') {
+        window.addEventListener('hashchange', () => showPanelNavFromHash(nav));
+      }
+    });
+  }
+
+  function isSafeMarkdownHref(value) {
+    const href = String(value || '').trim();
+    if (!href) return false;
+    if (href.startsWith('#') || href.startsWith('/') || href.startsWith('./') || href.startsWith('../')) return true;
+    try {
+      return ['http:', 'https:', 'mailto:', 'tel:'].includes(new URL(href, window.location.href).protocol);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function appendInlineMarkdown(parent, text) {
+    const pattern = /(`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
+    String(text).split(pattern).forEach((part) => {
+      if (!part) return;
+      if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+        const code = document.createElement('code');
+        code.className = 'uzu-code';
+        code.textContent = part.slice(1, -1);
+        parent.append(code);
+        return;
+      }
+      const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (link) {
+        if (!isSafeMarkdownHref(link[2])) {
+          parent.append(document.createTextNode(link[1]));
+          return;
+        }
+        const anchor = document.createElement('a');
+        anchor.href = link[2].trim();
+        anchor.textContent = link[1];
+        parent.append(anchor);
+        return;
+      }
+      parent.append(document.createTextNode(part));
+    });
+  }
+
+  function createMarkdownBlock(type, content) {
+    const element = document.createElement(type);
+    appendInlineMarkdown(element, content);
+    return element;
+  }
+
+  function createCodeBlock(codeText, language = '') {
+    const shell = document.createElement('div');
+    shell.className = 'uzu-code-block';
+    const pre = document.createElement('pre');
+    pre.className = 'uzu-code-block-body uzu-scroll';
+    const code = document.createElement('code');
+    if (language) code.className = `language-${language}`;
+    code.textContent = codeText.replace(/\n$/, '');
+    pre.append(code);
+    const button = document.createElement('button');
+    button.className = 'uzu-icon-button uzu-code-block-copy';
+    button.type = 'button';
+    button.setAttribute('aria-label', 'Copy code');
+    button.setAttribute('data-uzu-code-copy', '');
+    button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><rect x="8" y="8" width="10" height="10" rx="1.8" stroke="currentColor" stroke-width="1.7"/><path d="M6 15H5.8A1.8 1.8 0 0 1 4 13.2V5.8A1.8 1.8 0 0 1 5.8 4h7.4A1.8 1.8 0 0 1 15 5.8V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span data-uzu-code-copy-label>Copy</span>';
+    shell.append(pre, button);
+    return shell;
+  }
+
+  function renderMarkdown(markdown) {
+    const fragment = document.createDocumentFragment();
+    const lines = String(markdown).replace(/\r\n?/g, '\n').split('\n');
+    let paragraph = [];
+    let list = null;
+    let inFence = false;
+    let fenceLanguage = '';
+    let fenceLines = [];
+
+    const flushParagraph = () => {
+      if (!paragraph.length) return;
+      fragment.append(createMarkdownBlock('p', paragraph.join(' ')));
+      paragraph = [];
+    };
+    const flushList = () => {
+      if (!list) return;
+      fragment.append(list);
+      list = null;
+    };
+
+    lines.forEach((line) => {
+      const fence = line.match(/^```([\w-]*)\s*$/);
+      if (fence) {
+        if (inFence) {
+          fragment.append(createCodeBlock(fenceLines.join('\n'), fenceLanguage));
+          inFence = false;
+          fenceLanguage = '';
+          fenceLines = [];
+        } else {
+          flushParagraph();
+          flushList();
+          inFence = true;
+          fenceLanguage = fence[1] || '';
+        }
+        return;
+      }
+      if (inFence) {
+        fenceLines.push(line);
+        return;
+      }
+
+      if (!line.trim()) {
+        flushParagraph();
+        flushList();
+        return;
+      }
+
+      const heading = line.match(/^(#{1,3})\s+(.+)$/);
+      if (heading) {
+        flushParagraph();
+        flushList();
+        fragment.append(createMarkdownBlock(`h${heading[1].length}`, heading[2]));
+        return;
+      }
+
+      const item = line.match(/^\s*[-*]\s+(.+)$/);
+      if (item) {
+        flushParagraph();
+        if (!list) list = document.createElement('ul');
+        const li = document.createElement('li');
+        appendInlineMarkdown(li, item[1]);
+        list.append(li);
+        return;
+      }
+
+      paragraph.push(line.trim());
+    });
+
+    if (inFence) fragment.append(createCodeBlock(fenceLines.join('\n'), fenceLanguage));
+    flushParagraph();
+    flushList();
+    return fragment;
+  }
+
+  function initMarkdown(root = document) {
+    queryAll(root, '[data-uzu-markdown]').forEach((element) => {
+      if (markInitialized(element, 'Markdown')) {
+        const source = element.tagName === 'TEXTAREA' ? element.value : element.textContent;
+        element.replaceChildren(renderMarkdown(source));
+      }
+      initCodeCopy(element);
+    });
+  }
+
+  function getCodeCopyLabelText(button, label, key, fallback) {
+    return label?.dataset[key] || button.dataset[key] || fallback;
+  }
+
+  function getCodeCopyLabels(button) {
+    return queryAll(button, '[data-uzu-code-copy-label]');
+  }
+
+  function setCodeCopyLabel(button, key, fallback) {
+    const labels = getCodeCopyLabels(button);
+    const nextLabel = button.dataset[key] || fallback;
+    button.setAttribute('aria-label', nextLabel);
+    if (labels.length) {
+      labels.forEach((label) => {
+        label.textContent = getCodeCopyLabelText(button, label, key, fallback);
+      });
+      return;
+    }
+    button.textContent = nextLabel;
+  }
+
+  function restoreCodeCopyLabel(button) {
+    const labels = getCodeCopyLabels(button);
+    if (labels.length) {
+      button.setAttribute('aria-label', button.dataset.uzuCopyText || 'Copy code');
+      labels.forEach((label) => {
+        label.textContent = getCodeCopyLabelText(button, label, 'uzuCopyText', label.dataset.uzuCodeCopyDefault || 'Copy');
+      });
+      return;
+    }
+    const defaultContent = codeCopyDefaultContent.get(button);
+    if (defaultContent) {
+      button.replaceChildren(...defaultContent.map((node) => node.cloneNode(true)));
+      button.setAttribute('aria-label', button.dataset.uzuCopyText || 'Copy code');
+      return;
+    }
+    button.setAttribute('aria-label', button.dataset.uzuCopyText || 'Copy code');
+    button.textContent = button.dataset.uzuCopyText || 'Copy';
+  }
+
+  function initCodeCopy(root = document) {
+    queryAll(root, '[data-uzu-code-copy]').forEach((button) => {
+      if (!markInitialized(button, 'CodeCopy')) return;
+      const labels = getCodeCopyLabels(button);
+      labels.forEach((label) => {
+        if (!label.dataset.uzuCodeCopyDefault) label.dataset.uzuCodeCopyDefault = label.textContent.trim();
+      });
+      if (!labels.length && !codeCopyDefaultContent.has(button)) {
+        codeCopyDefaultContent.set(button, [...button.childNodes].map((node) => node.cloneNode(true)));
+      }
+      button.addEventListener('click', () => {
+        const block = button.closest('.uzu-code-block');
+        const code = block?.querySelector('pre code, pre')?.textContent || '';
+        copyText(code).then(() => {
+          setCodeCopyLabel(button, 'uzuCopiedText', 'Copied');
+          window.setTimeout(() => {
+            restoreCodeCopyLabel(button);
+          }, 1400);
+        }).catch(() => {
+          setCodeCopyLabel(button, 'uzuCopyFailedText', 'Copy failed');
+          window.setTimeout(() => {
+            restoreCodeCopyLabel(button);
+          }, 1800);
+        });
+      });
+    });
+  }
+
   function handleDocumentClick(event) {
     queryAll(document, '[data-uzu-select].is-open').forEach((select) => {
       if (!select.contains(event.target)) closeSelect(select);
@@ -1100,7 +1428,7 @@
   function init(root = document) {
     syncRootClass();
     initGlobalListeners();
-    for (const fn of [initThemeToggles, initLanguageToggles, initSelects, initTabs, initSegmented, initPaginations, initSwitches, initDisclosures, initDialogs, initToasts]) {
+    for (const fn of [initThemeToggles, initLanguageToggles, initSelects, initTabs, initSegmented, initPaginations, initSwitches, initDisclosures, initDialogs, initToasts, initPanelNavs, initMarkdown, initCodeCopy]) {
       try { fn(root); } catch (error) { console.error('[usuzumi]', error); }
     }
     queueIndicatorRefresh(root);
@@ -1112,6 +1440,8 @@
     applyLanguage,
     setSwitchState,
     setPaginationPage: syncPaginationState,
+    renderMarkdown,
+    initCodeCopy,
     openDialog,
     closeDialog
   };

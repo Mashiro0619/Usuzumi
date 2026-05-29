@@ -447,6 +447,7 @@ async function browserSmoke() {
 </head>
 <body class="uzu-app">
   <main class="uzu-page">
+    <section id="consumer-page-width" class="uzu-page" style="--uzu-page-max-width: 640px">Scoped page width</section>
     <section id="consumer-theme-root" class="uzu-scope" data-theme="light" data-uzu-theme-key="consumer-theme">
       <button id="consumer-theme-toggle" class="uzu-icon-button" type="button" data-uzu-theme-toggle data-uzu-theme-target="#consumer-theme-root" aria-label="Theme">T</button>
     </section>
@@ -477,6 +478,67 @@ async function browserSmoke() {
       <p class="uzu-stat-note">Public primitives.</p>
     </article>
     <p><code class="uzu-code" id="consumer-code">.uzu-scope</code> <kbd class="uzu-kbd" id="consumer-kbd">Ctrl</kbd></p>
+    <p id="consumer-plain-backticks">Plain \`raw\` text should stay untouched.</p>
+    <div class="uzu-code-block" id="consumer-code-block">
+      <pre class="uzu-code-block-body uzu-scroll"><code>const label = 'Usuzumi';</code></pre>
+      <button class="uzu-icon-button uzu-code-block-copy" type="button" data-uzu-code-copy aria-label="Copy code">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><rect x="8" y="8" width="10" height="10" rx="1.8" stroke="currentColor" stroke-width="1.7"/><path d="M6 15H5.8A1.8 1.8 0 0 1 4 13.2V5.8A1.8 1.8 0 0 1 5.8 4h7.4A1.8 1.8 0 0 1 15 5.8V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <span data-uzu-code-copy-label>Copy</span>
+      </button>
+    </div>
+    <div class="uzu-doc-layout" id="consumer-panel-layout">
+      <nav class="uzu-panel-nav" id="consumer-panel-nav" data-uzu-panel-nav data-uzu-panel-selector=".consumer-doc-panel" aria-label="Consumer panels">
+        <section class="uzu-panel-nav-section" aria-labelledby="consumer-panel-nav-title">
+          <p class="uzu-panel-nav-title" id="consumer-panel-nav-title">Docs</p>
+          <button class="uzu-panel-nav-button is-active" type="button" data-uzu-panel-target="#consumer-panel-one" aria-pressed="true">One<span class="uzu-panel-nav-meta">Intro</span></button>
+          <button class="uzu-panel-nav-button" type="button" data-uzu-panel-target="#consumer-panel-two" aria-pressed="false">Two<span class="uzu-panel-nav-meta">API</span></button>
+        </section>
+      </nav>
+      <div>
+        <section class="uzu-doc-panel consumer-doc-panel" id="consumer-panel-one">Panel one</section>
+        <section class="uzu-doc-panel consumer-doc-panel" id="consumer-panel-two" hidden>Panel two</section>
+      </div>
+    </div>
+    <div class="uzu-doc-layout" id="consumer-panel-layout-secondary">
+      <nav class="uzu-panel-nav" id="consumer-panel-nav-secondary" data-uzu-panel-nav data-uzu-panel-selector=".consumer-doc-panel-secondary" aria-label="Secondary consumer panels">
+        <section class="uzu-panel-nav-section" aria-labelledby="consumer-panel-nav-title-secondary">
+          <p class="uzu-panel-nav-title" id="consumer-panel-nav-title-secondary">More docs</p>
+          <button class="uzu-panel-nav-button is-active" type="button" data-uzu-panel-target="#consumer-panel-three" aria-pressed="true">Three</button>
+          <button class="uzu-panel-nav-button" type="button" data-uzu-panel-target="#consumer-panel-four" aria-pressed="false">Four</button>
+        </section>
+      </nav>
+      <div>
+        <section class="uzu-doc-panel consumer-doc-panel-secondary" id="consumer-panel-three">Panel three</section>
+        <section class="uzu-doc-panel consumer-doc-panel-secondary" id="consumer-panel-four" hidden>Panel four</section>
+      </div>
+    </div>
+    <div class="uzu-doc-layout" id="consumer-panel-layout-hash">
+      <nav class="uzu-panel-nav" id="consumer-panel-nav-hash" data-uzu-panel-nav data-uzu-panel-hash="true" data-uzu-panel-selector=".consumer-doc-panel-hash" aria-label="Hash consumer panels">
+        <section class="uzu-panel-nav-section" aria-labelledby="consumer-panel-nav-title-hash">
+          <p class="uzu-panel-nav-title" id="consumer-panel-nav-title-hash">Hash docs</p>
+          <button class="uzu-panel-nav-button is-active" type="button" data-uzu-panel-target="#consumer-panel-hash-one" aria-pressed="true">Default</button>
+          <button class="uzu-panel-nav-button" type="button" data-uzu-panel-target="#consumer-panel-hash-two" aria-pressed="false">Hash target</button>
+        </section>
+      </nav>
+      <div>
+        <section class="uzu-doc-panel consumer-doc-panel-hash" id="consumer-panel-hash-one">Default hash panel</section>
+        <section class="uzu-doc-panel consumer-doc-panel-hash" id="consumer-panel-hash-two" hidden>Hash target panel</section>
+      </div>
+    </div>
+    <div class="uzu-prose" id="consumer-markdown" data-uzu-markdown>
+# Rendered
+
+Use \`.uzu-code\` inside copy.
+
+[Safe link](https://example.com) [Bad link](javascript:alert(1))
+
+- First
+- Second
+
+\`\`\`html
+<button class="uzu-button">Save</button>
+\`\`\`
+    </div>
     <hr class="uzu-separator" id="consumer-separator">
     <span class="uzu-separator-vertical" id="consumer-separator-vertical" aria-hidden="true"></span>
     <nav aria-label="Consumer pagination">
@@ -607,7 +669,7 @@ async function browserSmoke() {
   const { pathToFileURL } = await import('node:url');
   const profile = path.join(appDir, 'browser-profile');
   const activePortFile = path.join(profile, 'DevToolsActivePort');
-  const targetUrl = pathToFileURL(htmlPath).href;
+  const targetUrl = `${pathToFileURL(htmlPath).href}#consumer-panel-hash-two`;
 
   rmSync(profile, { recursive: true, force: true });
   mkdirSync(profile, { recursive: true });
@@ -657,6 +719,10 @@ async function browserSmoke() {
       const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       const events = [];
       const themeToggle = document.querySelector('#consumer-theme-toggle');
+      const pageWidthTarget = document.querySelector('#consumer-page-width');
+      const pageWidth = pageWidthTarget.getBoundingClientRect().width;
+      pageWidthTarget.style.setProperty('--uzu-page-max-width', '520px');
+      const pageWidthCustom = pageWidthTarget.getBoundingClientRect().width;
       const tabs = document.querySelector('[data-uzu-tabs]');
       const segmented = document.querySelector('[data-uzu-segmented]');
       const paginationRoot = document.querySelector('#consumer-pagination');
@@ -735,6 +801,37 @@ async function browserSmoke() {
       const stat = getComputedStyle(document.querySelector('#consumer-stat'));
       const statValue = getComputedStyle(document.querySelector('.uzu-stat-value'));
       const codeStyle = getComputedStyle(document.querySelector('#consumer-code'));
+      const codeBlock = document.querySelector('#consumer-code-block');
+      const codeBlockStyle = getComputedStyle(codeBlock.querySelector('.uzu-code-block-body'));
+      const codeCopyButton = codeBlock.querySelector('[data-uzu-code-copy]');
+      click(codeCopyButton);
+      await wait(80);
+      const codeBlockCopyLabelExists = Boolean(codeCopyButton.querySelector('[data-uzu-code-copy-label]'));
+      const codeBlockCopySvgExists = Boolean(codeCopyButton.querySelector('svg'));
+      const codeBlockCopyDisplay = getComputedStyle(codeCopyButton).position;
+      const codeBlockPaddingTop = Number.parseFloat(codeBlockStyle.paddingTop);
+      const panelNav = document.querySelector('#consumer-panel-nav');
+      const panelNavSecond = panelNav.querySelector('[data-uzu-panel-target="#consumer-panel-two"]');
+      const hashBeforePanelNav = window.location.hash;
+      let panelNavEvent = '';
+      panelNav.addEventListener('uzu-panel-nav-change', (event) => { panelNavEvent = event.detail.target; }, { once: true });
+      click(panelNavSecond);
+      await wait(80);
+      const hashAfterPanelNav = window.location.hash;
+      const secondaryPanelThreeHidden = document.querySelector('#consumer-panel-three').hidden;
+      const secondaryPanelFourHidden = document.querySelector('#consumer-panel-four').hidden;
+      const hashPanelOneHidden = document.querySelector('#consumer-panel-hash-one').hidden;
+      const hashPanelTwoHidden = document.querySelector('#consumer-panel-hash-two').hidden;
+      const hashPanelSecondPressed = document.querySelector('#consumer-panel-nav-hash [data-uzu-panel-target="#consumer-panel-hash-two"]').getAttribute('aria-pressed');
+      const markdown = document.querySelector('#consumer-markdown');
+      const markdownHeading = markdown.querySelector('h1');
+      const markdownInlineCode = markdown.querySelector('p .uzu-code');
+      const markdownCodeBlock = markdown.querySelector('.uzu-code-block');
+      const markdownSafeLink = [...markdown.querySelectorAll('a')].find((anchor) => anchor.textContent.trim() === 'Safe link');
+      const markdownUnsafeLink = [...markdown.querySelectorAll('a')].find((anchor) => anchor.textContent.trim() === 'Bad link');
+      const renderedFragment = window.Usuzumi.renderMarkdown('Hello ' + String.fromCharCode(96) + 'api' + String.fromCharCode(96));
+      const plainBackticks = document.querySelector('#consumer-plain-backticks');
+      const plainBackticksCodeExists = Boolean(plainBackticks.querySelector('.uzu-code'));
       const kbdStyle = getComputedStyle(document.querySelector('#consumer-kbd'));
       const separator = document.querySelector('#consumer-separator');
       const separatorStyle = getComputedStyle(separator);
@@ -807,6 +904,8 @@ async function browserSmoke() {
         hasApi: Boolean(window.Usuzumi && window.Usuzumi.init),
         rootClass: document.documentElement.classList.contains('uzu-root'),
         restoredTheme: document.querySelector('#consumer-theme-root').getAttribute('data-theme'),
+        pageWidth,
+        pageWidthCustom,
         themeToggleDark: themeToggle.classList.contains('is-dark'),
         tabValue: tabs.dataset.uzuTabsValue,
         tabSelected: tabs.querySelector('[data-uzu-tab-value="two"]').getAttribute('aria-selected'),
@@ -887,6 +986,33 @@ async function browserSmoke() {
         statDisplay: stat.display,
         statValueFontSize: statValue.fontSize,
         codeFontFamily: codeStyle.fontFamily,
+        codeBlockBorderStyle: codeBlockStyle.borderTopStyle,
+        codeBlockCopyText: codeCopyButton.textContent.trim(),
+        codeBlockCopyLabelExists,
+        codeBlockCopySvgExists,
+        codeBlockCopyDisplay,
+        codeBlockCopyButtonWidth: Math.round(codeCopyButton.getBoundingClientRect().width),
+        codeBlockCopyButtonHeight: Math.round(codeCopyButton.getBoundingClientRect().height),
+        codeBlockPaddingTop,
+        panelNavDisplay: getComputedStyle(panelNav).display,
+        panelNavEvent,
+        panelNavSecondPressed: panelNavSecond.getAttribute('aria-pressed'),
+        panelTwoHidden: document.querySelector('#consumer-panel-two').hidden,
+        hashBeforePanelNav,
+        hashAfterPanelNav,
+        secondaryPanelThreeHidden,
+        secondaryPanelFourHidden,
+        hashPanelOneHidden,
+        hashPanelTwoHidden,
+        hashPanelSecondPressed,
+        markdownHeadingText: markdownHeading?.textContent.trim() || '',
+        markdownInlineCodeText: markdownInlineCode?.textContent.trim() || '',
+        markdownCodeBlockExists: Boolean(markdownCodeBlock),
+        markdownSafeLinkHref: markdownSafeLink?.href || '',
+        markdownUnsafeLinkExists: Boolean(markdownUnsafeLink),
+        renderedMarkdownInlineCode: renderedFragment.querySelector?.('.uzu-code')?.textContent || '',
+        plainBackticksText: plainBackticks.textContent.trim(),
+        plainBackticksCodeExists,
         kbdHeight: Math.round(document.querySelector('#consumer-kbd').getBoundingClientRect().height),
         separatorHeight: Math.round(separator.getBoundingClientRect().height),
         separatorBackground: separatorStyle.backgroundColor,
@@ -926,6 +1052,7 @@ async function browserSmoke() {
     if (!value.hasApi) throw new Error('Browser consumer page did not expose window.Usuzumi');
     if (!value.rootClass) throw new Error('Browser consumer page did not keep uzu-root');
     if (value.restoredTheme !== 'dark' || !value.themeToggleDark) throw new Error('Browser consumer theme did not restore the saved mode');
+    if (!(value.pageWidth > value.pageWidthCustom) || Math.round(value.pageWidthCustom) !== 520) throw new Error('Browser consumer page max-width variable did not apply');
     if (value.tabValue !== 'two' || value.tabSelected !== 'true') throw new Error('Browser consumer tabs did not respond');
     if (value.tabsIndicator !== 'true' || value.tabsIndicatorWidth <= 0) throw new Error('Browser consumer tabs did not expose animated indicator metrics');
     if (value.tabsIndicatorTransform === 'none') throw new Error('Browser consumer tabs indicator did not move');
@@ -979,6 +1106,19 @@ async function browserSmoke() {
     if (value.toolbarButtonBackground !== 'rgb(47, 47, 44)') throw new Error('Browser consumer toolbar primary button styling is wrong');
     if (value.statDisplay !== 'grid' || value.statValueFontSize !== '34px') throw new Error('Browser consumer stat styles are wrong');
     if (!value.codeFontFamily.toLowerCase().includes('mono')) throw new Error('Browser consumer code should use a monospace stack');
+    if (value.codeBlockBorderStyle === 'none') throw new Error('Browser consumer code block styling is missing');
+    if (!['Copied', 'Copy'].includes(value.codeBlockCopyText)) throw new Error('Browser consumer code copy button did not initialize');
+    if (!value.codeBlockCopyLabelExists) throw new Error('Browser consumer code copy should preserve its label element');
+    if (!value.codeBlockCopySvgExists || value.codeBlockCopyDisplay !== 'absolute') throw new Error('Browser consumer code copy should render as an overlay icon button');
+    if (value.codeBlockCopyButtonWidth !== 28 || value.codeBlockCopyButtonHeight !== 28) throw new Error('Browser consumer code copy button should use compact icon metrics');
+    if (value.codeBlockPaddingTop >= 30) throw new Error('Browser consumer code block should not reserve vertical space for the copy button');
+    if (value.panelNavDisplay !== 'grid' || value.panelNavEvent !== '#consumer-panel-two' || value.panelNavSecondPressed !== 'true' || value.panelTwoHidden) throw new Error('Browser consumer panel nav did not switch panels');
+    if (value.hashBeforePanelNav !== value.hashAfterPanelNav) throw new Error('Browser consumer panel nav should not update the URL hash unless data-uzu-panel-hash is enabled');
+    if (value.secondaryPanelThreeHidden || !value.secondaryPanelFourHidden) throw new Error('Browser consumer panel nav should not hide panels controlled by a different nav');
+    if (!value.hashPanelOneHidden || value.hashPanelTwoHidden || value.hashPanelSecondPressed !== 'true') throw new Error('Browser consumer panel nav should honor the initial hash before opening the default panel');
+    if (value.markdownHeadingText !== 'Rendered' || value.markdownInlineCodeText !== '.uzu-code' || !value.markdownCodeBlockExists || value.renderedMarkdownInlineCode !== 'api') throw new Error('Browser consumer markdown rendering did not produce Usuzumi elements');
+    if (value.markdownSafeLinkHref !== 'https://example.com/' || value.markdownUnsafeLinkExists) throw new Error('Browser consumer markdown should allow safe links and reject unsafe links');
+    if (value.plainBackticksText !== 'Plain `raw` text should stay untouched.' || value.plainBackticksCodeExists) throw new Error('Browser consumer markdown should not rewrite ordinary text outside data-uzu-markdown');
     if (value.kbdHeight < 24) throw new Error('Browser consumer keyboard hint height is too small');
     if (value.separatorHeight !== 1 || value.separatorBackground !== 'rgb(229, 228, 224)') throw new Error('Browser consumer separator styling is wrong');
     if (value.verticalSeparatorWidth !== 1 || value.verticalSeparatorHeight !== 24 || value.verticalSeparatorBackground !== 'rgb(229, 228, 224)') throw new Error('Browser consumer vertical separator styling is wrong');

@@ -301,58 +301,6 @@
   color: var(--uzu-fg-strong);
 }
 
-.uzu-doc-nav {
-  display: grid;
-  gap: 22px;
-}
-
-.uzu-doc-nav-section {
-  display: grid;
-  gap: 4px;
-}
-
-.uzu-doc-nav-title {
-  margin: 0 0 4px;
-  color: var(--uzu-subtle);
-  font-size: 13px;
-  line-height: 1.35;
-}
-
-.uzu-doc-nav a {
-  min-height: 36px;
-  padding: 7px 10px;
-  color: var(--uzu-fg);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-}
-
-.uzu-doc-nav a:hover,
-.uzu-doc-nav a:focus-visible {
-  background: var(--uzu-surface-soft);
-  color: var(--uzu-fg-strong);
-}
-
-.uzu-doc-nav a[aria-current="page"] {
-  background: var(--uzu-surface-soft);
-  color: var(--uzu-fg-strong);
-}
-
-.uzu-doc-nav-en {
-  color: var(--uzu-soft);
-  font-size: 12px;
-  line-height: 1;
-}
-
-.uzu-doc-nav-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: var(--uzu-radius-pill);
-  background: var(--uzu-accent, var(--uzu-success));
-  flex: 0 0 auto;
-}
-
 .uzu-theme-toggle .uzu-icon-sun,
 .uzu-theme-toggle.is-dark .uzu-icon-moon {
   display: none;
@@ -749,6 +697,63 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.uzu-code-block {
+  min-width: 0;
+  max-width: 100%;
+  position: relative;
+}
+
+.uzu-code-block pre,
+pre.uzu-code-block-body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  max-height: var(--uzu-code-block-max-height, 430px);
+  box-sizing: border-box;
+  margin: 0;
+  overflow: auto;
+  padding: var(--uzu-code-block-padding, 14px 52px 14px 16px);
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-micro);
+  background: var(--uzu-surface-inset);
+  color: var(--uzu-fg);
+  font-family: var(--uzu-font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.uzu-code-block-copy {
+  width: var(--uzu-code-block-copy-size, 28px);
+  height: var(--uzu-code-block-copy-size, 28px);
+  min-width: var(--uzu-code-block-copy-size, 28px);
+  min-height: var(--uzu-code-block-copy-size, 28px);
+  padding: 0;
+  position: absolute;
+  top: var(--uzu-code-block-copy-offset, 8px);
+  right: var(--uzu-code-block-copy-offset, 8px);
+  z-index: 1;
+  border-radius: var(--uzu-radius-pill);
+}
+
+.uzu-code-block-copy svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.uzu-code-block-copy [data-uzu-code-copy-label] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .uzu-alert {

@@ -96,10 +96,12 @@ Single-instance adjustments:
 </article>
 ```
 
-Documented variables cover color roles, radius, spacing, motion, card title rhythm, form field rhythm, feedback sizing and colors, toast sizing, and disclosure panel spacing.
+Documented variables cover color roles, radius, spacing, motion, page width, card title rhythm, form field rhythm, feedback sizing and colors, toast sizing, and disclosure panel spacing.
 
 | Variable | Default | Applies to | Suggested scope |
 | --- | --- | --- | --- |
+| `--uzu-page-max-width` | `1120px` | `.uzu-page` width | `.uzu-app`, `.uzu-scope`, local page |
+| `--uzu-page-narrow-max-width` | `960px` | `.uzu-page-narrow` width | `.uzu-app`, `.uzu-scope`, local page |
 | `--uzu-card-title-size` | `18px` | `.uzu-title-pair` heading | `.uzu-app`, `.uzu-scope`, local card |
 | `--uzu-card-title-line` | `1.25` | `.uzu-title-pair` heading | `.uzu-app`, `.uzu-scope`, local card |
 | `--uzu-card-subtitle-size` | `13px` | `.uzu-title-pair` description | `.uzu-app`, `.uzu-scope`, local card |
@@ -129,9 +131,9 @@ Runtime-written variables for tab indicators, segmented indicators, and measured
 ## Included
 
 - Design tokens for color, typography, spacing, borders, radius, motion, and dark mode.
-- Layout and component primitives for pages, sections, grids, buttons, toolbars, breadcrumbs, pagination, cards, stats, forms, tabs, badges, separators, code, keyboard hints, alert presets, callouts, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, and tooltips.
+- Layout and component primitives for pages, sections, grids, buttons, toolbars, breadcrumbs, pagination, cards, stats, forms, tabs, badges, separators, code, code blocks, keyboard hints, alert presets, callouts, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, panel navigation, document layouts, and tooltips.
 - Page patterns for personal homepages, app introduction pages, design catalogs, project lists, mockups, and feature sections.
-- Small JavaScript helpers for theme toggles, language toggles, custom selects, tabs, segmented controls, pagination, switches, disclosures, dialogs, and toast dismissal.
+- Small JavaScript helpers for theme toggles, language toggles, custom selects, tabs, segmented controls, pagination, switches, disclosures, dialogs, toast dismissal, panel navigation, code copying, and a limited Markdown renderer.
 
 ## Runtime
 
@@ -140,6 +142,12 @@ The JavaScript runtime auto-initializes in browsers, is safe to import in SSR/No
 ```js
 window.Usuzumi.init(container);
 ```
+
+Optional document helpers:
+
+- Add `data-uzu-panel-nav` to a `.uzu-panel-nav` container and `data-uzu-panel-target="#panel-id"` to its buttons to switch `.uzu-doc-panel` panels. Use `data-uzu-panel-hash="true"` to sync the URL hash.
+- Use `.uzu-code-block` with `.uzu-code-block-body` and a `[data-uzu-code-copy]` button for copyable snippets.
+- Add `data-uzu-markdown` to a `.uzu-prose` container to render a small Markdown subset: headings, paragraphs, unordered lists, links, inline code, and fenced code blocks. This is not a full Markdown engine.
 
 Custom events:
 
@@ -151,6 +159,8 @@ Custom events:
 - `uzu-disclosure-change`: `{ open, disclosure }`
 - `uzu-toast-close`: `{ toast }`
 - `uzu-dialog-open` / `uzu-dialog-close`: `{ dialog, overlay, trigger }`
+- `uzu-panel-nav-change`: `{ target, control, panel, nav }`
+- `uzu-panel-show`: `{ target, control, panel, nav }`
 
 Type declarations are included.
 
