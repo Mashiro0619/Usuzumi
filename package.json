@@ -1,7 +1,7 @@
 {
   "name": "usuzumi",
   "version": "0.6.0",
-  "description": "A zero-build web design system for quiet editorial interfaces and small product pages.",
+  "description": "Drop-in CSS and JavaScript components for personal sites, docs, and product pages.",
   "keywords": [
     "ui",
     "css",

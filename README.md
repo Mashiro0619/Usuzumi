@@ -2,9 +2,9 @@
 
 [中文](README.zh-CN.md)
 
-Usuzumi is a zero-build web design system for quiet editorial interfaces, personal pages, app introductions, documentation, and small product tools.
+Usuzumi is a CSS and JavaScript component library you can load directly in a page. It is aimed at personal pages, app introductions, documentation, and small product tools.
 
-It provides `uzu-*` CSS primitives, a soft monochrome visual language, optional signature typography, and a small dependency-free JavaScript runtime for common UI behavior.
+It provides `uzu-*` classes, documented CSS variables, optional signature typography, and dependency-free scripts for themes, language toggles, tabs, pagination, selects, dialogs, and related controls.
 
 ## Install
 
@@ -41,7 +41,7 @@ Use `uzu-root` and `uzu-app` for a full page:
       <section class="uzu-section">
         <div class="uzu-section-head">
           <p class="uzu-section-label">Overview</p>
-          <h1 class="uzu-page-title">A quiet interface starts with good rhythm.</h1>
+          <h1 class="uzu-page-title">Project notes</h1>
         </div>
         <button class="uzu-button uzu-button-primary">Continue</button>
       </section>
@@ -126,18 +126,18 @@ Documented variables cover color roles, radius, spacing, motion, page width, car
 | `--uzu-toast-action-gap` | `12px` | gap reserved for toast action | local toast |
 | `--uzu-disclosure-panel-block-end-padding` | `20px` | disclosure panel bottom spacing | local disclosure or container |
 
-Runtime-written variables for tab indicators, segmented indicators, and measured disclosure height are internal state and should not be set by application code. If a repeated project need is not covered by the variable API, add a component variable to the library instead of depending on preview-only CSS.
+Script-written variables for tab indicators, segmented indicators, and measured disclosure height are internal state and should not be set by application code. If a repeated project need is not covered by the variable API, add a component variable to the library instead of depending on preview-only CSS.
 
 ## Included
 
 - Design tokens for color, typography, spacing, borders, radius, motion, and dark mode.
 - Layout and component primitives for pages, sections, grids, buttons, toolbars, breadcrumbs, pagination, cards, stats, forms, tabs, badges, separators, code, code blocks, keyboard hints, alert presets, callouts, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, panel navigation, document layouts, and tooltips.
-- Page patterns for personal homepages, app introduction pages, design catalogs, project lists, mockups, and feature sections.
-- Small JavaScript helpers for theme toggles, language toggles, custom selects, tabs, segmented controls, pagination, switches, disclosures, dialogs, toast dismissal, panel navigation, code copying, and a limited Markdown renderer.
+- Page patterns for personal homepages, app introduction pages, component pages, project lists, mockups, and feature sections.
+- JavaScript helpers for theme toggles, language toggles, custom selects, tabs, segmented controls, pagination, switches, disclosures, dialogs, toast dismissal, panel navigation, code copying, and a limited Markdown renderer.
 
-## Runtime
+## Scripts
 
-The JavaScript runtime auto-initializes in browsers, is safe to import in SSR/Node contexts, and can be rerun for dynamic content:
+The JavaScript file auto-initializes in browsers, is safe to import in SSR/Node contexts, and can be rerun for dynamic content:
 
 ```js
 window.Usuzumi.init(container);
@@ -167,7 +167,7 @@ Type declarations are included.
 ## Examples
 
 - [Homepage](https://github.com/Mashiro0619/Usuzumi/blob/main/example/index.html)
-- [Component catalog](https://github.com/Mashiro0619/Usuzumi/blob/main/example/components.html)
+- [Components page](https://github.com/Mashiro0619/Usuzumi/blob/main/example/components.html)
 - [Personal homepage example](https://github.com/Mashiro0619/Usuzumi/blob/main/example/example-1.html)
 - [App introduction example](https://github.com/Mashiro0619/Usuzumi/blob/main/example/example-2.html)
 
@@ -182,9 +182,9 @@ npm run build:css
 npm run validate
 ```
 
-`npm run validate` checks source guardrails, then packs the library and installs it into a temporary consumer project to verify package exports, CSS files, type declarations, CDN-style `ui/*` paths, browser runtime behavior, and component catalog layout smoke checks.
+`npm run validate` checks source guardrails, then packs the library and installs it into a temporary consumer project to verify package exports, CSS files, type declarations, CDN-style `ui/*` paths, browser behavior, and component page layout smoke checks.
 
-The runtime library has no dependencies. See [DESIGN.md](DESIGN.md) for the full design specification.
+The scripts have no dependencies. See [DESIGN.md](DESIGN.md) for the full design specification.
 
 ## License
 

@@ -167,7 +167,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Foundation</p>
             <h2 class="uzu-section-title"><span data-lang="zh">动效令牌</span><span data-lang="en">Motion Tokens</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">动效集中用于过程状态和组件状态变化，不移动整个控件位置。</span><span data-lang="en">Motion is reserved for process states and component state changes, without moving whole controls.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">动效只用在加载、切换、展开和关闭这类变化上，不让按钮或卡片在悬浮时整体位移。</span><span data-lang="en">Motion appears in loading, switching, expanding, and closing states, without shifting whole buttons or cards on hover.</span></p>
           </div>
           <div class="uzu-doc-example">
             <div class="uzu-progress uzu-progress-indeterminate" role="progressbar" aria-label="Syncing changes">
@@ -204,13 +204,13 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Layout</p>
             <h2 class="uzu-section-title"><span data-lang="zh">居中区块</span><span data-lang="en">Centered Section</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">`.uzu-section-centered` 用于简短介绍、下载入口或空状态，让标题、说明和操作保持居中。</span><span data-lang="en">`.uzu-section-centered` keeps short intros, download groups, or empty states centered.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">`.uzu-section-centered` 用在内容很短的区块，比如介绍、下载入口或空状态。</span><span data-lang="en">Use `.uzu-section-centered` for short sections such as intros, download groups, or empty states.</span></p>
           </div>
           <section class="uzu-section uzu-section-centered uzu-doc-example">
             <div class="uzu-section-head">
               <p class="uzu-section-label">Usuzumi</p>
-              <h3 class="uzu-section-title"><span data-lang="zh">轻量接入</span><span data-lang="en">Lightweight Setup</span></h3>
-              <p class="uzu-body-large"><span data-lang="zh">直接引用 CSS 和运行时脚本即可开始。</span><span data-lang="en">Reference the CSS and runtime script to start.</span></p>
+              <h3 class="uzu-section-title"><span data-lang="zh">直接引用</span><span data-lang="en">Direct Include</span></h3>
+              <p class="uzu-body-large"><span data-lang="zh">页面里引入 CSS；需要交互控件时再引入 JS。</span><span data-lang="en">Load the CSS first; add the JS when the page needs interactive controls.</span></p>
             </div>
             <div class="uzu-download-actions">
               <a class="uzu-button uzu-button-primary" href="../README.md">README</a>
@@ -286,7 +286,7 @@
             <article class="uzu-stat">
               <p class="uzu-stat-label"><span data-lang="zh">组件</span><span data-lang="en">Components</span></p>
               <p class="uzu-stat-value">42</p>
-              <p class="uzu-stat-note"><span data-lang="zh">公开类名和运行时行为。</span><span data-lang="en">Public classes and runtime behavior.</span></p>
+              <p class="uzu-stat-note"><span data-lang="zh">类名、变量和交互控件。</span><span data-lang="en">Classes, variables, and interactive controls.</span></p>
             </article>
           </div>
         </section>
@@ -397,7 +397,7 @@
             <p class="uzu-text uzu-doc-note"><span data-lang="zh">工具栏把局部操作、筛选或视图切换放在同一行。</span><span data-lang="en">Toolbars group local actions, filters, or view switches in one row.</span></p>
           </div>
           <div class="uzu-doc-example">
-            <div class="uzu-toolbar" role="toolbar" aria-label="Catalog actions">
+            <div class="uzu-toolbar" role="toolbar" aria-label="Component actions">
               <div class="uzu-toolbar-group">
                 <button class="uzu-button uzu-button-primary" type="button"><span data-lang="zh">新建</span><span data-lang="en">New</span></button>
                 <button class="uzu-button" type="button"><span data-lang="zh">导入</span><span data-lang="en">Import</span></button>
@@ -431,14 +431,14 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Actions</p>
             <h2 class="uzu-section-title"><span data-lang="zh">分页</span><span data-lang="en">Pagination</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">加入 `data-uzu-pagination` 后，运行时会管理当前页、前后按钮和可选面板切换。</span><span data-lang="en">With `data-uzu-pagination`, the runtime manages the current page, previous/next controls, and optional panels.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">给分页列表加 `data-uzu-pagination` 后，脚本会更新当前页、前后按钮和对应内容面板。</span><span data-lang="en">Add `data-uzu-pagination` so the script updates the current page, prev/next buttons, and matching panels.</span></p>
           </div>
           <div class="uzu-doc-example">
             <div id="pagination-demo-pages">
               <article class="uzu-page-panel" data-uzu-page-panel="1">
                 <div class="uzu-title-pair">
                   <h3><span data-lang="zh">第 1 页：安装</span><span data-lang="en">Page 1: Install</span></h3>
-                  <p><span data-lang="zh">引入 CSS 与运行时脚本。</span><span data-lang="en">Load the CSS and runtime script.</span></p>
+                  <p><span data-lang="zh">引入 CSS；需要交互时再引入 JS。</span><span data-lang="en">Load the CSS; add JS when interaction is needed.</span></p>
                 </div>
               </article>
               <article class="uzu-page-panel" data-uzu-page-panel="2" hidden>
@@ -471,7 +471,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Controls</p>
             <h2 class="uzu-section-title"><span data-lang="zh">标签页</span><span data-lang="en">Tabs</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">标签页用于同级内容切换。运行时会同步 ARIA、键盘导航和下划线动画。</span><span data-lang="en">Tabs switch peer content. The runtime syncs ARIA, keyboard navigation, and the animated underline.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">标签页用于同级内容切换。加上 `data-uzu-tabs` 后，脚本会处理 ARIA、键盘导航和下划线动画。</span><span data-lang="en">Tabs switch peer content. Add `data-uzu-tabs` for ARIA, keyboard navigation, and the animated underline.</span></p>
           </div>
           <div class="uzu-doc-example">
             <div class="uzu-tabs" data-uzu-tabs>
@@ -522,7 +522,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Controls</p>
             <h2 class="uzu-section-title"><span data-lang="zh">开关</span><span data-lang="en">Switch</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">开关用于立即生效的二元设置，运行时会同步 `aria-checked`。</span><span data-lang="en">Switches are for immediately applied binary settings. The runtime syncs `aria-checked`.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">开关用于点下后立即生效的二元设置。脚本会同步 `.is-on` 和 `aria-checked`。</span><span data-lang="en">Switches are for binary settings that apply immediately. The script syncs `.is-on` and `aria-checked`.</span></p>
           </div>
           <div class="uzu-doc-example">
             <div class="uzu-check-row">
@@ -536,7 +536,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Form</p>
             <h2 class="uzu-section-title"><span data-lang="zh">字段</span><span data-lang="en">Fields</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">字段把 label、输入控件、帮助文字和错误状态放在同一个节奏里。单行文本和多行文本共用这套结构。</span><span data-lang="en">Fields keep labels, controls, helper text, and validation states in one rhythm. Single-line and multi-line inputs share the same structure.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">字段把 label、输入控件、帮助文字和错误提示按固定间距排在一起。单行和多行输入共用这套结构。</span><span data-lang="en">Fields place labels, controls, helper text, and errors with consistent spacing. Single-line and multiline inputs share the same structure.</span></p>
           </div>
           <div class="uzu-doc-example">
             <div class="uzu-field">
@@ -587,14 +587,14 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Feedback</p>
             <h2 class="uzu-section-title"><span data-lang="zh">提示条</span><span data-lang="en">Alert</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">提示条用于状态反馈。成功、警告、危险和信息都有预设。</span><span data-lang="en">Alerts communicate status feedback. Success, warning, danger, and info presets are available.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">提示条用于页面内消息。成功、警告、危险和信息都有预设。</span><span data-lang="en">Alerts show in-page messages. Success, warning, danger, and info presets are available.</span></p>
           </div>
           <div class="uzu-doc-example">
             <div class="uzu-grid uzu-grid-2">
               <article class="uzu-alert uzu-alert-info">
                 <div class="uzu-title-pair">
                   <h3><span data-lang="zh">信息</span><span data-lang="en">Information</span></h3>
-                  <p><span data-lang="zh">普通说明或轻量提醒。</span><span data-lang="en">General notes and reminders.</span></p>
+                  <p><span data-lang="zh">普通说明或短提醒。</span><span data-lang="en">General notes and short reminders.</span></p>
                 </div>
               </article>
               <article class="uzu-alert uzu-alert-danger">
@@ -623,7 +623,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Feedback</p>
             <h2 class="uzu-section-title"><span data-lang="zh">进度与活动</span><span data-lang="en">Progress And Activity</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">线性进度承载任务进展，环形进度适合小面积状态，活动点用于短暂后台处理。</span><span data-lang="en">Linear progress carries task progress, circular progress fits compact status, and activity dots cover brief background work.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">线性进度用于任务进展，环形进度适合小空间，活动点表示短暂后台处理。</span><span data-lang="en">Use linear progress for task progress, circular progress in small spaces, and activity dots for brief background work.</span></p>
           </div>
           <div class="uzu-doc-example">
             <div class="uzu-progress uzu-progress-indeterminate" role="progressbar" aria-label="Syncing changes"><span class="uzu-progress-bar"></span></div>
@@ -693,7 +693,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Overlay</p>
             <h2 class="uzu-section-title"><span data-lang="zh">折叠面板</span><span data-lang="en">Disclosure</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">折叠面板用于默认隐藏的补充内容。运行时管理高度动画、ARIA 和隐藏状态。</span><span data-lang="en">Disclosures hide supporting content by default. The runtime manages height animation, ARIA, and hidden state.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">折叠面板用于默认收起的补充内容。脚本负责高度动画、ARIA 和 `hidden` 状态。</span><span data-lang="en">Disclosures hide supporting content by default. The script handles height animation, ARIA, and `hidden` state.</span></p>
           </div>
           <div class="uzu-doc-example">
             <article class="uzu-disclosure" data-uzu-disclosure>
@@ -712,7 +712,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Overlay</p>
             <h2 class="uzu-section-title"><span data-lang="zh">弹窗</span><span data-lang="en">Dialog</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">弹窗用于需要用户处理的临时任务。运行时支持打开、关闭、Esc、背景点击和焦点返回。</span><span data-lang="en">Dialogs handle temporary tasks that need user attention. The runtime supports open, close, Escape, backdrop click, and focus return.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">弹窗用于必须先处理完的临时内容。脚本支持打开、关闭、Esc、背景点击和焦点返回。</span><span data-lang="en">Dialogs are for temporary content that must be handled before returning. The script supports open, close, Escape, backdrop click, and focus return.</span></p>
           </div>
           <div class="uzu-doc-example">
             <button class="uzu-button uzu-button-primary" type="button" data-uzu-dialog-target="#site-dialog">
@@ -737,7 +737,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Overlay</p>
             <h2 class="uzu-section-title"><span data-lang="zh">浮动面板</span><span data-lang="en">Popover</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">浮动面板用于短上下文、局部菜单或轻量设置容器。</span><span data-lang="en">Popovers hold short context, local menus, or lightweight settings.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">浮动面板用于短说明、局部菜单或少量设置。</span><span data-lang="en">Popovers hold short notes, local menus, or a small set of settings.</span></p>
           </div>
           <aside class="uzu-popover">
             <div class="uzu-title-pair">
@@ -789,7 +789,7 @@
         },
         motion: {
           classes: ['--uzu-motion-base', '.uzu-progress-indeterminate', '.uzu-activity'],
-          usage: ['过程状态使用进度条、活动点或展开收起动画表达。', 'Use progress, activity dots, or expansion motion for process states.'],
+          usage: ['加载、保存、展开和关闭这类变化用进度条、活动点或高度动画表达。', 'Use progress, activity dots, or expansion motion for loading, saving, expanding, and closing states.'],
           note: ['不要让整个按钮或卡片在悬浮时位移。', 'Do not move whole buttons or cards on hover.'],
           tip: ['自定义动画时复用 --uzu-ease-standard，和内置控件保持一致。', 'Reuse --uzu-ease-standard for custom motion.']
         },
@@ -797,7 +797,7 @@
           classes: ['.uzu-page', '.uzu-page-narrow', '.uzu-section'],
           usage: ['页面外层用 .uzu-page，内容分组用 .uzu-section。', 'Use .uzu-page for the outer container and .uzu-section for content groups.'],
           note: ['页面最大宽度可用变量或作用域覆盖，不必改库文件。', 'Override width through variables or scope styles instead of editing the library.'],
-          tip: ['窄页面可用 .uzu-page-narrow 承载文档、设置页和短表单。', 'Use .uzu-page-narrow for docs, settings pages, and short forms.']
+          tip: ['文档、设置页和短表单可以用 .uzu-page-narrow。', 'Use .uzu-page-narrow for docs, settings pages, and short forms.']
         },
         'section-centered': {
           classes: ['.uzu-section-centered', '.uzu-section-head', '.uzu-download-actions'],
@@ -875,7 +875,7 @@
           classes: ['.uzu-pagination', '[data-uzu-pagination]', '[data-uzu-page]'],
           usage: ['为页码容器加 data-uzu-pagination，页码按钮加 data-uzu-page。', 'Add data-uzu-pagination to the list and data-uzu-page to page buttons.'],
           note: ['如果要切换内容面板，设置 data-uzu-pagination-target。', 'Set data-uzu-pagination-target when page panels should switch.'],
-          tip: ['运行时会同步当前页、前后按钮和 change 事件。', 'The runtime syncs current page, prev/next buttons, and change events.']
+          tip: ['脚本会同步当前页、前后按钮，并派发 change 事件。', 'The script syncs the current page, prev/next buttons, and change events.']
         },
         tabs: {
           classes: ['.uzu-tabs', '.uzu-tab', '[data-uzu-tabs]'],
@@ -899,7 +899,7 @@
           classes: ['.uzu-switch', '[data-uzu-switch]'],
           usage: ['立即生效的二元设置用开关。', 'Use switches for binary settings that apply immediately.'],
           note: ['需要保存确认的设置不要用 switch，改用 checkbox 加提交按钮。', 'Use checkbox plus submit for settings that need confirmation.'],
-          tip: ['运行时同步 .is-on 与 aria-checked。', 'The runtime syncs .is-on and aria-checked.']
+          tip: ['脚本会同步 .is-on 与 aria-checked。', 'The script syncs .is-on and aria-checked.']
         },
         input: {
           classes: ['.uzu-field', '.uzu-label', '.uzu-input', '.uzu-textarea', '.uzu-help'],
@@ -915,13 +915,13 @@
         },
         badge: {
           classes: ['.uzu-badge', '.uzu-badge-success', '.uzu-badge-warning'],
-          usage: ['短状态、计数或轻量标签使用 badge。', 'Use badges for short status, counts, or lightweight tags.'],
+          usage: ['短状态、计数或标签使用 badge。', 'Use badges for short status, counts, or tags.'],
           note: ['不要把长句放进徽章。', 'Do not put sentences inside badges.'],
           tip: ['状态含义重要时，旁边保留文字说明。', 'Keep explanatory text nearby when the status matters.']
         },
         alert: {
           classes: ['.uzu-alert', '.uzu-alert-info', '.uzu-alert-danger'],
-          usage: ['页面内状态反馈使用 alert。', 'Use alerts for in-page status feedback.'],
+          usage: ['页面内消息使用 alert。', 'Use alerts for in-page messages.'],
           note: ['错误提示要说明用户下一步能做什么。', 'Error alerts should say what the user can do next.'],
           tip: ['成功、警告、危险和信息都有预设。', 'Success, warning, danger, and info presets are available.']
         },
@@ -959,7 +959,7 @@
           classes: ['.uzu-disclosure', '[data-uzu-disclosure]', '[data-uzu-disclosure-panel]'],
           usage: ['默认隐藏的补充内容使用 disclosure。', 'Use disclosures for supporting content hidden by default.'],
           note: ['折叠后面板应 hidden，不继续占位。', 'Collapsed panels should be hidden and not reserve space.'],
-          tip: ['运行时会处理高度动画、aria-expanded 和 hidden。', 'The runtime handles height animation, aria-expanded, and hidden.']
+          tip: ['脚本会处理高度动画、aria-expanded 和 hidden。', 'The script handles height animation, aria-expanded, and hidden.']
         },
         dialog: {
           classes: ['.uzu-dialog-overlay', '.uzu-modal', '[data-uzu-dialog]'],
@@ -969,7 +969,7 @@
         },
         popover: {
           classes: ['.uzu-popover'],
-          usage: ['短上下文、局部菜单或轻量设置容器使用 popover。', 'Use popovers for short context, local menus, or lightweight settings.'],
+          usage: ['短说明、局部菜单或少量设置使用 popover。', 'Use popovers for short notes, local menus, or a small set of settings.'],
           note: ['复杂表单不要塞进 popover。', 'Do not put complex forms inside popovers.'],
           tip: ['放在触发控件附近，避免弹出位置离目标太远。', 'Place it close to its trigger.']
         },
@@ -1159,7 +1159,7 @@
         const guidance = document.createElement('aside');
         guidance.className = 'uzu-doc-guidance';
         const title = document.createElement('h3');
-        title.append(textPair('使用建议', 'Usage Notes'));
+        title.append(textPair('用法', 'How To Use'));
         const list = document.createElement('ul');
         [info.usage, info.note, info.tip].filter(Boolean).forEach((item) => {
           const entry = document.createElement('li');
@@ -1194,7 +1194,7 @@
         const panel = document.createElement('aside');
         panel.className = 'uzu-doc-interface';
         const title = document.createElement('h3');
-        title.append(textPair('公开接口', 'Public Interface'));
+        title.append(textPair('可配置项', 'Configurable Parts'));
         panel.append(title);
         const groups = [
           ['base', info.classes],

@@ -2,9 +2,9 @@
 
 [English](README.md)
 
-Usuzumi 是一套零构建网页设计系统，适用于安静、克制的编辑型界面、个人页面、应用介绍页、文档页面和小型产品工具。
+Usuzumi 是一套可以直接引入的 CSS 和 JavaScript 组件库，适合个人页面、应用介绍页、文档页面和小型产品工具。
 
-它提供 `uzu-*` CSS 原语、柔和的单色视觉语言、可选的签名字体，以及少量无依赖 JavaScript，用于常见 UI 行为。
+它提供 `uzu-*` 类名、可覆盖的 CSS 变量、可选的签名字体，以及一组无依赖脚本，用来处理主题、语言、标签页、分页、选择器、弹窗等交互。
 
 ## 安装
 
@@ -41,7 +41,7 @@ CDN 用法：
       <section class="uzu-section">
         <div class="uzu-section-head">
           <p class="uzu-section-label">Overview</p>
-          <h1 class="uzu-page-title">A quiet interface starts with good rhythm.</h1>
+          <h1 class="uzu-page-title">Project notes</h1>
         </div>
         <button class="uzu-button uzu-button-primary">Continue</button>
       </section>
@@ -124,16 +124,16 @@ Usuzumi 通过 CSS 自定义属性提供样式接口。项目应优先在 `:root
 | `--uzu-toast-action-gap` | `12px` | Toast 为关闭按钮预留的距离 | 局部 Toast |
 | `--uzu-disclosure-panel-block-end-padding` | `20px` | Disclosure 面板底部间距 | 局部 Disclosure 或外层容器 |
 
-Tabs 指示条、Segmented 指示条、Disclosure 实测高度等由运行时写入的变量属于内部状态，不建议在项目代码中手动设置。如果项目反复需要某个新尺寸，应在库里新增组件变量，而不是依赖 preview 专用 CSS。
+Tabs 指示条、Segmented 指示条、Disclosure 实测高度等由脚本写入的变量属于内部状态，不建议在项目代码中手动设置。如果项目反复需要某个新尺寸，应在库里新增组件变量，而不是依赖 preview 专用 CSS。
 
 ## 包含内容
 
 - 颜色、字体、间距、边框、圆角、动效和暗色模式等设计 token。
 - 页面、章节、网格、按钮、工具栏、面包屑、分页、卡片、指标、表单、标签页、徽章、分割线、代码、快捷键提示、Alert 预设、callout、表格、浮层、进度、骨架屏、toast、dialog、disclosure 和 tooltip 等布局与组件原语。
 - 个人主页、应用介绍页、设计目录、项目列表、产品 mockup 和功能区块等页面模式。
-- 主题切换、语言切换、自定义 select、标签页、分段控件、分页、switch、disclosure、dialog 和 toast 关闭等小型 JavaScript 行为。
+- 主题切换、语言切换、自定义 select、标签页、分段控件、分页、switch、disclosure、dialog 和 toast 关闭等交互脚本。
 
-## 运行时
+## 交互脚本
 
 JavaScript 会在浏览器中自动初始化，也可以安全地在 SSR/Node 环境中 import。动态插入内容后可手动初始化：
 
@@ -172,9 +172,9 @@ npm run build:css
 npm run validate
 ```
 
-`npm run validate` 会先检查源码约束，然后将库打包并安装到临时外部项目中，验证 package exports、CSS 文件、类型声明、CDN 风格的 `ui/*` 路径、浏览器运行时行为和组件目录布局 smoke check。
+`npm run validate` 会先检查源码约束，然后将库打包并安装到临时外部项目中，验证 package exports、CSS 文件、类型声明、CDN 风格的 `ui/*` 路径、浏览器交互脚本和组件页面布局 smoke check。
 
-运行时库没有依赖。完整设计规范见 [DESIGN.md](DESIGN.md)。
+交互脚本没有依赖。完整设计规范见 [DESIGN.md](DESIGN.md)。
 
 ## 许可证
 
