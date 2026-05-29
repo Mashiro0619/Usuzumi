@@ -71,14 +71,71 @@ All public component classes use the `uzu-` prefix. Do not rely on internal file
 - `.uzu-card`, `.uzu-card-muted`, `.uzu-title-pair`
 - `.uzu-field`, `.uzu-label`, `.uzu-input`, `.uzu-textarea`, `.uzu-select`
 - `.uzu-tabs`, `.uzu-tab`, `.uzu-segmented`, `.uzu-segment`
-- `.uzu-badge`, `.uzu-alert`, `.uzu-callout`, `.uzu-callout-title`, `.uzu-toast`, `.uzu-table`, `.uzu-popover`, `.uzu-modal`, `.uzu-dialog-overlay`
+- `.uzu-badge`, `.uzu-alert`, `.uzu-alert-info`, `.uzu-alert-success`, `.uzu-alert-warning`, `.uzu-alert-danger`, `.uzu-callout`, `.uzu-callout-title`, `.uzu-toast`, `.uzu-table`, `.uzu-popover`, `.uzu-modal`, `.uzu-dialog-overlay`
 - `.uzu-progress`, `.uzu-progress-bar`, `.uzu-progress-indeterminate`, `.uzu-progress-circular`, `.uzu-skeleton`
 - `.uzu-activity`, `.uzu-activity-dot`, `.uzu-process`, `.uzu-process-step`
 - `.uzu-disclosure`, `.uzu-disclosure-trigger`, `.uzu-disclosure-panel`, `.uzu-tooltip`
 - `.uzu-page`, `.uzu-section`, `.uzu-section-head`, `.uzu-grid`, `.uzu-hero-split`
 - `.uzu-home-hero`, `.uzu-home-summary`, `.uzu-project-list`, `.uzu-project-row`, `.uzu-project-preview`
 - `.uzu-app-preview`, `.uzu-download-actions`, `.uzu-feature-list`, `.uzu-feature-item`, `.uzu-screen-grid`, `.uzu-screen-card`
-- `.uzu-type-list`, `.uzu-type-row`, `.uzu-type-sample`
+- `.uzu-type-list`, `.uzu-type-list-plain`, `.uzu-type-row`, `.uzu-type-sample`
+
+### CSS Custom Property API
+
+CSS custom properties are the public customization interface for project-specific sizing and rhythm. Consumers should set documented `--uzu-*` variables on `:root`, `.uzu-app`, `.uzu-scope`, or a local wrapper. Avoid high-specificity selector overrides unless the variable API cannot express the requirement.
+
+Global customization:
+
+```css
+:root {
+  --uzu-radius-standard: 10px;
+  --uzu-motion-base: 220ms;
+}
+```
+
+Scoped customization:
+
+```css
+.billing-panel {
+  --uzu-card-block-gap: 16px;
+  --uzu-field-gap: 8px;
+  --uzu-alert-max-width: 640px;
+  --uzu-alert-accent-color: #6b5855;
+  --uzu-alert-bg: #f4eeeb;
+  --uzu-toast-width: 420px;
+  --uzu-disclosure-panel-block-end-padding: 24px;
+}
+```
+
+Instance customization:
+
+```html
+<article class="uzu-toast" style="--uzu-toast-width: 420px; --uzu-toast-content-end-offset: 8px">
+  ...
+</article>
+```
+
+Stable global variables include:
+
+- Color roles: `--uzu-bg`, `--uzu-surface`, `--uzu-surface-soft`, `--uzu-surface-muted`, `--uzu-surface-inset`, `--uzu-fg`, `--uzu-fg-strong`, `--uzu-muted`, `--uzu-subtle`, `--uzu-soft`, `--uzu-disabled`, `--uzu-border`, `--uzu-border-soft`, `--uzu-border-strong`, `--uzu-action-bg`, `--uzu-action-fg`
+- Semantic roles: `--uzu-success`, `--uzu-success-bg`, `--uzu-warning`, `--uzu-warning-bg`, `--uzu-danger`, `--uzu-danger-bg`, `--uzu-info`, `--uzu-info-bg`
+- Surface support: `--uzu-control-bg`, `--uzu-shadow-soft`, `--uzu-shadow-popover`, `--uzu-focus-ring`
+- Font stacks: `--uzu-font-serif`, `--uzu-font-signature`, `--uzu-font-mono`
+- Motion: `--uzu-motion-quick`, `--uzu-motion-base`, `--uzu-motion-slow`, `--uzu-ease-standard`
+- Radius: `--uzu-radius-micro`, `--uzu-radius-standard`, `--uzu-radius-medium`, `--uzu-radius-large`, `--uzu-radius-pill`
+- Spacing: `--uzu-space-1`, `--uzu-space-2`, `--uzu-space-3`, `--uzu-space-4`, `--uzu-space-5`, `--uzu-space-6`, `--uzu-space-8`, `--uzu-space-10`
+- Card and form rhythm: `--uzu-card-title-size`, `--uzu-card-title-line`, `--uzu-card-subtitle-size`, `--uzu-card-subtitle-line`, `--uzu-card-title-gap`, `--uzu-card-block-gap`, `--uzu-field-gap`
+
+Stable component variables include:
+
+- Alert sizing and colors: `--uzu-alert-max-width`, `--uzu-alert-border-color`, `--uzu-alert-accent-color`, `--uzu-alert-bg`, `--uzu-alert-title-color`, `--uzu-alert-text-color`
+- Callout colors: `--uzu-callout-border-color`, `--uzu-callout-bg`, `--uzu-callout-title-color`, `--uzu-callout-text-color`
+- Toast sizing: `--uzu-toast-width`, `--uzu-toast-inline-padding`, `--uzu-toast-content-end-offset`, `--uzu-toast-action-size`, `--uzu-toast-action-gap`
+- Disclosure spacing: `--uzu-disclosure-panel-block-end-padding`
+
+Runtime-written variables such as `--uzu-tabs-indicator-x`, `--uzu-tabs-indicator-width`, `--uzu-segmented-indicator-x`, `--uzu-segmented-indicator-width`, and `--uzu-disclosure-panel-height` are internal state. They can appear in computed styles, but application code should not set them as customization hooks.
+
+If a project repeatedly needs a size or behavior that is not covered here, add a small component variable to `ui/css/*.css`, rebuild `ui/usuzumi.css`, and document it in this section. Do not solve that gap with preview-only CSS.
 
 ### State Contract
 
@@ -177,7 +234,7 @@ Use animation for process states and state transitions: loading, syncing, indete
 
 Letter spacing is 0 by default. Section labels may be uppercase, but they should remain quiet and compact.
 
-Use display-size classes only in their intended page context. `.uzu-signature` belongs in open identity areas such as a homepage hero, and `.uzu-hero-title` belongs in product or offer heroes. In design catalogs, use `.uzu-type-list`, `.uzu-type-row`, and `.uzu-type-sample` so type roles can be inspected in a quiet specimen list without oversized card containers.
+Use display-size classes only in their intended page context. `.uzu-signature` belongs in open identity areas such as a homepage hero, and `.uzu-hero-title` belongs in product or offer heroes. In design catalogs, use `.uzu-type-list`, `.uzu-type-row`, and `.uzu-type-sample` so type roles can be inspected in a quiet specimen list without oversized card containers. Use `.uzu-type-list-plain` when the same specimen rhythm is needed without row dividers.
 
 ## Components
 
@@ -256,7 +313,7 @@ Tabs and segmented controls are static visual primitives by default. Add `data-u
 
 ### Feedback
 
-Badges, alerts, callouts, toasts, and validation use the muted semantic families. Do not use bright red or color alone to communicate state. Toasts use `.uzu-toast-stack` and `.uzu-toast`; close buttons use `data-uzu-toast-close`.
+Badges, alerts, callouts, toasts, and validation use the muted semantic families. Do not use bright red or color alone to communicate state. Alerts provide `.uzu-alert-info`, `.uzu-alert-success`, `.uzu-alert-warning`, and `.uzu-alert-danger` presets. Alerts and callouts also expose color custom properties for project-specific tones; prefer those variables over selector overrides. Toasts use `.uzu-toast-stack` and `.uzu-toast`; close buttons use `data-uzu-toast-close`.
 
 Use `.uzu-callout` for editorial notes, constraints, and secondary context that belongs in the reading flow. Callouts are not alerts: they should not announce urgent errors, destructive states, or time-sensitive feedback. Use `.uzu-callout-note`, `.uzu-callout-info`, or `.uzu-callout-warning` to adjust the tone while keeping the message text-led.
 

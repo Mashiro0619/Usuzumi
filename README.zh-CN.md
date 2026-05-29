@@ -61,10 +61,47 @@ CDN 用法：
 </section>
 ```
 
+## 自定义样式接口
+
+Usuzumi 通过 CSS 自定义属性提供样式接口。项目应优先在 `:root`、`.uzu-app`、`.uzu-scope` 或局部容器上覆盖已文档化的 `--uzu-*` 变量，而不是直接覆盖组件内部选择器。
+
+全局调整：
+
+```css
+:root {
+  --uzu-radius-standard: 10px;
+  --uzu-motion-base: 220ms;
+}
+```
+
+局部调整：
+
+```css
+.settings-panel {
+  --uzu-card-block-gap: 16px;
+  --uzu-field-gap: 8px;
+  --uzu-alert-max-width: 640px;
+  --uzu-alert-accent-color: #6b5855;
+  --uzu-alert-bg: #f4eeeb;
+  --uzu-toast-width: 420px;
+  --uzu-disclosure-panel-block-end-padding: 24px;
+}
+```
+
+单个实例也可以直接设置变量：
+
+```html
+<article class="uzu-toast" style="--uzu-toast-width: 420px; --uzu-toast-content-end-offset: 8px">
+  ...
+</article>
+```
+
+已文档化的变量覆盖颜色角色、圆角、间距、动效、卡片标题节奏、表单字段间距、反馈卡片尺寸与颜色、Toast 尺寸和 Disclosure 内容边距。Tabs 指示条、Segmented 指示条、Disclosure 实测高度等由运行时写入的变量属于内部状态，不建议在项目代码中手动设置。如果项目反复需要某个新尺寸，应在库里新增组件变量，而不是依赖 preview 专用 CSS。
+
 ## 包含内容
 
 - 颜色、字体、间距、边框、圆角、动效和暗色模式等设计 token。
-- 页面、章节、网格、按钮、卡片、表单、标签页、徽章、提示、callout、表格、浮层、进度、骨架屏、toast、dialog、disclosure 和 tooltip 等布局与组件原语。
+- 页面、章节、网格、按钮、卡片、表单、标签页、徽章、Alert 预设、callout、表格、浮层、进度、骨架屏、toast、dialog、disclosure 和 tooltip 等布局与组件原语。
 - 个人主页、应用介绍页、设计目录、项目列表、产品 mockup 和功能区块等页面模式。
 - 主题切换、语言切换、自定义 select、标签页、分段控件、switch、disclosure、dialog 和 toast 关闭等小型 JavaScript 行为。
 

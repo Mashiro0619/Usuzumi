@@ -55,6 +55,7 @@
   --uzu-card-subtitle-line: 1.55;
   --uzu-card-title-gap: 6px;
   --uzu-card-block-gap: 12px;
+  --uzu-field-gap: 5px;
 }
 
 :root[data-theme="dark"],

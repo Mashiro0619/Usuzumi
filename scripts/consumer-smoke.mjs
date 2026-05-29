@@ -442,6 +442,7 @@ async function browserSmoke() {
     <a id="consumer-ghost" class="uzu-button uzu-button-ghost" href="#ghost">Ghost</a>
     <a id="consumer-danger" class="uzu-button uzu-button-danger" href="#danger">Danger</a>
     <button class="uzu-icon-button" type="button" data-uzu-tooltip="Tooltip text" aria-label="Tooltip target">?</button>
+    <button id="consumer-tooltip-zh" class="uzu-icon-button" type="button" data-uzu-tooltip="短提示" aria-label="Chinese tooltip target">?</button>
     <div class="uzu-tabs" data-uzu-tabs>
       <button class="uzu-tab is-active" type="button" data-uzu-tab-value="one" aria-selected="true">One</button>
       <button class="uzu-tab" type="button" data-uzu-tab-value="two" aria-selected="false">Two</button>
@@ -457,14 +458,37 @@ async function browserSmoke() {
         <div class="uzu-select-option" data-uzu-select-option data-value="compact" role="option" aria-selected="false">Compact</div>
       </div>
     </div>
+    <div class="uzu-field">
+      <label class="uzu-label" for="consumer-field">Project name</label>
+      <input class="uzu-input" id="consumer-field" placeholder="Untitled project">
+      <span class="uzu-help">Field helper text.</span>
+    </div>
     <section class="uzu-disclosure" data-uzu-disclosure>
       <button class="uzu-disclosure-trigger" type="button" data-uzu-disclosure-trigger aria-expanded="false">Details</button>
       <div class="uzu-disclosure-panel" data-uzu-disclosure-panel hidden>Disclosure content</div>
     </section>
-    <aside class="uzu-callout uzu-callout-note">
+    <aside class="uzu-callout uzu-callout-note" style="--uzu-callout-border-color: rgb(10, 20, 30); --uzu-callout-bg: rgb(240, 241, 242); --uzu-callout-title-color: rgb(30, 40, 50); --uzu-callout-text-color: rgb(60, 70, 80);">
       <h3 class="uzu-callout-title">Consumer page</h3>
       <p>Loaded from node_modules.</p>
     </aside>
+    <article class="uzu-alert" id="consumer-alert" style="--uzu-alert-max-width: 420px; --uzu-alert-accent-color: rgb(10, 20, 30); --uzu-alert-bg: rgb(240, 241, 242); --uzu-alert-title-color: rgb(30, 40, 50); --uzu-alert-text-color: rgb(60, 70, 80);">
+      <div class="uzu-title-pair">
+        <h3>Custom alert</h3>
+        <p>Alert colors are set with custom properties.</p>
+      </div>
+    </article>
+    <article class="uzu-alert uzu-alert-success" id="consumer-alert-success">
+      <div class="uzu-title-pair">
+        <h3>Success alert</h3>
+        <p>Preset success alert.</p>
+      </div>
+    </article>
+    <article class="uzu-alert uzu-alert-warning" id="consumer-alert-warning">
+      <div class="uzu-title-pair">
+        <h3>Warning alert</h3>
+        <p>Preset warning alert.</p>
+      </div>
+    </article>
     <div class="uzu-progress uzu-progress-indeterminate" role="progressbar" aria-label="Syncing changes">
       <span class="uzu-progress-bar"></span>
     </div>
@@ -487,6 +511,18 @@ async function browserSmoke() {
       </div>
       <button class="uzu-icon-button uzu-toast-close" type="button" data-uzu-toast-close aria-label="Dismiss toast">x</button>
     </article>
+    <div class="uzu-grid uzu-grid-2">
+      <article class="uzu-card" id="consumer-tall-card" style="min-height: 180px">Tall sibling</article>
+      <article class="uzu-toast" id="consumer-grid-toast" data-uzu-toast>
+        <div class="uzu-toast-content">
+          <div class="uzu-title-pair">
+            <h3>Saved</h3>
+            <p>Compact grid toast.</p>
+          </div>
+        </div>
+        <button class="uzu-icon-button uzu-toast-close" type="button" data-uzu-toast-close aria-label="Dismiss grid toast">x</button>
+      </article>
+    </div>
     <button class="uzu-button" type="button" data-uzu-dialog-target="#consumer-dialog">Open dialog</button>
     <button class="uzu-button" type="button" data-uzu-dialog-target="#consumer-dialog-two">Open second dialog</button>
     <div class="uzu-dialog-overlay" data-uzu-dialog-overlay hidden>
@@ -595,7 +631,18 @@ async function browserSmoke() {
         dialogCloseEvents.push(event.detail.trigger === dialogTrigger ? 'first-trigger' : 'wrong-trigger');
       });
       click(dialogTrigger);
-      const style = getComputedStyle(document.querySelector('.uzu-callout'));
+      const callout = document.querySelector('.uzu-callout');
+      const style = getComputedStyle(callout);
+      const calloutTitle = getComputedStyle(callout.querySelector('.uzu-callout-title'));
+      const calloutBody = getComputedStyle(callout.querySelector('p'));
+      const alert = document.querySelector('#consumer-alert');
+      const alertStyle = getComputedStyle(alert);
+      const alertTitle = getComputedStyle(alert.querySelector('h3'));
+      const alertBody = getComputedStyle(alert.querySelector('p'));
+      const alertSuccess = getComputedStyle(document.querySelector('#consumer-alert-success'));
+      const alertWarning = getComputedStyle(document.querySelector('#consumer-alert-warning'));
+      const alertWidth = alert.getBoundingClientRect().width;
+      const alertSuccessWidth = document.querySelector('#consumer-alert-success').getBoundingClientRect().width;
       const consumerButton = getComputedStyle(document.querySelector('#consumer-button'));
       const consumerPrimary = getComputedStyle(document.querySelector('#consumer-primary'));
       const consumerGhost = getComputedStyle(document.querySelector('#consumer-ghost'));
@@ -606,6 +653,12 @@ async function browserSmoke() {
       const progressBar = getComputedStyle(document.querySelector('.uzu-progress-indeterminate .uzu-progress-bar'));
       const activityDot = getComputedStyle(document.querySelector('.uzu-activity-dot'));
       const processStep = getComputedStyle(document.querySelector('.uzu-process-step.is-active'), '::before');
+      const field = document.querySelector('.uzu-field');
+      const fieldLabel = field.querySelector('.uzu-label');
+      const fieldInput = field.querySelector('.uzu-input');
+      const fieldGap = Number.parseFloat(getComputedStyle(field).gap);
+      const fieldLabelBottom = fieldLabel.getBoundingClientRect().bottom;
+      const fieldInputTop = fieldInput.getBoundingClientRect().top;
       const selectOpenTransform = getComputedStyle(selectMenu).transform;
       const dialogOpenAnimation = getComputedStyle(dialog).animationName;
       const dialogOpenTransform = getComputedStyle(dialog).transform;
@@ -626,6 +679,11 @@ async function browserSmoke() {
       const toastCloseRightCustom = toastClose.getBoundingClientRect().right;
       const toastOpenTransform = getComputedStyle(toast).transform;
       const tooltipTransform = getComputedStyle(document.querySelector('[data-uzu-tooltip]'), '::after').transform;
+      const tooltipZh = getComputedStyle(document.querySelector('#consumer-tooltip-zh'), '::after');
+      const tooltipZhWidth = Number.parseFloat(tooltipZh.width);
+      const tooltipZhHeight = Number.parseFloat(tooltipZh.height);
+      const gridToastHeight = document.querySelector('#consumer-grid-toast').getBoundingClientRect().height;
+      const gridTallCardHeight = document.querySelector('#consumer-tall-card').getBoundingClientRect().height;
       click(dialog.querySelector('[data-uzu-dialog-close]'));
       const dialogCloseAnimation = getComputedStyle(dialog).animationName;
       const dialogCloseTransform = getComputedStyle(dialog).transform;
@@ -662,6 +720,20 @@ async function browserSmoke() {
         disclosureHiddenWhileClosing,
         buttonTransform,
         calloutBorderStyle: style.borderTopStyle,
+        calloutBorderColor: style.borderTopColor,
+        calloutBackground: style.backgroundColor,
+        calloutTitleColor: calloutTitle.color,
+        calloutBodyColor: calloutBody.color,
+        alertAccentColor: alertStyle.borderLeftColor,
+        alertBackground: alertStyle.backgroundColor,
+        alertTitleColor: alertTitle.color,
+        alertBodyColor: alertBody.color,
+        alertSuccessAccentColor: alertSuccess.borderLeftColor,
+        alertWarningAccentColor: alertWarning.borderLeftColor,
+        alertWidth,
+        alertSuccessWidth,
+        fieldGap,
+        fieldLabelToInputGap: fieldInputTop - fieldLabelBottom,
         progressAnimation: progressBar.animationName,
         activityAnimation: activityDot.animationName,
         processAnimation: processStep.animationName,
@@ -682,6 +754,10 @@ async function browserSmoke() {
         toastOpenTransform,
         toastCloseTransform,
         tooltipTransform,
+        tooltipZhWidth,
+        tooltipZhHeight,
+        gridToastHeight,
+        gridTallCardHeight,
         consumerButtonFontSize: consumerButton.fontSize,
         consumerButtonHeight: Math.round(document.querySelector('#consumer-button').getBoundingClientRect().height),
         consumerPrimaryBackground: consumerPrimary.backgroundColor,
@@ -714,11 +790,21 @@ async function browserSmoke() {
     if (value.selectOpenAnimation !== 'uzu-menu-in' || value.selectCloseAnimation !== 'uzu-menu-out') throw new Error('Browser consumer select did not animate open and close');
     if (value.selectOpenTransform !== 'none') throw new Error('Browser consumer select menu should not shift or scale while opening');
     if (!value.selectClosing || value.selectExpandedAfterClose !== 'false') throw new Error('Browser consumer select did not keep a closing state with collapsed ARIA');
+    if (Math.round(value.fieldGap) !== 5) throw new Error('Browser consumer form field should use the default field gap variable');
+    if (value.fieldLabelToInputGap < 4) throw new Error('Browser consumer form label should not overlap the input');
     if (value.disclosureOpenAnimation !== 'uzu-disclosure-in' || value.disclosureCloseAnimation !== 'uzu-disclosure-out') throw new Error('Browser consumer disclosure did not animate open and close');
     if (!(value.disclosurePanelTargetHeight > 0)) throw new Error('Browser consumer disclosure did not set a measured panel height');
     if (!value.disclosureClosing || value.disclosureHiddenWhileClosing) throw new Error('Browser consumer disclosure did not stay visible while closing');
     if (value.buttonTransform !== 'none') throw new Error('Browser consumer button hover/base transform should not move the button');
     if (value.calloutBorderStyle === 'none') throw new Error('Browser consumer CSS did not style callouts');
+    if (value.calloutBorderColor !== 'rgb(10, 20, 30)' || value.calloutBackground !== 'rgb(240, 241, 242)') throw new Error('Browser consumer callout color variables did not apply');
+    if (value.calloutTitleColor !== 'rgb(30, 40, 50)' || value.calloutBodyColor !== 'rgb(60, 70, 80)') throw new Error('Browser consumer callout text color variables did not apply');
+    if (value.alertAccentColor !== 'rgb(10, 20, 30)' || value.alertBackground !== 'rgb(240, 241, 242)') throw new Error('Browser consumer alert color variables did not apply');
+    if (value.alertTitleColor !== 'rgb(30, 40, 50)' || value.alertBodyColor !== 'rgb(60, 70, 80)') throw new Error('Browser consumer alert text color variables did not apply');
+    if (value.alertSuccessAccentColor !== 'rgb(78, 102, 85)') throw new Error('Browser consumer success alert preset did not apply');
+    if (value.alertWarningAccentColor !== 'rgb(123, 104, 66)') throw new Error('Browser consumer warning alert preset did not apply');
+    if (Math.round(value.alertWidth) !== 420) throw new Error('Browser consumer alert max-width variable did not apply');
+    if (Math.round(value.alertSuccessWidth) !== 520) throw new Error('Browser consumer alert default max width did not apply');
     if (value.progressAnimation !== 'uzu-progress-indeterminate') throw new Error('Browser consumer CSS did not animate indeterminate progress');
     if (value.activityAnimation !== 'uzu-activity-dot') throw new Error('Browser consumer CSS did not animate activity dots');
     if (value.processAnimation !== 'uzu-process-pulse') throw new Error('Browser consumer CSS did not animate active process steps');
@@ -733,6 +819,8 @@ async function browserSmoke() {
     if (Math.round(value.toastCloseWidth) !== 28 || value.toastTitlePaddingRight < 40) throw new Error('Browser consumer toast close affordance should keep title text clear');
     if (value.toastOpenTransform !== 'none' || value.toastCloseTransform !== 'none') throw new Error('Browser consumer toast should not shift or scale while opening or closing');
     if (!value.tooltipTransform.startsWith('matrix(1, 0, 0, 1,') || !value.tooltipTransform.endsWith(', 0)')) throw new Error('Browser consumer tooltip should only keep its static centering transform');
+    if (!(value.tooltipZhWidth > value.tooltipZhHeight)) throw new Error('Browser consumer Chinese tooltip should render horizontally');
+    if (!(value.gridTallCardHeight - value.gridToastHeight > 40)) throw new Error('Browser consumer toast should not stretch to match a tall grid sibling');
     if (value.consumerButtonFontSize !== '13px' || value.consumerButtonHeight !== 40) throw new Error('Browser consumer button size did not return to the default metrics');
     if (value.consumerPrimaryBackground !== 'rgb(47, 47, 44)' || value.consumerPrimaryColor !== 'rgb(247, 246, 241)') throw new Error('Browser consumer primary button colors are wrong');
     if (value.consumerGhostColor !== 'rgb(104, 104, 102)') throw new Error('Browser consumer ghost button link color is wrong');

@@ -446,6 +446,11 @@
   display: grid;
 }
 
+.uzu-type-list-plain {
+  border-top: 0;
+  gap: 12px;
+}
+
 .uzu-type-row {
   min-width: 0;
   padding: 28px 0;
@@ -460,6 +465,11 @@
   border-bottom-color: var(--uzu-border);
 }
 
+.uzu-type-list-plain .uzu-type-row {
+  padding: 24px 0;
+  border-bottom: 0;
+}
+
 .uzu-type-sample {
   margin: 0;
   min-width: 0;
@@ -470,7 +480,7 @@
 .uzu-type-sample-signature {
   font-family: var(--uzu-font-signature);
   font-size: 88px;
-  line-height: 1.05;
+  line-height: 1.28;
 }
 
 .uzu-type-sample-hero {

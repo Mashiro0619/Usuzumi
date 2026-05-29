@@ -97,12 +97,22 @@
 
 .uzu-footer a {
   color: var(--uzu-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   text-decoration-color: transparent;
 }
 
 .uzu-footer a:hover {
   color: var(--uzu-fg-strong);
   text-decoration-color: var(--uzu-soft);
+}
+
+.uzu-footer svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  display: block;
 }
 
 .uzu-divider {
