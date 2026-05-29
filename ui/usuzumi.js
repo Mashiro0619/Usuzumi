@@ -8,6 +8,7 @@
   const disclosureCloseTimers = new WeakMap();
   const dialogCloseTimers = new WeakMap();
   const toastCloseTimers = new WeakMap();
+  const indicatorInstantTimers = new WeakMap();
 
   const storage = {
     get(key) {
@@ -170,6 +171,8 @@
         toggle.setAttribute('aria-label', language === 'en' ? 'Switch to Chinese' : 'Switch to English');
       }
     });
+    refreshStateIndicators(root, true);
+    queueIndicatorRefresh(root, true);
   }
 
   function initLanguageToggles(root = document) {
@@ -480,11 +483,21 @@
     return window.setTimeout(callback, duration + 30);
   }
 
-  function setControlIndicator(root, control, prefix) {
+  function holdIndicatorInstant(root) {
+    root.dataset.uzuIndicatorInstant = 'true';
+    if (indicatorInstantTimers.has(root)) window.clearTimeout(indicatorInstantTimers.get(root));
+    indicatorInstantTimers.set(root, window.setTimeout(() => {
+      delete root.dataset.uzuIndicatorInstant;
+      indicatorInstantTimers.delete(root);
+    }, 120));
+  }
+
+  function setControlIndicator(root, control, prefix, instant = false) {
     if (!control || !root.isConnected || control.offsetWidth <= 0 || control.offsetHeight <= 0) {
       root.dataset[prefix === 'tabs' ? 'uzuTabsIndicator' : 'uzuSegmentedIndicator'] = 'false';
       return;
     }
+    if (instant) holdIndicatorInstant(root);
     const cssPrefix = prefix === 'tabs' ? 'uzu-tabs' : 'uzu-segmented';
     root.style.setProperty(`--${cssPrefix}-indicator-x`, `${control.offsetLeft}px`);
     root.style.setProperty(`--${cssPrefix}-indicator-width`, `${control.offsetWidth}px`);
@@ -499,21 +512,21 @@
     }
   }
 
-  function refreshStateIndicators(root = document) {
+  function refreshStateIndicators(root = document, instant = false) {
     queryAll(root, '[data-uzu-tabs]').forEach((tabsRoot) => {
       const activeTab = getScopedControls(tabsRoot, '.uzu-tab', '[data-uzu-tabs]')
         .find((tab) => tab.classList.contains('is-active') || tab.getAttribute('aria-selected') === 'true');
-      if (activeTab) setControlIndicator(tabsRoot, activeTab, 'tabs');
+      if (activeTab) setControlIndicator(tabsRoot, activeTab, 'tabs', instant);
     });
     queryAll(root, '[data-uzu-segmented]').forEach((segmented) => {
       const activeSegment = getScopedControls(segmented, '.uzu-segment', '[data-uzu-segmented]')
         .find((segment) => segment.classList.contains('is-active') || segment.getAttribute('aria-pressed') === 'true');
-      if (activeSegment) setControlIndicator(segmented, activeSegment, 'segmented');
+      if (activeSegment) setControlIndicator(segmented, activeSegment, 'segmented', instant);
     });
   }
 
-  function queueIndicatorRefresh(root = document) {
-    window.requestAnimationFrame(() => refreshStateIndicators(root));
+  function queueIndicatorRefresh(root = document, instant = false) {
+    window.requestAnimationFrame(() => refreshStateIndicators(root, instant));
   }
 
   function syncTabsState(tabsRoot, activeTab, emit = true) {

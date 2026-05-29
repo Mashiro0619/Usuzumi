@@ -96,7 +96,35 @@ Usuzumi 通过 CSS 自定义属性提供样式接口。项目应优先在 `:root
 </article>
 ```
 
-已文档化的变量覆盖颜色角色、圆角、间距、动效、卡片标题节奏、表单字段间距、反馈卡片尺寸与颜色、Toast 尺寸和 Disclosure 内容边距。Tabs 指示条、Segmented 指示条、Disclosure 实测高度等由运行时写入的变量属于内部状态，不建议在项目代码中手动设置。如果项目反复需要某个新尺寸，应在库里新增组件变量，而不是依赖 preview 专用 CSS。
+已文档化的变量覆盖颜色角色、圆角、间距、动效、卡片标题节奏、表单字段间距、反馈卡片尺寸与颜色、Toast 尺寸和 Disclosure 内容边距。
+
+| 变量 | 默认值 | 作用范围 | 建议设置位置 |
+| --- | --- | --- | --- |
+| `--uzu-card-title-size` | `18px` | `.uzu-title-pair` 标题 | `.uzu-app`、`.uzu-scope`、局部卡片 |
+| `--uzu-card-title-line` | `1.25` | `.uzu-title-pair` 标题行高 | `.uzu-app`、`.uzu-scope`、局部卡片 |
+| `--uzu-card-subtitle-size` | `13px` | `.uzu-title-pair` 说明文字 | `.uzu-app`、`.uzu-scope`、局部卡片 |
+| `--uzu-card-subtitle-line` | `1.55` | `.uzu-title-pair` 说明文字行高 | `.uzu-app`、`.uzu-scope`、局部卡片 |
+| `--uzu-card-title-gap` | `6px` | 标题和说明之间的距离 | `.uzu-app`、`.uzu-scope`、局部卡片 |
+| `--uzu-card-block-gap` | `12px` | 卡片内重复内容间距 | `.uzu-app`、`.uzu-scope`、局部卡片 |
+| `--uzu-field-gap` | `5px` | label、输入框、帮助文字间距 | `.uzu-app`、`.uzu-scope`、局部表单 |
+| `--uzu-alert-max-width` | `520px` | Alert 最大宽度 | 局部 Alert 或外层容器 |
+| `--uzu-alert-border-color` | `var(--uzu-border)` | Alert 边框 | 局部 Alert 或外层容器 |
+| `--uzu-alert-accent-color` | `var(--uzu-border-strong)` | Alert 左侧强调线 | 局部 Alert 或外层容器 |
+| `--uzu-alert-bg` | `var(--uzu-surface)` | Alert 背景 | 局部 Alert 或外层容器 |
+| `--uzu-alert-title-color` | `var(--uzu-fg-strong)` | Alert 标题 | 局部 Alert 或外层容器 |
+| `--uzu-alert-text-color` | `var(--uzu-muted)` | Alert 正文 | 局部 Alert 或外层容器 |
+| `--uzu-callout-border-color` | `var(--uzu-border)` | Callout 边框 | 局部 Callout 或外层容器 |
+| `--uzu-callout-bg` | 混合弱化表面色 | Callout 背景 | 局部 Callout 或外层容器 |
+| `--uzu-callout-title-color` | `var(--uzu-fg-strong)` | Callout 标题 | 局部 Callout 或外层容器 |
+| `--uzu-callout-text-color` | `var(--uzu-muted)` | Callout 正文 | 局部 Callout 或外层容器 |
+| `--uzu-toast-width` | `360px` | Toast 宽度 | 局部 Toast 或 Toast stack |
+| `--uzu-toast-inline-padding` | `16px` | Toast 左右内边距 | 局部 Toast 或 Toast stack |
+| `--uzu-toast-content-end-offset` | `0px` | Toast 正文右边界和关闭按钮对齐 | 局部 Toast |
+| `--uzu-toast-action-size` | `28px` | Toast 关闭按钮尺寸 | 局部 Toast |
+| `--uzu-toast-action-gap` | `12px` | Toast 为关闭按钮预留的距离 | 局部 Toast |
+| `--uzu-disclosure-panel-block-end-padding` | `20px` | Disclosure 面板底部间距 | 局部 Disclosure 或外层容器 |
+
+Tabs 指示条、Segmented 指示条、Disclosure 实测高度等由运行时写入的变量属于内部状态，不建议在项目代码中手动设置。如果项目反复需要某个新尺寸，应在库里新增组件变量，而不是依赖 preview 专用 CSS。
 
 ## 包含内容
 
@@ -135,12 +163,14 @@ window.Usuzumi.init(container);
 
 ## 维护
 
+仓库维护命令：
+
 ```bash
 npm run build:css
 npm run validate
 ```
 
-`npm run validate` 会先检查源码约束，然后将库打包并安装到临时外部项目中，验证 package exports、CSS 文件、类型声明、CDN 风格的 `ui/*` 路径和浏览器运行时行为。
+`npm run validate` 会先检查源码约束，然后将库打包并安装到临时外部项目中，验证 package exports、CSS 文件、类型声明、CDN 风格的 `ui/*` 路径、浏览器运行时行为和 preview 布局 smoke check。
 
 运行时库没有依赖。完整设计规范见 [DESIGN.md](DESIGN.md)。
 

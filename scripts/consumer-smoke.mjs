@@ -429,7 +429,7 @@ async function browserSmoke() {
 
   const htmlPath = path.join(appDir, 'browser-check.html');
   writeFileSync(htmlPath, `<!doctype html>
-<html class="uzu-root" lang="en" data-theme="light">
+<html class="uzu-root" lang="zh-CN" data-theme="light" data-language="zh" data-uzu-lang="zh">
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="./node_modules/usuzumi/ui/usuzumi.css">
@@ -444,12 +444,12 @@ async function browserSmoke() {
     <button class="uzu-icon-button" type="button" data-uzu-tooltip="Tooltip text" aria-label="Tooltip target">?</button>
     <button id="consumer-tooltip-zh" class="uzu-icon-button" type="button" data-uzu-tooltip="短提示" aria-label="Chinese tooltip target">?</button>
     <div class="uzu-tabs" data-uzu-tabs>
-      <button class="uzu-tab is-active" type="button" data-uzu-tab-value="one" aria-selected="true">One</button>
-      <button class="uzu-tab" type="button" data-uzu-tab-value="two" aria-selected="false">Two</button>
+      <button class="uzu-tab is-active" type="button" data-uzu-tab-value="one" aria-selected="true"><span data-lang="zh">一</span><span data-lang="en">One</span></button>
+      <button class="uzu-tab" type="button" data-uzu-tab-value="two" aria-selected="false"><span data-lang="zh">第二项</span><span data-lang="en">Two</span></button>
     </div>
     <div class="uzu-segmented" data-uzu-segmented>
-      <button class="uzu-segment is-active" type="button" data-uzu-segment-value="alpha" aria-pressed="true">Alpha</button>
-      <button class="uzu-segment" type="button" data-uzu-segment-value="beta" aria-pressed="false">Beta</button>
+      <button class="uzu-segment is-active" type="button" data-uzu-segment-value="alpha" aria-pressed="true"><span data-lang="zh">今天</span><span data-lang="en">Today</span></button>
+      <button class="uzu-segment" type="button" data-uzu-segment-value="beta" aria-pressed="false"><span data-lang="zh">计划</span><span data-lang="en">Planning</span></button>
     </div>
     <div class="uzu-select" data-uzu-select data-uzu-select-name="density">
       <button class="uzu-select-trigger" type="button" data-uzu-select-trigger aria-expanded="false">Balanced</button>
@@ -606,8 +606,10 @@ async function browserSmoke() {
       tabs.addEventListener('uzu-tabs-change', (event) => events.push(event.detail.value));
       segmented.addEventListener('uzu-segmented-change', (event) => events.push(event.detail.value));
       const click = (element) => element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-      click([...tabs.querySelectorAll('.uzu-tab')].find((tab) => tab.textContent.trim() === 'Two'));
-      click([...segmented.querySelectorAll('.uzu-segment')].find((segment) => segment.textContent.trim() === 'Beta'));
+      const secondTab = tabs.querySelector('[data-uzu-tab-value="two"]');
+      const betaSegment = segmented.querySelector('[data-uzu-segment-value="beta"]');
+      click(secondTab);
+      click(betaSegment);
       click(selectTrigger);
       const selectOpenAnimation = getComputedStyle(selectMenu).animationName;
       click(selectTrigger);
@@ -650,6 +652,16 @@ async function browserSmoke() {
       const buttonTransform = consumerButton.transform;
       const tabsIndicator = getComputedStyle(tabs, '::after');
       const segmentedIndicator = getComputedStyle(segmented, '::before');
+      const segmentedWidthBeforeLanguage = Number.parseFloat(segmentedIndicator.width);
+      const segmentedActiveWidthBeforeLanguage = betaSegment.getBoundingClientRect().width;
+      window.Usuzumi.applyLanguage(document.documentElement, 'en');
+      await wait(60);
+      const segmentedIndicatorAfterLanguage = getComputedStyle(segmented, '::before');
+      const tabsIndicatorAfterLanguage = getComputedStyle(tabs, '::after');
+      const segmentedWidthAfterLanguage = Number.parseFloat(segmentedIndicatorAfterLanguage.width);
+      const segmentedActiveWidthAfterLanguage = betaSegment.getBoundingClientRect().width;
+      const tabsWidthAfterLanguage = Number.parseFloat(tabsIndicatorAfterLanguage.width);
+      const tabsActiveWidthAfterLanguage = secondTab.getBoundingClientRect().width;
       const progressBar = getComputedStyle(document.querySelector('.uzu-progress-indeterminate .uzu-progress-bar'));
       const activityDot = getComputedStyle(document.querySelector('.uzu-activity-dot'));
       const processStep = getComputedStyle(document.querySelector('.uzu-process-step.is-active'), '::before');
@@ -703,11 +715,17 @@ async function browserSmoke() {
         tabsIndicator: tabs.dataset.uzuTabsIndicator,
         tabsIndicatorWidth: Number.parseFloat(tabsIndicator.width),
         tabsIndicatorTransform: tabsIndicator.transform,
+        tabsIndicatorWidthAfterLanguage: tabsWidthAfterLanguage,
+        tabsActiveWidthAfterLanguage,
         segmentValue: segmented.dataset.uzuSegmentedValue,
         segmentPressed: segmented.querySelector('[data-uzu-segment-value="beta"]').getAttribute('aria-pressed'),
         segmentedIndicator: segmented.dataset.uzuSegmentedIndicator,
         segmentedIndicatorWidth: Number.parseFloat(segmentedIndicator.width),
         segmentedIndicatorTransform: segmentedIndicator.transform,
+        segmentedIndicatorWidthBeforeLanguage: segmentedWidthBeforeLanguage,
+        segmentedActiveWidthBeforeLanguage,
+        segmentedIndicatorWidthAfterLanguage: segmentedWidthAfterLanguage,
+        segmentedActiveWidthAfterLanguage,
         selectOpenAnimation,
         selectCloseAnimation,
         selectOpenTransform,
@@ -784,9 +802,12 @@ async function browserSmoke() {
     if (value.tabValue !== 'two' || value.tabSelected !== 'true') throw new Error('Browser consumer tabs did not respond');
     if (value.tabsIndicator !== 'true' || value.tabsIndicatorWidth <= 0) throw new Error('Browser consumer tabs did not expose animated indicator metrics');
     if (value.tabsIndicatorTransform === 'none') throw new Error('Browser consumer tabs indicator did not move');
+    if (Math.abs(value.tabsIndicatorWidthAfterLanguage - value.tabsActiveWidthAfterLanguage) > 1) throw new Error('Browser consumer tabs indicator did not refresh after language change');
     if (value.segmentValue !== 'beta' || value.segmentPressed !== 'true') throw new Error('Browser consumer segmented control did not respond');
     if (value.segmentedIndicator !== 'true' || value.segmentedIndicatorWidth <= 0) throw new Error('Browser consumer segmented control did not expose animated indicator metrics');
     if (value.segmentedIndicatorTransform === 'none') throw new Error('Browser consumer segmented indicator did not move');
+    if (Math.abs(value.segmentedIndicatorWidthBeforeLanguage - value.segmentedActiveWidthBeforeLanguage) > 1) throw new Error('Browser consumer segmented indicator did not match the active segment before language change');
+    if (Math.abs(value.segmentedIndicatorWidthAfterLanguage - value.segmentedActiveWidthAfterLanguage) > 1) throw new Error('Browser consumer segmented indicator did not refresh after language change');
     if (value.selectOpenAnimation !== 'uzu-menu-in' || value.selectCloseAnimation !== 'uzu-menu-out') throw new Error('Browser consumer select did not animate open and close');
     if (value.selectOpenTransform !== 'none') throw new Error('Browser consumer select menu should not shift or scale while opening');
     if (!value.selectClosing || value.selectExpandedAfterClose !== 'false') throw new Error('Browser consumer select did not keep a closing state with collapsed ARIA');

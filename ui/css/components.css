@@ -738,6 +738,11 @@
   transition: transform var(--uzu-motion-slow) var(--uzu-ease-standard), width var(--uzu-motion-slow) var(--uzu-ease-standard), height var(--uzu-motion-slow) var(--uzu-ease-standard), opacity var(--uzu-motion-base) var(--uzu-ease-standard);
 }
 
+.uzu-tabs[data-uzu-indicator-instant="true"]::after,
+.uzu-segmented[data-uzu-indicator-instant="true"]::before {
+  transition: none;
+}
+
 .uzu-segment {
   min-height: 32px;
   padding: 7px 11px;

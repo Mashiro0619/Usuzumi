@@ -133,6 +133,32 @@ Stable component variables include:
 - Toast sizing: `--uzu-toast-width`, `--uzu-toast-inline-padding`, `--uzu-toast-content-end-offset`, `--uzu-toast-action-size`, `--uzu-toast-action-gap`
 - Disclosure spacing: `--uzu-disclosure-panel-block-end-padding`
 
+| Variable | Default | Applies to | Suggested scope |
+| --- | --- | --- | --- |
+| `--uzu-card-title-size` | `18px` | `.uzu-title-pair` heading | `.uzu-app`, `.uzu-scope`, local card |
+| `--uzu-card-title-line` | `1.25` | `.uzu-title-pair` heading | `.uzu-app`, `.uzu-scope`, local card |
+| `--uzu-card-subtitle-size` | `13px` | `.uzu-title-pair` description | `.uzu-app`, `.uzu-scope`, local card |
+| `--uzu-card-subtitle-line` | `1.55` | `.uzu-title-pair` description | `.uzu-app`, `.uzu-scope`, local card |
+| `--uzu-card-title-gap` | `6px` | title/description rhythm | `.uzu-app`, `.uzu-scope`, local card |
+| `--uzu-card-block-gap` | `12px` | repeated card content spacing | `.uzu-app`, `.uzu-scope`, local card |
+| `--uzu-field-gap` | `5px` | label/input/help spacing | `.uzu-app`, `.uzu-scope`, local form |
+| `--uzu-alert-max-width` | `520px` | alert width | local alert or container |
+| `--uzu-alert-border-color` | `var(--uzu-border)` | alert border | local alert or container |
+| `--uzu-alert-accent-color` | `var(--uzu-border-strong)` | alert left accent | local alert or container |
+| `--uzu-alert-bg` | `var(--uzu-surface)` | alert background | local alert or container |
+| `--uzu-alert-title-color` | `var(--uzu-fg-strong)` | alert title | local alert or container |
+| `--uzu-alert-text-color` | `var(--uzu-muted)` | alert body text | local alert or container |
+| `--uzu-callout-border-color` | `var(--uzu-border)` | callout border | local callout or container |
+| `--uzu-callout-bg` | mixed soft surface | callout background | local callout or container |
+| `--uzu-callout-title-color` | `var(--uzu-fg-strong)` | callout title | local callout or container |
+| `--uzu-callout-text-color` | `var(--uzu-muted)` | callout body text | local callout or container |
+| `--uzu-toast-width` | `360px` | toast width | local toast or toast stack |
+| `--uzu-toast-inline-padding` | `16px` | toast side padding | local toast or toast stack |
+| `--uzu-toast-content-end-offset` | `0px` | toast text/right action alignment | local toast |
+| `--uzu-toast-action-size` | `28px` | toast close button size | local toast |
+| `--uzu-toast-action-gap` | `12px` | gap reserved for toast action | local toast |
+| `--uzu-disclosure-panel-block-end-padding` | `20px` | disclosure panel bottom spacing | local disclosure or container |
+
 Runtime-written variables such as `--uzu-tabs-indicator-x`, `--uzu-tabs-indicator-width`, `--uzu-segmented-indicator-x`, `--uzu-segmented-indicator-width`, and `--uzu-disclosure-panel-height` are internal state. They can appear in computed styles, but application code should not set them as customization hooks.
 
 If a project repeatedly needs a size or behavior that is not covered here, add a small component variable to `ui/css/*.css`, rebuild `ui/usuzumi.css`, and document it in this section. Do not solve that gap with preview-only CSS.

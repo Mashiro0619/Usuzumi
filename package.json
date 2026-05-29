@@ -49,16 +49,16 @@
   },
   "scripts": {
     "build:css": "node scripts/build-css.mjs",
-    "validate": "node scripts/validate.mjs && node scripts/consumer-smoke.mjs",
+    "validate": "node scripts/validate.mjs && node scripts/consumer-smoke.mjs && node scripts/visual-regression.mjs",
     "validate:source": "node scripts/validate.mjs",
-    "validate:consumer": "node scripts/consumer-smoke.mjs"
+    "validate:consumer": "node scripts/consumer-smoke.mjs",
+    "validate:visual": "node scripts/visual-regression.mjs"
   },
   "publishConfig": {
     "access": "public"
   },
   "files": [
     "ui/",
-    "scripts/",
     "DESIGN.md",
     "README.md",
     "README.zh-CN.md",
