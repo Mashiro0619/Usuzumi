@@ -104,6 +104,108 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.uzu-stack {
+  --uzu-stack-gap: var(--uzu-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--uzu-stack-gap);
+}
+
+.uzu-stack-tight {
+  --uzu-stack-gap: var(--uzu-space-2);
+}
+
+.uzu-stack-loose {
+  --uzu-stack-gap: var(--uzu-space-6);
+}
+
+.uzu-flex {
+  --uzu-flex-gap: var(--uzu-space-3);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--uzu-flex-gap);
+}
+
+.uzu-flex-between {
+  justify-content: space-between;
+}
+
+.uzu-spacer {
+  flex: 1 1 auto;
+  min-width: var(--uzu-space-4);
+  min-height: var(--uzu-space-4);
+}
+
+.uzu-aspect {
+  --uzu-aspect-ratio: 16 / 9;
+  aspect-ratio: var(--uzu-aspect-ratio);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.uzu-scroll-area {
+  --uzu-scroll-area-max-height: 260px;
+  max-height: var(--uzu-scroll-area-max-height);
+  min-width: 0;
+  overflow: auto;
+}
+
+.uzu-sidebar {
+  --uzu-sidebar-width: 240px;
+  width: min(var(--uzu-sidebar-width), 100%);
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: var(--uzu-space-5);
+}
+
+.uzu-sidebar-section {
+  min-width: 0;
+  display: grid;
+  gap: var(--uzu-space-2);
+}
+
+.uzu-sidebar-nav {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--uzu-space-1);
+  list-style: none;
+}
+
+.uzu-sidebar-nav a,
+.uzu-sidebar-nav button {
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: var(--uzu-radius-micro);
+  background: transparent;
+  color: var(--uzu-muted);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.35;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.uzu-sidebar-nav a:hover,
+.uzu-sidebar-nav button:hover,
+.uzu-sidebar-nav a:focus-visible,
+.uzu-sidebar-nav button:focus-visible,
+.uzu-sidebar-nav a[aria-current="page"],
+.uzu-sidebar-nav button.is-active,
+.uzu-sidebar-nav button[aria-pressed="true"] {
+  background: var(--uzu-surface-soft);
+  color: var(--uzu-fg-strong);
+}
+
 .uzu-hero-split {
   min-height: min(720px, calc(100vh - 110px));
   padding-bottom: 68px;

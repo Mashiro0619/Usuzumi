@@ -22,6 +22,126 @@
   <link rel="stylesheet" href="../ui/usuzumi.css">
   <link rel="stylesheet" href="../ui/usuzumi-signature.css">
   <script src="../ui/usuzumi.js" defer></script>
+  <style>
+    .uzu-home-hero {
+      padding: 92px 0 58px;
+      border-bottom: 1px solid var(--uzu-border);
+      display: grid;
+      gap: 20px;
+    }
+
+    .uzu-home-summary {
+      margin: 0;
+      width: min(640px, 100%);
+      color: var(--uzu-fg);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .uzu-project-list {
+      border-top: 1px solid var(--uzu-border);
+      display: grid;
+    }
+
+    .uzu-project-row {
+      display: grid;
+      grid-template-columns: minmax(190px, 280px) minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--uzu-border-soft);
+    }
+
+    .uzu-project-row:last-child {
+      border-bottom-color: var(--uzu-border);
+    }
+
+    .uzu-project-media {
+      min-width: 0;
+    }
+
+    .uzu-project-preview {
+      aspect-ratio: 16 / 10;
+      border: 1px solid var(--uzu-border);
+      border-radius: var(--uzu-radius-micro);
+      background: var(--uzu-surface-muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .uzu-project-preview::before,
+    .uzu-project-preview::after {
+      content: "";
+      position: absolute;
+      border-radius: var(--uzu-radius-micro);
+    }
+
+    .uzu-project-preview-app::before {
+      inset: 16px auto 16px 18px;
+      width: 38%;
+      border: 1px solid var(--uzu-border-soft);
+      background: var(--uzu-surface);
+    }
+
+    .uzu-project-preview-app::after {
+      right: 18px;
+      bottom: 18px;
+      width: 34%;
+      height: 5px;
+      background: var(--uzu-fg-strong);
+      opacity: .34;
+    }
+
+    .uzu-project-preview-system::before {
+      inset: 18px;
+      border: 1px solid var(--uzu-border-soft);
+      background:
+        linear-gradient(90deg, var(--uzu-border-soft) 1px, transparent 1px),
+        linear-gradient(180deg, var(--uzu-border-soft) 1px, transparent 1px);
+      background-size: 33.33% 50%;
+    }
+
+    .uzu-project-preview-system::after {
+      left: 18px;
+      bottom: 18px;
+      width: 68px;
+      height: 5px;
+      background: var(--uzu-fg-strong);
+      opacity: .34;
+    }
+
+    .uzu-project-copy {
+      min-width: 0;
+      display: grid;
+      gap: 14px;
+      padding: 6px 0;
+    }
+
+    .uzu-project-action {
+      justify-self: end;
+    }
+
+    @media (max-width: 760px) {
+      .uzu-project-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .uzu-project-copy {
+        padding: 0;
+      }
+
+      .uzu-project-action {
+        justify-self: start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .uzu-home-hero {
+        padding: 72px 0 44px;
+      }
+    }
+  </style>
 </head>
 <body class="uzu-app">
   <div class="uzu-floating-controls" aria-label="Page settings">

@@ -21,6 +21,165 @@
   </script>
   <link rel="stylesheet" href="../ui/usuzumi.css">
   <script src="../ui/usuzumi.js" defer></script>
+  <style>
+    .uzu-app-preview {
+      border: 1px solid var(--uzu-border);
+      border-radius: var(--uzu-radius-medium);
+      background: var(--uzu-surface);
+      padding: 18px;
+    }
+
+    .uzu-app-window {
+      min-height: 560px;
+      border: 1px solid var(--uzu-border-soft);
+      border-radius: var(--uzu-radius-micro);
+      background: var(--uzu-bg);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .uzu-window-bar {
+      height: 42px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--uzu-border-soft);
+      color: var(--uzu-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+
+    .uzu-window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .uzu-window-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: var(--uzu-radius-pill);
+      background: var(--uzu-border);
+    }
+
+    .uzu-mock-content {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .uzu-mock-panel,
+    .uzu-mock-stat {
+      padding: 18px;
+      border: 1px solid var(--uzu-border);
+      border-radius: var(--uzu-radius-micro);
+      background: var(--uzu-surface);
+    }
+
+    .uzu-mock-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .uzu-today-head {
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .uzu-mock-date {
+      margin: 4px 0 0;
+      color: var(--uzu-fg-strong);
+      font-size: 30px;
+      line-height: 1.1;
+    }
+
+    .uzu-timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .uzu-task {
+      padding-top: 12px;
+      border-top: 1px solid var(--uzu-border-soft);
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .uzu-task.is-current {
+      margin-left: -10px;
+      padding-left: 9px;
+      border-left: 1px solid var(--uzu-fg-strong);
+    }
+
+    .uzu-task-time {
+      color: var(--uzu-subtle);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .uzu-task-title {
+      margin: 0 0 var(--uzu-card-title-gap);
+      color: var(--uzu-fg-strong);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    .uzu-task-note {
+      margin: 0;
+      color: var(--uzu-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .uzu-metric-value {
+      margin: var(--uzu-card-block-gap) 0 var(--uzu-card-title-gap);
+      color: var(--uzu-fg-strong);
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    @media (forced-colors: active) {
+      .uzu-app-preview,
+      .uzu-app-window,
+      .uzu-mock-panel,
+      .uzu-mock-stat {
+        border: 1px solid CanvasText;
+        background: Canvas;
+        color: CanvasText;
+        box-shadow: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .uzu-app-preview {
+        padding: 10px;
+      }
+
+      .uzu-app-window {
+        min-height: 500px;
+      }
+
+      .uzu-mock-content {
+        padding: 16px;
+      }
+
+      .uzu-mock-stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .uzu-task {
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 12px;
+      }
+    }
+  </style>
 </head>
 <body class="uzu-app">
   <div class="uzu-floating-controls" aria-label="Page settings">

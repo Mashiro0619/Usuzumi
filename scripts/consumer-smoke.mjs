@@ -381,18 +381,81 @@ assert(css.includes('.uzu-segment[aria-pressed="true"]'), 'Published CSS is miss
 assert(css.includes('.uzu-progress-indeterminate'), 'Published CSS is missing indeterminate progress styles');
 assert(css.includes('.uzu-activity-dot'), 'Published CSS is missing activity indicator styles');
 assert(css.includes('.uzu-process-step.is-active'), 'Published CSS is missing process step styles');
+assert(css.includes('.uzu-input-group'), 'Published CSS is missing input group styles');
+assert(css.includes('.uzu-search'), 'Published CSS is missing search styles');
+assert(css.includes('.uzu-password'), 'Published CSS is missing password input styles');
+assert(css.includes('.uzu-stepper'), 'Published CSS is missing stepper styles');
+assert(css.includes('.uzu-stack'), 'Published CSS is missing stack layout styles');
+assert(css.includes('.uzu-menu'), 'Published CSS is missing menu styles');
+assert(css.includes('.uzu-menubar'), 'Published CSS is missing menubar styles');
+assert(css.includes('.uzu-command'), 'Published CSS is missing command menu styles');
+assert(css.includes('.uzu-combobox'), 'Published CSS is missing combobox styles');
+assert(css.includes('.uzu-data-grid'), 'Published CSS is missing data grid styles');
+assert(css.includes('.uzu-tree'), 'Published CSS is missing tree view styles');
+assert(css.includes('.uzu-split-pane'), 'Published CSS is missing split pane styles');
+assert(css.includes('.uzu-resizable'), 'Published CSS is missing resizable panel styles');
+assert(css.includes('.uzu-json-viewer'), 'Published CSS is missing JSON viewer styles');
+assert(css.includes('.uzu-diff-viewer'), 'Published CSS is missing diff viewer styles');
+assert(css.includes('.uzu-editor'), 'Published CSS is missing editor styles');
+assert(css.includes('.uzu-markdown-editor'), 'Published CSS is missing markdown editor styles');
+assert(css.includes('.uzu-sidebar'), 'Published CSS is missing sidebar styles');
+assert(css.includes('.uzu-list'), 'Published CSS is missing list styles');
+assert(css.includes('.uzu-avatar'), 'Published CSS is missing avatar styles');
+assert(css.includes('.uzu-tag'), 'Published CSS is missing tag styles');
+assert(css.includes('.uzu-accordion'), 'Published CSS is missing accordion styles');
+assert(css.includes('.uzu-hover-card'), 'Published CSS is missing hover card styles');
+assert(css.includes('.uzu-alert-dialog'), 'Published CSS is missing alert dialog styles');
+assert(css.includes('.uzu-drawer'), 'Published CSS is missing drawer styles');
+assert(css.includes('.uzu-sheet'), 'Published CSS is missing sheet styles');
+assert(css.includes('.uzu-spinner'), 'Published CSS is missing spinner styles');
+assert(css.includes('.uzu-step-nav'), 'Published CSS is missing step navigation styles');
+assert(css.includes('.uzu-empty-state'), 'Published CSS is missing empty state styles');
+assert(css.includes('.uzu-error-state'), 'Published CSS is missing error state styles');
 
 const js = readPackageFile(packageRoot, 'ui/usuzumi.js');
 assert(js.includes('window.Usuzumi'), 'Runtime does not expose window.Usuzumi');
 assert(js.includes('data-uzu-tabs'), 'Runtime is missing tabs initialization support');
 assert(js.includes('data-uzu-segmented'), 'Runtime is missing segmented initialization support');
 assert(js.includes('data-uzu-pagination'), 'Runtime is missing pagination initialization support');
+assert(js.includes('data-uzu-search'), 'Runtime is missing search initialization support');
+assert(js.includes('data-uzu-password'), 'Runtime is missing password initialization support');
+assert(js.includes('data-uzu-stepper'), 'Runtime is missing stepper initialization support');
+assert(js.includes('data-uzu-menu'), 'Runtime is missing menu initialization support');
+assert(js.includes('data-uzu-context-menu'), 'Runtime is missing context menu initialization support');
+assert(js.includes('data-uzu-menubar'), 'Runtime is missing menubar initialization support');
+assert(js.includes('data-uzu-command'), 'Runtime is missing command initialization support');
+assert(js.includes('data-uzu-combobox'), 'Runtime is missing combobox initialization support');
+assert(js.includes('data-uzu-data-grid'), 'Runtime is missing data grid initialization support');
+assert(js.includes('data-uzu-tree'), 'Runtime is missing tree initialization support');
+assert(js.includes('data-uzu-split-pane'), 'Runtime is missing split pane initialization support');
+assert(js.includes('data-uzu-resizable'), 'Runtime is missing resizable initialization support');
+assert(js.includes('data-uzu-json-viewer'), 'Runtime is missing JSON viewer initialization support');
+assert(js.includes('data-uzu-diff-viewer'), 'Runtime is missing diff viewer initialization support');
+assert(js.includes('data-uzu-markdown-editor'), 'Runtime is missing editor initialization support');
+assert(js.includes('data-uzu-accordion'), 'Runtime is missing accordion initialization support');
+assert(js.includes('data-uzu-hover-card'), 'Runtime is missing hover card initialization support');
+assert(js.includes('data-uzu-tag'), 'Runtime is missing tag initialization support');
+assert(js.includes('data-uzu-step-nav'), 'Runtime is missing step navigation initialization support');
 
 const dts = readPackageFile(packageRoot, 'ui/usuzumi.d.ts');
 assert(dts.includes('interface UsuzumiApi'), 'Types are missing UsuzumiApi');
 assert(dts.includes('"uzu-tabs-change"'), 'Types are missing tabs event declarations');
 assert(dts.includes('"uzu-segmented-change"'), 'Types are missing segmented event declarations');
 assert(dts.includes('"uzu-pagination-change"'), 'Types are missing pagination event declarations');
+assert(dts.includes('"uzu-password-toggle"'), 'Types are missing password event declarations');
+assert(dts.includes('"uzu-stepper-change"'), 'Types are missing stepper event declarations');
+assert(dts.includes('"uzu-menu-select"'), 'Types are missing menu select event declarations');
+assert(dts.includes('"uzu-command-select"'), 'Types are missing command select event declarations');
+assert(dts.includes('"uzu-combobox-change"'), 'Types are missing combobox event declarations');
+assert(dts.includes('"uzu-data-grid-sort"'), 'Types are missing data grid event declarations');
+assert(dts.includes('"uzu-tree-select"'), 'Types are missing tree event declarations');
+assert(dts.includes('"uzu-split-resize"'), 'Types are missing split pane event declarations');
+assert(dts.includes('"uzu-resizable-resize"'), 'Types are missing resizable event declarations');
+assert(dts.includes('"uzu-markdown-editor-render"'), 'Types are missing markdown editor event declarations');
+assert(dts.includes('"uzu-accordion-change"'), 'Types are missing accordion event declarations');
+assert(dts.includes('"uzu-hover-card-open"'), 'Types are missing hover card event declarations');
+assert(dts.includes('"uzu-tag-change"'), 'Types are missing tag event declarations');
+assert(dts.includes('"uzu-step-nav-change"'), 'Types are missing step nav event declarations');
 
 const signatureCss = readPackageFile(packageRoot, 'ui/usuzumi-signature.css');
 assert(signatureCss.includes('./css/fonts.css'), 'Signature CSS must import packaged fonts.css');
@@ -486,8 +549,8 @@ async function browserSmoke() {
         <span data-uzu-code-copy-label>Copy</span>
       </button>
     </div>
-    <div class="uzu-doc-layout" id="consumer-panel-layout">
-      <nav class="uzu-panel-nav" id="consumer-panel-nav" data-uzu-panel-nav data-uzu-panel-selector=".consumer-doc-panel" aria-label="Consumer panels">
+    <div class="consumer-panel-layout" id="consumer-panel-layout">
+      <nav class="uzu-panel-nav" id="consumer-panel-nav" data-uzu-panel-nav data-uzu-panel-selector=".consumer-panel" aria-label="Consumer panels">
         <section class="uzu-panel-nav-section" aria-labelledby="consumer-panel-nav-title">
           <p class="uzu-panel-nav-title" id="consumer-panel-nav-title">Docs</p>
           <button class="uzu-panel-nav-button is-active" type="button" data-uzu-panel-target="#consumer-panel-one" aria-pressed="true">One<span class="uzu-panel-nav-meta">Intro</span></button>
@@ -495,12 +558,12 @@ async function browserSmoke() {
         </section>
       </nav>
       <div>
-        <section class="uzu-doc-panel consumer-doc-panel" id="consumer-panel-one">Panel one</section>
-        <section class="uzu-doc-panel consumer-doc-panel" id="consumer-panel-two" hidden>Panel two</section>
+        <section class="uzu-panel consumer-panel" id="consumer-panel-one">Panel one</section>
+        <section class="uzu-panel consumer-panel" id="consumer-panel-two" hidden>Panel two</section>
       </div>
     </div>
-    <div class="uzu-doc-layout" id="consumer-panel-layout-secondary">
-      <nav class="uzu-panel-nav" id="consumer-panel-nav-secondary" data-uzu-panel-nav data-uzu-panel-selector=".consumer-doc-panel-secondary" aria-label="Secondary consumer panels">
+    <div class="consumer-panel-layout" id="consumer-panel-layout-secondary">
+      <nav class="uzu-panel-nav" id="consumer-panel-nav-secondary" data-uzu-panel-nav data-uzu-panel-selector=".consumer-panel-secondary" aria-label="Secondary consumer panels">
         <section class="uzu-panel-nav-section" aria-labelledby="consumer-panel-nav-title-secondary">
           <p class="uzu-panel-nav-title" id="consumer-panel-nav-title-secondary">More docs</p>
           <button class="uzu-panel-nav-button is-active" type="button" data-uzu-panel-target="#consumer-panel-three" aria-pressed="true">Three</button>
@@ -508,12 +571,12 @@ async function browserSmoke() {
         </section>
       </nav>
       <div>
-        <section class="uzu-doc-panel consumer-doc-panel-secondary" id="consumer-panel-three">Panel three</section>
-        <section class="uzu-doc-panel consumer-doc-panel-secondary" id="consumer-panel-four" hidden>Panel four</section>
+        <section class="uzu-panel consumer-panel-secondary" id="consumer-panel-three">Panel three</section>
+        <section class="uzu-panel consumer-panel-secondary" id="consumer-panel-four" hidden>Panel four</section>
       </div>
     </div>
-    <div class="uzu-doc-layout" id="consumer-panel-layout-hash">
-      <nav class="uzu-panel-nav" id="consumer-panel-nav-hash" data-uzu-panel-nav data-uzu-panel-hash="true" data-uzu-panel-selector=".consumer-doc-panel-hash" aria-label="Hash consumer panels">
+    <div class="consumer-panel-layout" id="consumer-panel-layout-hash">
+      <nav class="uzu-panel-nav" id="consumer-panel-nav-hash" data-uzu-panel-nav data-uzu-panel-hash="true" data-uzu-panel-selector=".consumer-panel-hash" aria-label="Hash consumer panels">
         <section class="uzu-panel-nav-section" aria-labelledby="consumer-panel-nav-title-hash">
           <p class="uzu-panel-nav-title" id="consumer-panel-nav-title-hash">Hash docs</p>
           <button class="uzu-panel-nav-button is-active" type="button" data-uzu-panel-target="#consumer-panel-hash-one" aria-pressed="true">Default</button>
@@ -521,8 +584,8 @@ async function browserSmoke() {
         </section>
       </nav>
       <div>
-        <section class="uzu-doc-panel consumer-doc-panel-hash" id="consumer-panel-hash-one">Default hash panel</section>
-        <section class="uzu-doc-panel consumer-doc-panel-hash" id="consumer-panel-hash-two" hidden>Hash target panel</section>
+        <section class="uzu-panel consumer-panel-hash" id="consumer-panel-hash-one">Default hash panel</section>
+        <section class="uzu-panel consumer-panel-hash" id="consumer-panel-hash-two" hidden>Hash target panel</section>
       </div>
     </div>
     <div class="uzu-prose" id="consumer-markdown" data-uzu-markdown>
@@ -574,11 +637,56 @@ Use \`.uzu-code\` inside copy.
       <button class="uzu-segment is-active" type="button" data-uzu-segment-value="alpha" aria-pressed="true"><span data-lang="zh">今天</span><span data-lang="en">Today</span></button>
       <button class="uzu-segment" type="button" data-uzu-segment-value="beta" aria-pressed="false"><span data-lang="zh">计划</span><span data-lang="en">Planning</span></button>
     </div>
+    <div class="uzu-stack" id="consumer-stack" style="--uzu-stack-gap: 10px">
+      <div class="uzu-flex uzu-flex-between" id="consumer-flex"><span>Left</span><span>Right</span></div>
+      <div class="uzu-aspect" id="consumer-aspect" style="--uzu-aspect-ratio: 2 / 1"><div class="uzu-scroll-area" id="consumer-scroll-area" style="--uzu-scroll-area-max-height: 64px">Scrollable area</div></div>
+    </div>
+    <form class="uzu-form" id="consumer-form">
+      <fieldset class="uzu-fieldset">
+        <legend>Account</legend>
+        <div class="uzu-field">
+          <label class="uzu-label" for="consumer-search-input">Search</label>
+          <div class="uzu-search" id="consumer-search" data-uzu-search>
+            <input class="uzu-input uzu-search-input" id="consumer-search-input" type="search" value="query">
+            <button class="uzu-icon-button uzu-search-clear" type="button" data-uzu-search-clear aria-label="Clear search">x</button>
+          </div>
+        </div>
+        <div class="uzu-field">
+          <label class="uzu-label" for="consumer-password-input">Password</label>
+          <div class="uzu-password" id="consumer-password" data-uzu-password>
+            <input class="uzu-input uzu-password-input" id="consumer-password-input" type="password" value="secret">
+            <button class="uzu-icon-button uzu-password-toggle" type="button" data-uzu-password-toggle aria-label="Toggle password">••</button>
+          </div>
+        </div>
+        <div class="uzu-field">
+          <label class="uzu-label" for="consumer-stepper-input">Count</label>
+          <div class="uzu-stepper" id="consumer-stepper" data-uzu-stepper>
+            <input class="uzu-input uzu-stepper-input" id="consumer-stepper-input" type="number" min="1" max="3" step="1" value="2">
+            <span class="uzu-stepper-controls">
+              <button class="uzu-icon-button uzu-stepper-button" type="button" data-uzu-stepper-decrement aria-label="Decrease">-</button>
+              <button class="uzu-icon-button uzu-stepper-button" type="button" data-uzu-stepper-increment aria-label="Increase">+</button>
+            </span>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    <div class="uzu-input-group" id="consumer-input-group"><span class="uzu-input-addon">$</span><input class="uzu-input" value="128"><span class="uzu-input-addon">USD</span></div>
+    <label class="uzu-file-upload" id="consumer-file-upload"><span class="uzu-label">File</span><input class="uzu-file-input" type="file"><span class="uzu-file-summary">Native file input.</span></label>
+    <input class="uzu-slider" id="consumer-slider" type="range" value="50">
     <div class="uzu-select" data-uzu-select data-uzu-select-name="density">
       <button class="uzu-select-trigger" type="button" data-uzu-select-trigger aria-expanded="false">Balanced</button>
       <div class="uzu-select-menu" role="listbox">
         <div class="uzu-select-option is-selected" data-uzu-select-option data-value="balanced" role="option" aria-selected="true">Balanced</div>
         <div class="uzu-select-option" data-uzu-select-option data-value="compact" role="option" aria-selected="false">Compact</div>
+      </div>
+    </div>
+    <div class="uzu-combobox" id="consumer-combobox" data-uzu-combobox data-uzu-combobox-name="component">
+      <input class="uzu-input uzu-combobox-input" id="consumer-combobox-input" data-uzu-combobox-input autocomplete="off" value="">
+      <div class="uzu-combobox-list" data-uzu-combobox-list>
+        <button class="uzu-combobox-option is-selected" type="button" data-uzu-combobox-option data-uzu-combobox-value="button">Button</button>
+        <button class="uzu-combobox-option" type="button" data-uzu-combobox-option data-uzu-combobox-value="dialog">Dialog</button>
+        <button class="uzu-combobox-option" type="button" data-uzu-combobox-option data-uzu-combobox-value="tree">Tree View</button>
+        <p class="uzu-combobox-empty" hidden>No matches</p>
       </div>
     </div>
     <div class="uzu-field">
@@ -625,6 +733,121 @@ Use \`.uzu-code\` inside copy.
       <li class="uzu-process-step is-active" aria-current="step">Build CSS bundle</li>
       <li class="uzu-process-step">Package release</li>
     </ol>
+    <span class="uzu-spinner" id="consumer-spinner" role="status" aria-label="Loading"></span>
+    <ul class="uzu-list" id="consumer-list">
+      <li class="uzu-list-item"><span>Design tokens</span><span class="uzu-list-meta">Ready</span><button class="uzu-button uzu-list-action" type="button">Open</button></li>
+      <li class="uzu-list-item"><span>Runtime</span><span class="uzu-list-meta">Loaded</span></li>
+    </ul>
+    <div class="uzu-data-grid-wrap">
+      <table class="uzu-data-grid" id="consumer-data-grid" data-uzu-data-grid>
+        <thead><tr><th data-uzu-grid-sort>Name</th><th data-uzu-grid-sort>Count</th></tr></thead>
+        <tbody>
+          <tr data-uzu-grid-row="beta"><td>Beta</td><td>2</td></tr>
+          <tr data-uzu-grid-row="alpha"><td>Alpha</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="uzu-data-grid-wrap">
+      <table class="uzu-data-grid" id="consumer-data-grid-plain" data-uzu-data-grid>
+        <thead><tr><th data-uzu-grid-sort>Plain name</th><th>State</th></tr></thead>
+        <tbody>
+          <tr><td>One</td><td>Ready</td></tr>
+          <tr><td>Two</td><td>Queued</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="uzu-tree" id="consumer-tree" data-uzu-tree aria-label="Consumer tree">
+      <li class="uzu-tree-item is-open" data-uzu-tree-item data-uzu-tree-value="docs">
+        <div class="uzu-tree-row"><button class="uzu-tree-toggle" type="button" data-uzu-tree-toggle aria-label="Toggle docs"></button><span class="uzu-tree-label" data-uzu-tree-label>docs</span></div>
+        <ul class="uzu-tree-group">
+          <li class="uzu-tree-item is-selected" data-uzu-tree-item data-uzu-tree-value="overview"><div class="uzu-tree-row"><span class="uzu-tree-label" data-uzu-tree-label>Overview</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="uzu-split-pane" id="consumer-split-pane" data-uzu-split-pane data-uzu-split-size="40" data-uzu-split-min="20" data-uzu-split-max="80">
+      <section class="uzu-split-panel">Left panel</section>
+      <button class="uzu-split-resizer" type="button" data-uzu-split-resizer aria-label="Resize split pane"></button>
+      <section class="uzu-split-panel">Right panel</section>
+    </div>
+    <div class="uzu-resizable" id="consumer-resizable" data-uzu-resizable data-uzu-resizable-width="260" data-uzu-resizable-height="140" data-uzu-resizable-min-width="180" data-uzu-resizable-min-height="100">
+      <div class="uzu-resizable-content">Resizable content</div>
+      <button class="uzu-resizable-handle" type="button" data-uzu-resizable-handle aria-label="Resize panel"></button>
+    </div>
+    <div class="uzu-json-viewer" id="consumer-json-viewer" data-uzu-json-viewer><script type="application/json">{"name":"Usuzumi","enabled":true,"count":2}</script></div>
+    <pre class="uzu-diff-viewer" id="consumer-diff-viewer" data-uzu-diff-viewer>@@ file
+- old
++ new</pre>
+    <section class="uzu-editor" id="consumer-rich-editor" data-uzu-rich-editor>
+      <div class="uzu-editor-toolbar" role="toolbar" aria-label="Editor tools"><button class="uzu-toolbar-button" type="button" data-uzu-editor-command="bold">B</button></div>
+      <div class="uzu-editor-surface" data-uzu-editor-surface>Editable text</div>
+    </section>
+    <section class="uzu-editor uzu-markdown-editor" id="consumer-markdown-editor" data-uzu-markdown-editor>
+      <textarea class="uzu-markdown-source" data-uzu-markdown-source># Editor markdown</textarea>
+      <div class="uzu-markdown-preview" data-uzu-markdown-preview></div>
+    </section>
+    <span class="uzu-inline-editor" id="consumer-inline-editor" data-uzu-inline-editor data-placeholder="Untitled">Inline text</span>
+    <span class="uzu-avatar" id="consumer-avatar" aria-label="Usuzumi">U</span>
+    <aside class="uzu-sidebar" id="consumer-sidebar" aria-label="Consumer sidebar">
+      <section class="uzu-sidebar-section">
+        <p class="uzu-micro-label">Project</p>
+        <ul class="uzu-sidebar-nav">
+          <li><a href="#overview" aria-current="page">Overview</a></li>
+          <li><button type="button">Settings</button></li>
+        </ul>
+      </section>
+    </aside>
+    <div class="uzu-menu" id="consumer-menu" data-uzu-menu>
+      <button class="uzu-button uzu-menu-trigger" type="button" data-uzu-menu-trigger>More</button>
+      <div class="uzu-menu-content" data-uzu-menu-content>
+        <button class="uzu-menu-item" type="button" data-uzu-menu-value="rename">Rename</button>
+        <button class="uzu-menu-item" type="button" data-uzu-menu-value="duplicate">Duplicate</button>
+      </div>
+    </div>
+    <div class="uzu-menu" id="consumer-context-menu" data-uzu-context-menu data-uzu-context-menu-trigger="#consumer-context-target">
+      <button class="uzu-button" id="consumer-context-target" type="button">Context target</button>
+      <div class="uzu-menu-content" data-uzu-menu-content>
+        <button class="uzu-menu-item" type="button" data-uzu-menu-value="open">Open</button>
+      </div>
+    </div>
+    <div class="uzu-menubar" id="consumer-menubar" data-uzu-menubar aria-label="Consumer menubar">
+      <button class="uzu-menubar-item is-active" type="button" data-uzu-menubar-value="file">File</button>
+      <button class="uzu-menubar-item" type="button" data-uzu-menubar-value="edit">Edit</button>
+      <button class="uzu-menubar-item" type="button" data-uzu-menubar-value="view">View</button>
+    </div>
+    <div class="uzu-command" id="consumer-command" data-uzu-command>
+      <label class="uzu-label uzu-sr-only" for="consumer-command-input">Command</label>
+      <input class="uzu-command-input" id="consumer-command-input" data-uzu-command-input value="">
+      <div class="uzu-command-list" data-uzu-command-list>
+        <button class="uzu-command-item" type="button" data-uzu-command-value="new">New page</button>
+        <button class="uzu-command-item" type="button" data-uzu-command-value="theme">Toggle theme</button>
+        <button class="uzu-command-item" type="button" data-uzu-command-value="publish">Publish draft</button>
+        <p class="uzu-command-empty" hidden>No matches</p>
+      </div>
+    </div>
+    <ol class="uzu-step-nav" id="consumer-step-nav" data-uzu-step-nav aria-label="Consumer steps">
+      <li class="uzu-step-nav-item"><button class="uzu-step-nav-button is-active" type="button" data-uzu-step-value="profile">Profile</button></li>
+      <li class="uzu-step-nav-item"><button class="uzu-step-nav-button" type="button" data-uzu-step-value="plan">Plan</button></li>
+      <li class="uzu-step-nav-item"><button class="uzu-step-nav-button" type="button" data-uzu-step-value="review">Review</button></li>
+    </ol>
+    <div class="uzu-accordion" id="consumer-accordion" data-uzu-accordion>
+      <section class="uzu-disclosure is-open" data-uzu-disclosure>
+        <button class="uzu-disclosure-trigger" type="button" data-uzu-disclosure-trigger aria-expanded="true">First</button>
+        <div class="uzu-disclosure-panel" data-uzu-disclosure-panel>First content</div>
+      </section>
+      <section class="uzu-disclosure" data-uzu-disclosure>
+        <button class="uzu-disclosure-trigger" type="button" data-uzu-disclosure-trigger>Second</button>
+        <div class="uzu-disclosure-panel" data-uzu-disclosure-panel hidden>Second content</div>
+      </section>
+    </div>
+    <span class="uzu-hover-card" id="consumer-hover-card" data-uzu-hover-card data-uzu-hover-card-delay="20" data-uzu-hover-card-close-delay="20">
+      <button class="uzu-button" type="button" data-uzu-hover-card-trigger>Hover info</button>
+      <span class="uzu-hover-card-content" data-uzu-hover-card-content>Supporting information.</span>
+    </span>
+    <span class="uzu-tag" id="consumer-tag-static" data-uzu-tag>Docs</span>
+    <button class="uzu-tag is-selected" id="consumer-tag-selectable" type="button" data-uzu-tag data-uzu-tag-selectable="true" data-uzu-tag-value="active" aria-pressed="true">Active</button>
+    <span class="uzu-tag" id="consumer-tag-closeable" data-uzu-tag data-uzu-tag-value="filter">Filter<button class="uzu-tag-close" type="button" data-uzu-tag-close aria-label="Remove filter">x</button></span>
+    <section class="uzu-empty-state" id="consumer-empty-state"><div class="uzu-title-pair"><h3>No projects</h3><p>Create one to continue.</p></div></section>
+    <section class="uzu-error-state" id="consumer-error-state" role="alert"><div class="uzu-title-pair"><h3>Load failed</h3><p>Try again.</p></div></section>
     <article class="uzu-toast" data-uzu-toast>
       <div class="uzu-toast-content">
         <div class="uzu-title-pair">
@@ -658,6 +881,21 @@ Use \`.uzu-code\` inside copy.
       <section class="uzu-modal" id="consumer-dialog-two" data-uzu-dialog hidden tabindex="-1" aria-labelledby="consumer-dialog-two-title">
         <h2 id="consumer-dialog-two-title">Second dialog</h2>
         <button class="uzu-button" type="button" data-uzu-dialog-close>Close</button>
+      </section>
+    </div>
+    <button class="uzu-button" id="consumer-drawer-trigger" type="button" data-uzu-dialog-target="#consumer-drawer">Open drawer</button>
+    <button class="uzu-button uzu-button-danger" id="consumer-alert-dialog-trigger" type="button" data-uzu-dialog-target="#consumer-alert-dialog">Open alert dialog</button>
+    <div class="uzu-dialog-overlay" data-uzu-dialog-overlay hidden>
+      <aside class="uzu-drawer uzu-drawer-end" id="consumer-drawer" data-uzu-dialog hidden tabindex="-1" aria-labelledby="consumer-drawer-title">
+        <h2 id="consumer-drawer-title">Consumer drawer</h2>
+        <button class="uzu-button" type="button" data-uzu-dialog-close>Close drawer</button>
+      </aside>
+    </div>
+    <div class="uzu-dialog-overlay" data-uzu-dialog-overlay hidden>
+      <section class="uzu-modal uzu-alert-dialog" id="consumer-alert-dialog" data-uzu-dialog hidden tabindex="-1" role="alertdialog" aria-labelledby="consumer-alert-dialog-title" aria-describedby="consumer-alert-dialog-desc">
+        <h2 id="consumer-alert-dialog-title">Delete item</h2>
+        <p id="consumer-alert-dialog-desc">This action is dangerous.</p>
+        <button class="uzu-button" type="button" data-uzu-dialog-close>Cancel</button>
       </section>
     </div>
   </main>
@@ -729,12 +967,77 @@ Use \`.uzu-code\` inside copy.
       const select = document.querySelector('[data-uzu-select]');
       const selectTrigger = document.querySelector('[data-uzu-select-trigger]');
       const selectMenu = document.querySelector('.uzu-select-menu');
+      const combobox = document.querySelector('#consumer-combobox');
+      const comboboxInput = combobox.querySelector('[data-uzu-combobox-input]');
+      const comboboxList = combobox.querySelector('[data-uzu-combobox-list]');
+      const dataGrid = document.querySelector('#consumer-data-grid');
+      const plainDataGrid = document.querySelector('#consumer-data-grid-plain');
+      const tree = document.querySelector('#consumer-tree');
+      const splitPane = document.querySelector('#consumer-split-pane');
+      const splitResizer = splitPane.querySelector('[data-uzu-split-resizer]');
+      const resizable = document.querySelector('#consumer-resizable');
+      const resizableHandle = resizable.querySelector('[data-uzu-resizable-handle]');
+      const jsonViewer = document.querySelector('#consumer-json-viewer');
+      const diffViewer = document.querySelector('#consumer-diff-viewer');
+      const richEditor = document.querySelector('#consumer-rich-editor');
+      const markdownEditor = document.querySelector('#consumer-markdown-editor');
+      const markdownEditorSource = markdownEditor.querySelector('[data-uzu-markdown-source]');
+      const markdownEditorPreview = markdownEditor.querySelector('[data-uzu-markdown-preview]');
+      const inlineEditor = document.querySelector('#consumer-inline-editor');
       const disclosure = document.querySelector('[data-uzu-disclosure]');
       const disclosureTrigger = document.querySelector('[data-uzu-disclosure-trigger]');
       const disclosurePanel = document.querySelector('[data-uzu-disclosure-panel]');
+      const search = document.querySelector('#consumer-search');
+      const searchInput = document.querySelector('#consumer-search-input');
+      const searchClear = search.querySelector('[data-uzu-search-clear]');
+      const password = document.querySelector('#consumer-password');
+      const passwordInput = document.querySelector('#consumer-password-input');
+      const passwordToggle = password.querySelector('[data-uzu-password-toggle]');
+      const stepper = document.querySelector('#consumer-stepper');
+      const stepperInput = document.querySelector('#consumer-stepper-input');
+      const stepperIncrement = stepper.querySelector('[data-uzu-stepper-increment]');
+      const newEvents = [];
+      const menu = document.querySelector('#consumer-menu');
+      const menuTrigger = menu.querySelector('[data-uzu-menu-trigger]');
+      const menuContent = menu.querySelector('[data-uzu-menu-content]');
+      const menuRename = menu.querySelector('[data-uzu-menu-value="rename"]');
+      const contextMenu = document.querySelector('#consumer-context-menu');
+      const contextTarget = document.querySelector('#consumer-context-target');
+      const contextContent = contextMenu.querySelector('[data-uzu-menu-content]');
+      const menubar = document.querySelector('#consumer-menubar');
+      const command = document.querySelector('#consumer-command');
+      const commandInput = command.querySelector('[data-uzu-command-input]');
+      const accordion = document.querySelector('#consumer-accordion');
+      const stepNav = document.querySelector('#consumer-step-nav');
+      const hoverCard = document.querySelector('#consumer-hover-card');
+      const tagSelectable = document.querySelector('#consumer-tag-selectable');
+      const tagCloseable = document.querySelector('#consumer-tag-closeable');
+      menu.addEventListener('uzu-menu-select', (event) => newEvents.push('menu:' + event.detail.value));
+      contextMenu.addEventListener('uzu-menu-select', (event) => newEvents.push('context:' + event.detail.value));
+      menubar.addEventListener('uzu-menubar-change', (event) => newEvents.push('menubar:' + event.detail.value));
+      command.addEventListener('uzu-command-filter', (event) => newEvents.push('command-filter:' + event.detail.visibleCount));
+      command.addEventListener('uzu-command-select', (event) => newEvents.push('command:' + event.detail.value));
+      combobox.addEventListener('uzu-combobox-change', (event) => newEvents.push('combobox:' + event.detail.value));
+      dataGrid.addEventListener('uzu-data-grid-sort', (event) => newEvents.push('grid-sort:' + event.detail.direction));
+      dataGrid.addEventListener('uzu-data-grid-select', (event) => newEvents.push('grid-select:' + event.detail.value));
+      plainDataGrid.addEventListener('uzu-data-grid-select', (event) => newEvents.push('plain-grid-select:' + event.detail.value));
+      tree.addEventListener('uzu-tree-toggle', (event) => newEvents.push('tree-toggle:' + event.detail.expanded));
+      splitPane.addEventListener('uzu-split-resize', (event) => newEvents.push('split:' + Math.round(event.detail.size)));
+      resizable.addEventListener('uzu-resizable-resize', () => newEvents.push('resizable'));
+      richEditor.addEventListener('uzu-editor-command', (event) => newEvents.push('editor:' + event.detail.command));
+      richEditor.addEventListener('uzu-editor-change', () => newEvents.push('editor-change'));
+      markdownEditor.addEventListener('uzu-markdown-editor-render', () => newEvents.push('markdown-editor'));
+      inlineEditor.addEventListener('uzu-inline-editor-change', () => newEvents.push('inline-editor'));
+      accordion.addEventListener('uzu-accordion-change', (event) => newEvents.push('accordion:' + event.detail.open));
+      stepNav.addEventListener('uzu-step-nav-change', (event) => newEvents.push('step-nav:' + event.detail.value));
+      hoverCard.addEventListener('uzu-hover-card-open', () => newEvents.push('hover:open'));
+      tagSelectable.addEventListener('uzu-tag-change', (event) => newEvents.push('tag:' + event.detail.selected));
+      tagCloseable.addEventListener('uzu-tag-close', (event) => newEvents.push('tag-close:' + event.detail.value));
       tabs.addEventListener('uzu-tabs-change', (event) => events.push(event.detail.value));
       segmented.addEventListener('uzu-segmented-change', (event) => events.push(event.detail.value));
       paginationRoot.addEventListener('uzu-pagination-change', (event) => events.push('page:' + event.detail.value));
+      password.addEventListener('uzu-password-toggle', (event) => events.push('password:' + event.detail.visible));
+      stepper.addEventListener('uzu-stepper-change', (event) => events.push('stepper:' + event.detail.value));
       const click = (element) => element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
       const secondTab = tabs.querySelector('[data-uzu-tab-value="two"]');
       const betaSegment = segmented.querySelector('[data-uzu-segment-value="beta"]');
@@ -759,6 +1062,118 @@ Use \`.uzu-code\` inside copy.
       const selectCloseAnimation = getComputedStyle(selectMenu).animationName;
       const selectClosing = select.classList.contains('is-closing');
       const selectExpandedAfterClose = selectTrigger.getAttribute('aria-expanded');
+      comboboxInput.value = 'tree';
+      comboboxInput.dispatchEvent(new Event('input', { bubbles: true }));
+      await wait(60);
+      const comboboxOpenAnimation = getComputedStyle(comboboxList).animationName;
+      const comboboxListDisplayOpen = getComputedStyle(comboboxList).display;
+      const comboboxVisibleCount = [...combobox.querySelectorAll('[data-uzu-combobox-option]')].filter((item) => !item.hidden).length;
+      click(combobox.querySelector('[data-uzu-combobox-value="tree"]'));
+      await wait(60);
+      const comboboxValue = combobox.dataset.uzuComboboxValue;
+      const comboboxHiddenValue = combobox.querySelector('input[type="hidden"]')?.value || '';
+      const comboboxClosedAfterSelect = comboboxList.hidden && !combobox.classList.contains('is-open') && comboboxInput.getAttribute('aria-expanded') === 'false';
+      click(dataGrid.querySelector('[data-uzu-grid-sort]'));
+      await wait(60);
+      const dataGridFirstCellAfterSort = dataGrid.tBodies[0].rows[0].cells[0].textContent.trim();
+      click(dataGrid.querySelector('[data-uzu-grid-row="alpha"]'));
+      const dataGridSelectedValue = dataGrid.querySelector('[aria-selected="true"]')?.dataset.uzuGridRow || '';
+      const plainDataGridFirstValue = plainDataGrid.tBodies[0].rows[0].dataset.uzuGridRow || '';
+      click(plainDataGrid.tBodies[0].rows[1]);
+      const plainDataGridSelectedValue = plainDataGrid.querySelector('[aria-selected="true"]')?.dataset.uzuGridRow || '';
+      const treeToggle = tree.querySelector('[data-uzu-tree-toggle]');
+      click(treeToggle);
+      await wait(60);
+      const treeClosed = tree.querySelector('.uzu-tree-group').hidden;
+      click(treeToggle);
+      await wait(60);
+      const treeOpen = !tree.querySelector('.uzu-tree-group').hidden;
+      const treeSelected = tree.querySelector('[data-uzu-tree-value="overview"]');
+      treeSelected.focus();
+      treeSelected.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+      const treeKeyboardFocusValue = document.activeElement?.dataset.uzuTreeValue || '';
+      window.Usuzumi.setSplitPaneSize(splitPane, 58);
+      window.Usuzumi.setResizableSize(resizable, 300, 150);
+      const splitSize = splitPane.dataset.uzuSplitSize;
+      const splitAriaValue = splitResizer.getAttribute('aria-valuenow');
+      const resizableWidth = Math.round(resizable.getBoundingClientRect().width);
+      const resizableHeight = Math.round(resizable.getBoundingClientRect().height);
+      const jsonToggle = jsonViewer.querySelector('.uzu-json-toggle');
+      const jsonNodeCount = jsonViewer.querySelectorAll('.uzu-json-node').length;
+      click(jsonToggle);
+      const jsonCollapsed = jsonToggle.classList.contains('is-collapsed');
+      const diffAddRows = diffViewer.querySelectorAll('.uzu-diff-line-add').length;
+      const diffRemoveRows = diffViewer.querySelectorAll('.uzu-diff-line-remove').length;
+      click(richEditor.querySelector('[data-uzu-editor-command]'));
+      markdownEditorSource.value = '## Updated';
+      markdownEditorSource.dispatchEvent(new Event('input', { bubbles: true }));
+      markdownEditorSource.value = '';
+      markdownEditorSource.dispatchEvent(new Event('input', { bubbles: true }));
+      const markdownEditorCleared = markdownEditorPreview.textContent.trim();
+      markdownEditorSource.value = '## Updated';
+      markdownEditorSource.dispatchEvent(new Event('input', { bubbles: true }));
+      inlineEditor.textContent = 'Changed inline';
+      inlineEditor.dispatchEvent(new Event('input', { bubbles: true }));
+      await wait(80);
+      const markdownEditorHeading = markdownEditorPreview.querySelector('h2')?.textContent.trim() || '';
+      const markdownFence = String.fromCharCode(96, 96, 96);
+      const markdownLineBreak = String.fromCharCode(10);
+      markdownEditorSource.value = markdownFence + 'js' + markdownLineBreak + 'const copied = true;' + markdownLineBreak + markdownFence;
+      markdownEditorSource.dispatchEvent(new Event('input', { bubbles: true }));
+      const markdownEditorCopyButton = markdownEditorPreview.querySelector('[data-uzu-code-copy]');
+      const markdownEditorCopyInitialized = markdownEditorCopyButton?.dataset.uzuCodeCopyInitialized === 'true';
+      const inlineEditorValue = inlineEditor.textContent;
+      const searchClearInitiallyHidden = searchClear.hidden;
+      click(searchClear);
+      const searchValueAfterClear = searchInput.value;
+      const searchClearHiddenAfterClear = searchClear.hidden;
+      click(passwordToggle);
+      const passwordTypeAfterToggle = passwordInput.type;
+      const passwordPressedAfterToggle = passwordToggle.getAttribute('aria-pressed');
+      click(stepperIncrement);
+      const stepperValueAfterIncrement = stepperInput.value;
+      const stepperIncrementDisabledAfterMax = stepperIncrement.disabled;
+      const stepperInputAppearance = getComputedStyle(stepperInput).appearance || getComputedStyle(stepperInput).webkitAppearance || '';
+      const consumerSlider = document.querySelector('#consumer-slider');
+      const sliderValueBefore = consumerSlider.style.getPropertyValue('--uzu-slider-value').trim();
+      consumerSlider.value = '75';
+      consumerSlider.dispatchEvent(new Event('input', { bubbles: true }));
+      const sliderValueAfter = consumerSlider.style.getPropertyValue('--uzu-slider-value').trim();
+      click(menuTrigger);
+      await wait(60);
+      const menuOpenAnimation = getComputedStyle(menuContent).animationName;
+      const menuExpandedAfterOpen = menuTrigger.getAttribute('aria-expanded');
+      click(menuRename);
+      await wait(40);
+      const menuCloseAnimation = getComputedStyle(menuContent).animationName;
+      contextTarget.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, view: window, clientX: 24, clientY: 24 }));
+      await wait(60);
+      const contextMenuOpen = contextMenu.classList.contains('is-open');
+      const contextMenuLeft = contextContent.getBoundingClientRect().left;
+      click(contextMenu.querySelector('[data-uzu-menu-value="open"]'));
+      click(menubar.querySelector('[data-uzu-menubar-value="edit"]'));
+      const menubarActiveValue = menubar.querySelector('.uzu-menubar-item.is-active')?.dataset.uzuMenubarValue || '';
+      commandInput.value = 'theme';
+      commandInput.dispatchEvent(new Event('input', { bubbles: true }));
+      await wait(40);
+      const commandVisibleCount = [...command.querySelectorAll('.uzu-command-item')].filter((item) => !item.hidden).length;
+      click(command.querySelector('[data-uzu-command-value="theme"]'));
+      const stepNavReview = stepNav.querySelector('[data-uzu-step-value="review"]');
+      click(stepNavReview);
+      const stepNavValue = stepNav.dataset.uzuStepNavValue;
+      const stepNavReviewCurrent = stepNavReview.getAttribute('aria-current');
+      const accordionSecond = accordion.querySelectorAll('[data-uzu-disclosure]')[1];
+      click(accordionSecond.querySelector('[data-uzu-disclosure-trigger]'));
+      await wait(260);
+      const accordionFirstOpen = accordion.querySelectorAll('[data-uzu-disclosure]')[0].classList.contains('is-open');
+      const accordionSecondOpen = accordionSecond.classList.contains('is-open');
+      hoverCard.querySelector('[data-uzu-hover-card-trigger]').focus();
+      await wait(80);
+      const hoverCardOpen = hoverCard.classList.contains('is-open');
+      click(tagSelectable);
+      const tagSelectablePressed = tagSelectable.getAttribute('aria-pressed');
+      click(tagCloseable.querySelector('[data-uzu-tag-close]'));
+      const tagCloseableHidden = tagCloseable.hidden;
       click(disclosureTrigger);
       const disclosureOpenAnimation = getComputedStyle(disclosurePanel).animationName;
       const disclosurePanelTargetHeight = Number.parseFloat(disclosurePanel.style.getPropertyValue('--uzu-disclosure-panel-height'));
@@ -858,6 +1273,23 @@ Use \`.uzu-code\` inside copy.
       const progressBar = getComputedStyle(document.querySelector('.uzu-progress-indeterminate .uzu-progress-bar'));
       const activityDot = getComputedStyle(document.querySelector('.uzu-activity-dot'));
       const processStep = getComputedStyle(document.querySelector('.uzu-process-step.is-active'), '::before');
+      const spinnerStyle = getComputedStyle(document.querySelector('#consumer-spinner'));
+      const listStyle = getComputedStyle(document.querySelector('#consumer-list'));
+      const listItemStyle = getComputedStyle(document.querySelector('#consumer-list .uzu-list-item'));
+      const avatarBox = document.querySelector('#consumer-avatar').getBoundingClientRect();
+      const avatarStyle = getComputedStyle(document.querySelector('#consumer-avatar'));
+      const sidebarStyle = getComputedStyle(document.querySelector('#consumer-sidebar'));
+      const dataGridStyle = getComputedStyle(dataGrid);
+      const treeStyle = getComputedStyle(tree);
+      const splitPaneStyle = getComputedStyle(splitPane);
+      const resizableStyle = getComputedStyle(resizable);
+      const jsonViewerStyle = getComputedStyle(jsonViewer);
+      const diffViewerStyle = getComputedStyle(diffViewer);
+      const editorStyle = getComputedStyle(richEditor);
+      const markdownEditorStyle = getComputedStyle(markdownEditor);
+      const tagStaticStyle = getComputedStyle(document.querySelector('#consumer-tag-static'));
+      const emptyStateStyle = getComputedStyle(document.querySelector('#consumer-empty-state'));
+      const errorStateStyle = getComputedStyle(document.querySelector('#consumer-error-state'));
       const field = document.querySelector('.uzu-field');
       const fieldLabel = field.querySelector('.uzu-label');
       const fieldInput = field.querySelector('.uzu-input');
@@ -900,6 +1332,28 @@ Use \`.uzu-code\` inside copy.
       click(secondDialogTrigger);
       const closeEventsBeforeAnimationEnd = dialogCloseEvents.length;
       await wait(260);
+      const secondDialogOpenBeforeOverlayChecks = secondDialog.classList.contains('is-open');
+      const focusedSecondDialogBeforeOverlayChecks = document.activeElement === secondDialog.querySelector('[data-uzu-dialog-close]');
+      click(secondDialog.querySelector('[data-uzu-dialog-close]'));
+      await wait(260);
+      const drawerTrigger = document.querySelector('#consumer-drawer-trigger');
+      const drawer = document.querySelector('#consumer-drawer');
+      click(drawerTrigger);
+      await wait(80);
+      const drawerOpenAnimation = getComputedStyle(drawer).animationName;
+      const drawerOpenTransform = getComputedStyle(drawer).transform;
+      const drawerWidth = Math.round(drawer.getBoundingClientRect().width);
+      click(drawer.querySelector('[data-uzu-dialog-close]'));
+      await wait(120);
+      const alertDialogTrigger = document.querySelector('#consumer-alert-dialog-trigger');
+      const alertDialog = document.querySelector('#consumer-alert-dialog');
+      click(alertDialogTrigger);
+      await wait(80);
+      const alertDialogRole = alertDialog.getAttribute('role');
+      const alertDialogBorderLeftWidth = Math.round(Number.parseFloat(getComputedStyle(alertDialog).borderLeftWidth));
+      const alertDialogAccentColor = getComputedStyle(alertDialog).borderLeftColor;
+      click(alertDialog.querySelector('[data-uzu-dialog-close]'));
+      await wait(80);
       return {
         hasApi: Boolean(window.Usuzumi && window.Usuzumi.init),
         rootClass: document.documentElement.classList.contains('uzu-root'),
@@ -928,6 +1382,39 @@ Use \`.uzu-code\` inside copy.
         selectOpenTransform,
         selectClosing,
         selectExpandedAfterClose,
+        comboboxOpenAnimation,
+        comboboxVisibleCount,
+        comboboxValue,
+        comboboxHiddenValue,
+        comboboxClosedAfterSelect,
+        comboboxListDisplayOpen,
+        dataGridFirstCellAfterSort,
+        dataGridSelectedValue,
+        plainDataGridFirstValue,
+        plainDataGridSelectedValue,
+        dataGridDisplay: dataGridStyle.display,
+        treeClosed,
+        treeOpen,
+        treeKeyboardFocusValue,
+        treeDisplay: treeStyle.display,
+        splitSize,
+        splitAriaValue,
+        splitPaneDisplay: splitPaneStyle.display,
+        resizableWidth,
+        resizableHeight,
+        resizablePosition: resizableStyle.position,
+        jsonNodeCount,
+        jsonCollapsed,
+        jsonViewerBorderStyle: jsonViewerStyle.borderTopStyle,
+        diffAddRows,
+        diffRemoveRows,
+        diffViewerDisplay: diffViewerStyle.display,
+        editorDisplay: editorStyle.display,
+        markdownEditorDisplay: markdownEditorStyle.display,
+        markdownEditorHeading,
+        markdownEditorCleared,
+        markdownEditorCopyInitialized,
+        inlineEditorValue,
         disclosureOpenAnimation,
         disclosureCloseAnimation,
         disclosurePanelTargetHeight,
@@ -948,10 +1435,53 @@ Use \`.uzu-code\` inside copy.
         alertWidth,
         alertSuccessWidth,
         fieldGap,
+        stackDisplay: getComputedStyle(document.querySelector('#consumer-stack')).display,
+        flexDisplay: getComputedStyle(document.querySelector('#consumer-flex')).display,
+        aspectRatio: getComputedStyle(document.querySelector('#consumer-aspect')).aspectRatio,
+        scrollAreaMaxHeight: getComputedStyle(document.querySelector('#consumer-scroll-area')).maxHeight,
+        formDisplay: getComputedStyle(document.querySelector('#consumer-form')).display,
+        inputGroupDisplay: getComputedStyle(document.querySelector('#consumer-input-group')).display,
+        fileUploadBorderStyle: getComputedStyle(document.querySelector('#consumer-file-upload')).borderStyle,
+        sliderAccentColor: getComputedStyle(document.querySelector('#consumer-slider')).accentColor,
+        sliderValueBefore,
+        sliderValueAfter,
+        searchClearInitiallyHidden,
+        searchValueAfterClear,
+        searchClearHiddenAfterClear,
+        passwordTypeAfterToggle,
+        passwordPressedAfterToggle,
+        stepperValueAfterIncrement,
+        stepperIncrementDisabledAfterMax,
+        stepperInputAppearance,
+        menuOpenAnimation,
+        menuCloseAnimation,
+        menuExpandedAfterOpen,
+        contextMenuOpen,
+        contextMenuLeft,
+        menubarActiveValue,
+        commandVisibleCount,
+        stepNavValue,
+        stepNavReviewCurrent,
+        accordionFirstOpen,
+        accordionSecondOpen,
+        hoverCardOpen,
+        tagSelectablePressed,
+        tagCloseableHidden,
         fieldLabelToInputGap: fieldInputTop - fieldLabelBottom,
         progressAnimation: progressBar.animationName,
         activityAnimation: activityDot.animationName,
         processAnimation: processStep.animationName,
+        spinnerAnimation: spinnerStyle.animationName,
+        listBorderStyle: listStyle.borderTopStyle,
+        listItemDisplay: listItemStyle.display,
+        avatarWidth: Math.round(avatarBox.width),
+        avatarHeight: Math.round(avatarBox.height),
+        avatarDisplay: avatarStyle.display,
+        sidebarWidth: Math.round(document.querySelector('#consumer-sidebar').getBoundingClientRect().width),
+        sidebarDisplay: sidebarStyle.display,
+        tagStaticDisplay: tagStaticStyle.display,
+        emptyStateDisplay: emptyStateStyle.display,
+        errorStateColor: errorStateStyle.color,
         dialogOpenAnimation,
         dialogCloseAnimation,
         dialogOpenTransform,
@@ -1036,12 +1566,19 @@ Use \`.uzu-code\` inside copy.
         pagePanelAnimation: pagePanelStyle.animationName,
         dialogClosing,
         dialogHiddenWhileClosing,
-        secondDialogOpen: secondDialog.classList.contains('is-open'),
-        focusedSecondDialog: document.activeElement === secondDialog.querySelector('[data-uzu-dialog-close]'),
+        secondDialogOpen: secondDialogOpenBeforeOverlayChecks,
+        focusedSecondDialog: focusedSecondDialogBeforeOverlayChecks,
+        drawerOpenAnimation,
+        drawerOpenTransform,
+        drawerWidth,
+        alertDialogRole,
+        alertDialogBorderLeftWidth,
+        alertDialogAccentColor,
         overlayClosing,
         firstDialogHiddenAfterClose: dialog.hidden,
         closeEventsBeforeAnimationEnd,
         closeEventTriggerAfterAnimation: dialogCloseEvents.join(','),
+        newEvents,
         events
       };
     })()`;
@@ -1065,6 +1602,17 @@ Use \`.uzu-code\` inside copy.
     if (value.selectOpenAnimation !== 'uzu-menu-in' || value.selectCloseAnimation !== 'uzu-menu-out') throw new Error('Browser consumer select did not animate open and close');
     if (value.selectOpenTransform !== 'none') throw new Error('Browser consumer select menu should not shift or scale while opening');
     if (!value.selectClosing || value.selectExpandedAfterClose !== 'false') throw new Error('Browser consumer select did not keep a closing state with collapsed ARIA');
+    if (value.comboboxOpenAnimation !== 'uzu-menu-in' || value.comboboxVisibleCount !== 1 || value.comboboxValue !== 'tree' || value.comboboxHiddenValue !== 'tree') throw new Error('Browser consumer combobox did not filter, animate, or sync value');
+    if (!value.comboboxClosedAfterSelect) throw new Error('Browser consumer combobox reopened after selecting an option');
+    if (value.comboboxListDisplayOpen !== 'grid') throw new Error('Browser consumer combobox list styling is missing');
+    if (value.dataGridFirstCellAfterSort !== 'Alpha' || value.dataGridSelectedValue !== 'alpha' || value.dataGridDisplay !== 'table') throw new Error('Browser consumer data grid did not sort/select');
+    if (value.plainDataGridFirstValue !== '1' || value.plainDataGridSelectedValue !== '2') throw new Error('Browser consumer data grid did not initialize plain table rows');
+    if (!value.treeClosed || !value.treeOpen || value.treeKeyboardFocusValue !== 'docs' || value.treeDisplay !== 'grid') throw new Error('Browser consumer tree did not toggle, focus, or style correctly');
+    if (Number(value.splitSize) !== 58 || value.splitAriaValue !== '58' || value.splitPaneDisplay !== 'grid') throw new Error('Browser consumer split pane did not resize');
+    if (value.resizableWidth !== 300 || value.resizableHeight !== 150 || value.resizablePosition !== 'relative') throw new Error('Browser consumer resizable panel did not resize');
+    if (value.jsonNodeCount < 2 || !value.jsonCollapsed || value.jsonViewerBorderStyle === 'none') throw new Error('Browser consumer JSON viewer did not render collapsible JSON');
+    if (value.diffAddRows !== 1 || value.diffRemoveRows !== 1 || value.diffViewerDisplay !== 'block') throw new Error('Browser consumer diff viewer did not classify rows');
+    if (value.editorDisplay !== 'grid' || value.markdownEditorDisplay !== 'grid' || value.markdownEditorHeading !== 'Updated' || value.markdownEditorCleared !== '' || !value.markdownEditorCopyInitialized || value.inlineEditorValue !== 'Changed inline') throw new Error('Browser consumer editor helpers did not initialize');
     if (Math.round(value.fieldGap) !== 5) throw new Error('Browser consumer form field should use the default field gap variable');
     if (value.fieldLabelToInputGap < 4) throw new Error('Browser consumer form label should not overlap the input');
     if (value.disclosureOpenAnimation !== 'uzu-disclosure-in' || value.disclosureCloseAnimation !== 'uzu-disclosure-out') throw new Error('Browser consumer disclosure did not animate open and close');
@@ -1080,12 +1628,36 @@ Use \`.uzu-code\` inside copy.
     if (value.alertWarningAccentColor !== 'rgb(123, 104, 66)') throw new Error('Browser consumer warning alert preset did not apply');
     if (Math.round(value.alertWidth) !== 420) throw new Error('Browser consumer alert max-width variable did not apply');
     if (Math.round(value.alertSuccessWidth) !== 520) throw new Error('Browser consumer alert default max width did not apply');
+    if (value.stackDisplay !== 'flex' || value.flexDisplay !== 'flex') throw new Error('Browser consumer layout primitives did not use flex layout');
+    if (!value.aspectRatio.includes('2 / 1') || value.scrollAreaMaxHeight !== '64px') throw new Error('Browser consumer layout primitive variables did not apply');
+    if (value.formDisplay !== 'grid' || value.inputGroupDisplay !== 'flex') throw new Error('Browser consumer form primitives did not apply');
+    if (value.fileUploadBorderStyle !== 'dashed') throw new Error('Browser consumer file upload styling is missing');
+    if (!value.sliderAccentColor || value.sliderValueBefore !== '50%' || value.sliderValueAfter !== '75%') throw new Error('Browser consumer slider styling or value sync is missing');
+    if (value.searchClearInitiallyHidden || value.searchValueAfterClear !== '' || !value.searchClearHiddenAfterClear) throw new Error('Browser consumer search clear behavior did not work');
+    if (value.passwordTypeAfterToggle !== 'text' || value.passwordPressedAfterToggle !== 'true') throw new Error('Browser consumer password toggle behavior did not work');
+    if (value.stepperValueAfterIncrement !== '3' || !value.stepperIncrementDisabledAfterMax || value.stepperInputAppearance === 'auto') throw new Error('Browser consumer stepper behavior or appearance did not work');
+    if (value.menuOpenAnimation !== 'uzu-menu-in' || value.menuCloseAnimation !== 'uzu-menu-out' || value.menuExpandedAfterOpen !== 'true') throw new Error('Browser consumer menu behavior did not work');
+    if (!value.contextMenuOpen || value.contextMenuLeft < 8) throw new Error('Browser consumer context menu did not open at a clamped position');
+    if (value.menubarActiveValue !== 'edit') throw new Error('Browser consumer menubar did not update active item');
+    if (value.commandVisibleCount !== 1) throw new Error('Browser consumer command filtering did not narrow results');
+    if (value.stepNavValue !== 'review' || value.stepNavReviewCurrent !== 'step') throw new Error('Browser consumer step navigation did not update current step');
+    if (value.accordionFirstOpen || !value.accordionSecondOpen) throw new Error('Browser consumer accordion did not keep one panel open');
+    if (!value.hoverCardOpen) throw new Error('Browser consumer hover card did not open on focus');
+    if (value.tagSelectablePressed !== 'false' || !value.tagCloseableHidden) throw new Error('Browser consumer tag behavior did not work');
     if (value.progressAnimation !== 'uzu-progress-indeterminate') throw new Error('Browser consumer CSS did not animate indeterminate progress');
     if (value.activityAnimation !== 'uzu-activity-dot') throw new Error('Browser consumer CSS did not animate activity dots');
     if (value.processAnimation !== 'uzu-process-pulse') throw new Error('Browser consumer CSS did not animate active process steps');
+    if (value.spinnerAnimation !== 'uzu-spin') throw new Error('Browser consumer spinner animation is missing');
+    if (value.listBorderStyle === 'none' || value.listItemDisplay !== 'grid') throw new Error('Browser consumer list styling is missing');
+    if (value.avatarWidth !== 36 || value.avatarHeight !== 36 || value.avatarDisplay !== 'inline-flex') throw new Error('Browser consumer avatar metrics are wrong');
+    if (value.sidebarDisplay !== 'grid' || value.sidebarWidth !== 240) throw new Error('Browser consumer sidebar metrics are wrong');
+    if (value.tagStaticDisplay !== 'inline-flex') throw new Error('Browser consumer tag display is wrong');
+    if (value.emptyStateDisplay !== 'grid' || !value.errorStateColor) throw new Error('Browser consumer empty/error state styling is missing');
     if (value.dialogOpenAnimation !== 'uzu-dialog-surface-in') throw new Error('Browser consumer dialog did not animate on open');
     if (value.dialogCloseAnimation !== 'uzu-dialog-surface-out') throw new Error('Browser consumer dialog did not animate on close');
     if (value.dialogOpenTransform !== 'none' || value.dialogCloseTransform !== 'none') throw new Error('Browser consumer dialog should not shift or scale while opening or closing');
+    if (value.drawerOpenAnimation !== 'uzu-dialog-surface-in' || value.drawerOpenTransform !== 'none' || value.drawerWidth !== 420) throw new Error('Browser consumer drawer behavior or width is wrong');
+    if (value.alertDialogRole !== 'alertdialog' || value.alertDialogBorderLeftWidth !== 6 || value.alertDialogAccentColor !== 'rgb(122, 77, 74)') throw new Error('Browser consumer alert dialog semantics or accent styling is wrong');
     if (Math.round(value.toastWidthDefault) !== 360) throw new Error('Browser consumer toast should use the default compact width');
     if (Math.abs(value.toastContentRightDefault - value.toastCloseRightDefault) > 1) throw new Error('Browser consumer toast close button should align to the content boundary');
     if (Math.abs((value.toastContentLeftDefault - value.toastLeftDefault) - (value.toastRightDefault - value.toastContentRightDefault)) > 1) throw new Error('Browser consumer toast should keep balanced left and right padding by default');
@@ -1134,7 +1706,10 @@ Use \`.uzu-code\` inside copy.
     if (!value.dialogClosing || value.dialogHiddenWhileClosing || !value.overlayClosing) throw new Error('Browser consumer dialog did not stay visible while closing');
     if (!value.secondDialogOpen || !value.focusedSecondDialog) throw new Error('Browser consumer second dialog did not remain active while first dialog closed');
     if (value.closeEventsBeforeAnimationEnd !== 0 || value.closeEventTriggerAfterAnimation !== 'first-trigger') throw new Error('Browser consumer dialog close event used the wrong trigger during overlapping dialog animation');
-    if (JSON.stringify(value.events) !== JSON.stringify(['two', 'beta', 'page:2'])) throw new Error('Browser consumer events did not fire');
+    if (JSON.stringify(value.events) !== JSON.stringify(['two', 'beta', 'page:2', 'password:true', 'stepper:3'])) throw new Error('Browser consumer events did not fire');
+    for (const expected of ['menu:rename', 'context:open', 'menubar:edit', 'command:theme', 'combobox:tree', 'grid-sort:ascending', 'grid-select:alpha', 'plain-grid-select:2', 'tree-toggle:false', 'split:58', 'resizable', 'editor:bold', 'editor-change', 'markdown-editor', 'inline-editor', 'accordion:true', 'step-nav:review', 'hover:open', 'tag:false', 'tag-close:filter']) {
+      if (!value.newEvents.includes(expected)) throw new Error('Browser consumer new component event did not fire: ' + expected);
+    }
 
     await cdp.send('Emulation.setEmulatedMedia', {
       features: [{ name: 'prefers-reduced-motion', value: 'reduce' }]

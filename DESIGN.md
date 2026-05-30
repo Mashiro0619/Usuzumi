@@ -26,13 +26,13 @@ The published `ui/usuzumi.css` file is generated from the maintainable source fi
 - `ui/css/fonts.css`: optional Meddon signature font face.
 - `ui/css/base.css`: root behavior, focus, selection, scrollbar, forms, links.
 - `ui/css/typography.css`: signature, titles, section labels, title pairs.
-- `ui/css/components.css`: buttons, cards, fields, select, tabs, feedback, callouts, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, and tooltips.
-- `ui/css/layout.css`: page containers, sections, top bars, grids, hero split, footer.
-- `ui/css/patterns.css`: homepage, app intro, catalog, mockups, token specimens.
+- `ui/css/components.css`: buttons, cards, fields, menus, command surfaces, select, tabs, feedback, callouts, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, and tooltips.
+- `ui/css/layout.css`: page containers, sections, top bars, grids, sidebars, hero split, footer.
+- `ui/css/patterns.css`: reusable product sections, panel navigation, prose/code helpers, token specimens, type specimens, and small page patterns.
 - `ui/css/utilities.css`: small utilities and language visibility helpers.
 - `ui/css/forced-colors.css`: high-contrast mode visibility rules.
 - `ui/usuzumi-signature.css`: optional signature font entry for `.uzu-signature` and signature specimens.
-- `ui/usuzumi.js`: theme toggles, language toggles, custom selects, tabs, segmented controls, switches, disclosures, dialogs, and toast dismissal.
+- `ui/usuzumi.js`: theme toggles, language toggles, custom selects, tabs, segmented controls, switches, search, password, steppers, menus, command filtering, tags, disclosures, accordions, hover cards, dialogs, step navigation, and toast dismissal.
 - `ui/usuzumi.d.ts`: TypeScript declarations for the browser API and custom events.
 
 ## Adoption Modes
@@ -70,18 +70,21 @@ All public component classes use the `uzu-` prefix. Do not rely on internal file
 - `.uzu-icon-button`, `.uzu-theme-toggle`, `.uzu-floating-controls`
 - `.uzu-toolbar`, `.uzu-toolbar-group`, `.uzu-breadcrumb`, `.uzu-pagination`, `.uzu-page-button`
 - `.uzu-card`, `.uzu-card-muted`, `.uzu-title-pair`, `.uzu-stat`, `.uzu-stat-label`, `.uzu-stat-value`, `.uzu-stat-note`
-- `.uzu-field`, `.uzu-label`, `.uzu-input`, `.uzu-textarea`, `.uzu-select`
+- `.uzu-list`, `.uzu-list-item`, `.uzu-list-meta`, `.uzu-list-action`, `.uzu-avatar`
+- `.uzu-form`, `.uzu-fieldset`, `.uzu-form-message`, `.uzu-form-error`
+- `.uzu-field`, `.uzu-label`, `.uzu-input`, `.uzu-textarea`, `.uzu-select`, `.uzu-input-group`, `.uzu-input-addon`, `.uzu-input-action`
+- `.uzu-search`, `.uzu-search-input`, `.uzu-search-clear`, `.uzu-password`, `.uzu-password-input`, `.uzu-password-toggle`, `.uzu-file-upload`, `.uzu-file-input`, `.uzu-file-summary`, `.uzu-slider`, `.uzu-stepper`, `.uzu-stepper-input`, `.uzu-stepper-button`
+- `.uzu-menu`, `.uzu-menu-trigger`, `.uzu-menu-content`, `.uzu-menu-item`, `.uzu-menubar`, `.uzu-menubar-item`, `.uzu-command`, `.uzu-command-input`, `.uzu-command-list`, `.uzu-command-item`
 - `.uzu-tabs`, `.uzu-tab`, `.uzu-segmented`, `.uzu-segment`
-- `.uzu-badge`, `.uzu-separator`, `.uzu-separator-vertical`, `.uzu-code`, `.uzu-kbd`, `.uzu-alert`, `.uzu-alert-info`, `.uzu-alert-success`, `.uzu-alert-warning`, `.uzu-alert-danger`, `.uzu-callout`, `.uzu-callout-title`, `.uzu-toast`, `.uzu-table`, `.uzu-popover`, `.uzu-modal`, `.uzu-dialog-overlay`
-- `.uzu-progress`, `.uzu-progress-bar`, `.uzu-progress-indeterminate`, `.uzu-progress-circular`, `.uzu-skeleton`
-- `.uzu-activity`, `.uzu-activity-dot`, `.uzu-process`, `.uzu-process-step`
-- `.uzu-disclosure`, `.uzu-disclosure-trigger`, `.uzu-disclosure-panel`, `.uzu-tooltip`
-- `.uzu-page`, `.uzu-section`, `.uzu-section-head`, `.uzu-grid`, `.uzu-hero-split`
-- `.uzu-section-centered`, `.uzu-doc-layout`, `.uzu-doc-sidebar`, `.uzu-doc-main`, `.uzu-doc-panel`, `.uzu-doc-example`
+- `.uzu-badge`, `.uzu-tag`, `.uzu-tag-close`, `.uzu-separator`, `.uzu-separator-vertical`, `.uzu-code`, `.uzu-kbd`, `.uzu-alert`, `.uzu-alert-info`, `.uzu-alert-success`, `.uzu-alert-warning`, `.uzu-alert-danger`, `.uzu-callout`, `.uzu-callout-title`, `.uzu-toast`, `.uzu-table`, `.uzu-popover`, `.uzu-modal`, `.uzu-alert-dialog`, `.uzu-dialog-overlay`, `.uzu-drawer`, `.uzu-sheet`
+- `.uzu-progress`, `.uzu-progress-bar`, `.uzu-progress-indeterminate`, `.uzu-progress-circular`, `.uzu-spinner`, `.uzu-skeleton`
+- `.uzu-activity`, `.uzu-activity-dot`, `.uzu-process`, `.uzu-process-step`, `.uzu-step-nav`, `.uzu-step-nav-item`, `.uzu-step-nav-button`
+- `.uzu-disclosure`, `.uzu-disclosure-trigger`, `.uzu-disclosure-panel`, `.uzu-accordion`, `.uzu-hover-card`, `.uzu-hover-card-content`, `.uzu-tooltip`
+- `.uzu-page`, `.uzu-section`, `.uzu-section-head`, `.uzu-grid`, `.uzu-stack`, `.uzu-flex`, `.uzu-spacer`, `.uzu-aspect`, `.uzu-scroll-area`, `.uzu-sidebar`, `.uzu-sidebar-section`, `.uzu-sidebar-nav`, `.uzu-hero-split`
+- `.uzu-section-centered`, `.uzu-panel`
 - `.uzu-panel-nav`, `.uzu-panel-nav-section`, `.uzu-panel-nav-title`, `.uzu-panel-nav-button`, `.uzu-panel-nav-meta`
 - `.uzu-code-block`, `.uzu-code-block-body`, `.uzu-code-block-copy`, `.uzu-prose`
-- `.uzu-home-hero`, `.uzu-home-summary`, `.uzu-project-list`, `.uzu-project-row`, `.uzu-project-preview`
-- `.uzu-app-preview`, `.uzu-download-actions`, `.uzu-feature-list`, `.uzu-feature-item`, `.uzu-screen-grid`, `.uzu-screen-card`
+- `.uzu-download-actions`, `.uzu-app-hero-copy`, `.uzu-product-meta`, `.uzu-feature-list`, `.uzu-feature-item`, `.uzu-feature-index`, `.uzu-screen-grid`, `.uzu-screen-card`, `.uzu-screen-art`, `.uzu-screen-mark`
 - `.uzu-type-list`, `.uzu-type-list-plain`, `.uzu-type-row`, `.uzu-type-sample`
 
 ### CSS Custom Property API
@@ -129,6 +132,7 @@ Stable global variables include:
 - Radius: `--uzu-radius-micro`, `--uzu-radius-standard`, `--uzu-radius-medium`, `--uzu-radius-large`, `--uzu-radius-pill`
 - Spacing: `--uzu-space-1`, `--uzu-space-2`, `--uzu-space-3`, `--uzu-space-4`, `--uzu-space-5`, `--uzu-space-6`, `--uzu-space-8`, `--uzu-space-10`
 - Layout, card, and form rhythm: `--uzu-page-max-width`, `--uzu-page-narrow-max-width`, `--uzu-card-title-size`, `--uzu-card-title-line`, `--uzu-card-subtitle-size`, `--uzu-card-subtitle-line`, `--uzu-card-title-gap`, `--uzu-card-block-gap`, `--uzu-field-gap`
+- Local layout primitives: `--uzu-stack-gap`, `--uzu-flex-gap`, `--uzu-aspect-ratio`, `--uzu-scroll-area-max-height`
 
 Stable component variables include:
 
@@ -136,6 +140,11 @@ Stable component variables include:
 - Callout colors: `--uzu-callout-border-color`, `--uzu-callout-bg`, `--uzu-callout-title-color`, `--uzu-callout-text-color`
 - Toast sizing: `--uzu-toast-width`, `--uzu-toast-inline-padding`, `--uzu-toast-content-end-offset`, `--uzu-toast-action-size`, `--uzu-toast-action-gap`
 - Disclosure spacing: `--uzu-disclosure-panel-block-end-padding`
+- Form and upload sizing: `--uzu-form-gap`, `--uzu-file-upload-min-height`
+- Menu and command sizing: `--uzu-menu-min-width`, `--uzu-menu-offset`, `--uzu-menu-content-width`, `--uzu-command-max-height`
+- Identity and navigation sizing: `--uzu-avatar-size`, `--uzu-sidebar-width`, `--uzu-step-nav-gap`
+- Overlay sizing: `--uzu-hover-card-width`, `--uzu-alert-dialog-accent-color`, `--uzu-drawer-width`, `--uzu-sheet-width`
+- Loading sizing: `--uzu-spinner-size`, `--uzu-spinner-stroke`
 
 | Variable | Default | Applies to | Suggested scope |
 | --- | --- | --- | --- |
@@ -164,10 +173,31 @@ Stable component variables include:
 | `--uzu-toast-action-size` | `28px` | toast close button size | local toast |
 | `--uzu-toast-action-gap` | `12px` | gap reserved for toast action | local toast |
 | `--uzu-disclosure-panel-block-end-padding` | `20px` | disclosure panel bottom spacing | local disclosure or container |
+| `--uzu-menu-min-width` | `180px` | menu minimum width | local menu |
+| `--uzu-menu-offset` | `4px` | menu distance from trigger | local menu |
+| `--uzu-menu-content-width` | `max-content` | menu content width | local menu |
+| `--uzu-command-max-height` | `260px` | command list height | local command menu |
+| `--uzu-avatar-size` | `36px` | avatar size | local avatar or container |
+| `--uzu-sidebar-width` | `240px` | sidebar width | local sidebar or layout |
+| `--uzu-step-nav-gap` | `8px` | step navigation gap | local step nav |
+| `--uzu-hover-card-width` | `260px` | hover card width | local hover card |
+| `--uzu-combobox-list-max-height` | `240px` | combobox popup height | local combobox |
+| `--uzu-split-primary-size` | `50%` | split pane primary panel size | local split pane |
+| `--uzu-split-resizer-size` | `8px` | split pane divider size | local split pane |
+| `--uzu-resizable-width` | `320px` | resizable panel width | local resizable |
+| `--uzu-resizable-height` | `180px` | resizable panel height | local resizable |
+| `--uzu-viewer-max-height` | `360px` | JSON / diff viewer height | local viewer |
+| `--uzu-json-indent` | `18px` | JSON child indentation | local JSON viewer |
+| `--uzu-editor-min-height` | `160px` | editor surface minimum height | local editor |
+| `--uzu-alert-dialog-accent-color` | `var(--uzu-danger)` | alert dialog accent | local alert dialog |
+| `--uzu-drawer-width` | `420px` | drawer width | local drawer |
+| `--uzu-sheet-width` | `520px` | sheet width | local sheet |
+| `--uzu-spinner-size` | `18px` | spinner size | local spinner |
+| `--uzu-spinner-stroke` | `2px` | spinner stroke | local spinner |
 
 Runtime-written variables such as `--uzu-tabs-indicator-x`, `--uzu-tabs-indicator-width`, `--uzu-segmented-indicator-x`, `--uzu-segmented-indicator-width`, and `--uzu-disclosure-panel-height` are internal state. They can appear in computed styles, but application code should not set them as customization hooks.
 
-If a project repeatedly needs a size or behavior that is not covered here, add a small component variable to `ui/css/*.css`, rebuild `ui/usuzumi.css`, and document it in this section. Do not solve that gap with preview-only CSS.
+If a project repeatedly needs a size or behavior that is not covered here, add a small component variable to `ui/css/*.css`, rebuild `ui/usuzumi.css`, and document it in this section. Do not solve that gap with example-page CSS.
 
 ### State Contract
 
@@ -182,6 +212,17 @@ Every interactive component must define the states it exposes. Use native attrib
 - Open/closed: use `.is-open` with `aria-expanded` for disclosures and dialogs.
 
 Do not introduce a visual state without also defining the matching semantic attribute when one exists.
+
+### Advanced Component Scope
+
+The native runtime includes lightweight versions of the complex component families:
+
+- Combobox handles local filtering, ARIA sync, keyboard selection, and optional hidden form values.
+- Data grid keeps real table markup while adding sortable headers, row selection, and row keyboard navigation.
+- Tree view manages hierarchical focus, selection, expand/collapse state, and matching ARIA attributes.
+- Split pane and resizable panel support pointer and keyboard resizing. Optional persistence keys use local storage.
+- JSON viewer parses JSON into a collapsible tree. Diff viewer renders unified-diff style text into readable rows.
+- Editor surfaces provide shells, toolbar buttons, Markdown preview, plain/code text surfaces, and inline editing. They are not full editor engines; projects that need syntax services, collaboration, history, or large-file handling should attach a dedicated editor inside these shells.
 
 ## Visual Principles
 
@@ -360,7 +401,7 @@ Use `.uzu-callout` for editorial notes, constraints, and secondary context that 
 
 Use `.uzu-breadcrumb` for page hierarchy, `.uzu-toolbar` with `.uzu-toolbar-group` for local actions, and `.uzu-pagination` with `.uzu-page-button` for paged lists. Mark the current breadcrumb or page with `aria-current="page"`. Add `data-uzu-pagination` when the runtime should manage active page state, previous/next buttons, and optional `data-uzu-page-panel` content. Toolbars may use native buttons, links styled as `.uzu-button`, or icon buttons when the action has an accessible name.
 
-Use `.uzu-panel-nav` with `data-uzu-panel-nav` for documentation-style side navigation that switches `.uzu-doc-panel` panels. Use `.uzu-code-block` for copyable code snippets and `.uzu-prose[data-uzu-markdown]` for the built-in Markdown subset. The Markdown renderer intentionally supports only headings, paragraphs, unordered lists, links, inline code, and fenced code blocks; full Markdown documents should still be generated by a dedicated documentation pipeline.
+Use `.uzu-panel-nav` with `data-uzu-panel-nav` for side navigation that switches `.uzu-panel` sections. Use `.uzu-code-block` for copyable code snippets and `.uzu-prose[data-uzu-markdown]` for the built-in Markdown subset. The Markdown renderer intentionally supports only headings, paragraphs, unordered lists, links, inline code, and fenced code blocks; full Markdown documents should still be generated by a dedicated documentation pipeline.
 
 ```html
 <nav aria-label="Breadcrumb">
@@ -524,48 +565,47 @@ Pagination uses `data-uzu-pagination` and page buttons with `data-uzu-page`. Pre
 - `uzu-segmented-change`: `{ value, segment, segmented, index }`
 - `uzu-pagination-change`: `{ value, page, pagination, index, panel }`
 - `uzu-switch-change`: `{ checked, switch }`
+- `uzu-password-toggle`: `{ visible, password, input, toggle }`
+- `uzu-stepper-change`: `{ value, number, stepper, input }`
 - `uzu-disclosure-change`: `{ open, disclosure }`
 - `uzu-toast-close`: `{ toast }`
 - `uzu-dialog-open` / `uzu-dialog-close`: `{ dialog, overlay, trigger }`
 
 ## Page Patterns
 
-### Personal Homepage
+### Product Homepage
 
-Use `.uzu-home-hero` with a large left-aligned `.uzu-signature`, optional `.uzu-home-summary`, a project index, and a compact footer. Do not add an avatar, generic biography block, skills grid, or blog unless the project specifically needs them.
+Build homepage introductions from `.uzu-page`, `.uzu-topbar`, `.uzu-section`, `.uzu-hero-split`, `.uzu-signature`, `.uzu-title-pair`, `.uzu-body-large`, `.uzu-download-actions`, `.uzu-feature-list`, and `.uzu-footer`. Project-specific hero composition, portfolio rows, or mockup artwork can live in the page itself while still using public buttons, links, cards, typography, and layout primitives.
 
-Use this structure for project rows:
+Use this structure for a compact intro:
 
 ```html
-<div class="uzu-project-list">
-  <article class="uzu-project-row">
-    <div class="uzu-project-media">
-      <div class="uzu-project-preview uzu-project-preview-app" aria-label="Project preview"></div>
-    </div>
-    <div class="uzu-project-copy">
-      <div class="uzu-title-pair">
-        <h3>Project title</h3>
-        <p>Short role, scope, or outcome.</p>
+<main class="uzu-page">
+  <section class="uzu-hero-split">
+    <div class="uzu-app-hero-copy">
+      <p class="uzu-product-meta">CSS / Runtime / Components</p>
+      <h1 class="uzu-signature">Usuzumi</h1>
+      <p class="uzu-body-large">A quiet interface kit for small sites and product pages.</p>
+      <div class="uzu-download-actions">
+        <a class="uzu-button uzu-button-primary" href="components.html">Components</a>
+        <a class="uzu-button" href="https://github.com/Mashiro0619/Usuzumi">GitHub</a>
       </div>
     </div>
-    <a class="uzu-text-link uzu-project-action" href="project.html">View page</a>
-  </article>
-</div>
+  </section>
+</main>
 ```
-
-Homepage project rows should read like an index, not like a dashboard. Use text links for project navigation. Use buttons only when the project row itself performs an action such as download or submit.
 
 ### App Introduction Page
 
 Use a top bar, a hero with product name and short copy, download actions near the hero, a quiet product mockup, feature sections, screen sections, and optional bilingual content.
 
-Use `.uzu-hero-split` with `.uzu-app-hero-copy`, `.uzu-product-meta`, `.uzu-download-actions`, and `.uzu-app-preview`. Download actions may be buttons because they are explicit actions. Keep icon labels short enough to fit at mobile widths.
+Use `.uzu-hero-split` with `.uzu-app-hero-copy`, `.uzu-product-meta`, and `.uzu-download-actions`. Download actions may be buttons because they are explicit actions. Keep icon labels short enough to fit at mobile widths.
 
 Use `.uzu-feature-list` and `.uzu-feature-item` for explanatory product features. A feature list is preferred over three identical cards when the content is mostly text and needs editorial rhythm.
 
 Use `.uzu-screen-grid` and `.uzu-screen-card` for screen previews. Screen cards may contain simulated interface art or real screenshots. The thumbnail, title, and subtitle must use stable spacing and should not rely on browser-default paragraph margins.
 
-Use `.uzu-title-pair` for every title and subtitle pair inside feature items, project rows, cards, mockups, and screen cards. Do not hand-place headings and paragraphs with ad hoc margins.
+Use `.uzu-title-pair` for title and subtitle pairs inside feature items, cards, and screen cards.
 
 ### Design Catalog Page
 
@@ -602,7 +642,7 @@ Example pages in `example/` are canonical usage examples for the UI library. If 
 
 Usuzumi defines:
 
-- 6px scrollbars with hidden WebKit arrow buttons for the root viewport, `.uzu-scroll`, `.uzu-table-wrap`, and `.uzu-catalog-body`.
+- 6px scrollbars with hidden WebKit arrow buttons for the root viewport, `.uzu-scroll`, and `.uzu-table-wrap`.
 - Paper-toned scrollbar thumbs.
 - Ink-tinted text selection.
 - Serif link treatment with subtle underline color changes.
@@ -618,7 +658,7 @@ Usuzumi defines:
 - Use page patterns before inventing page-specific layout CSS.
 - Prefer borders, surfaces, and spacing over shadows.
 - Keep button hover states subtle.
-- Keep preview pages generic and component-focused.
+- Keep example pages generic and component-focused.
 
 ## Browser Support
 

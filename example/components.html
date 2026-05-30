@@ -7,6 +7,369 @@
   <link rel="stylesheet" href="../ui/usuzumi.css">
   <link rel="stylesheet" href="../ui/usuzumi-signature.css">
   <script src="../ui/usuzumi.js" defer></script>
+  <style>
+    .uzu-doc-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+      gap: 36px;
+      align-items: start;
+    }
+
+    .uzu-doc-topbar {
+      margin-bottom: 46px;
+      padding-right: 108px;
+    }
+
+    .uzu-doc-sidebar {
+      min-width: 0;
+      max-height: calc(100vh - 72px);
+      position: sticky;
+      top: 32px;
+      overflow: auto;
+      padding-right: 12px;
+    }
+
+    .uzu-doc-layout > * {
+      min-width: 0;
+    }
+
+    .uzu-doc-main {
+      min-width: 0;
+    }
+
+    .uzu-doc-main > .uzu-footer {
+      margin-top: 56px;
+    }
+
+    .uzu-doc-brand {
+      color: var(--uzu-fg-strong);
+      font-family: var(--uzu-font-signature);
+      font-size: var(--uzu-doc-brand-size, 34px);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .uzu-doc-panel {
+      min-width: 0;
+      animation: uzu-page-panel-in var(--uzu-motion-base) var(--uzu-ease-standard);
+    }
+
+    .uzu-doc-panel[hidden],
+    .uzu-doc-preview[hidden],
+    .uzu-doc-code-panel[hidden] {
+      display: none;
+    }
+
+    .uzu-doc-panel .uzu-section-head {
+      margin-bottom: 18px;
+    }
+
+    .uzu-doc-note {
+      max-width: 720px;
+      overflow-wrap: anywhere;
+    }
+
+    .uzu-doc-guidance-block {
+      margin-top: 22px;
+      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(260px, .88fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .uzu-doc-guidance,
+    .uzu-doc-interface {
+      min-width: 0;
+      padding: 14px 16px;
+      border: 1px solid var(--uzu-border);
+      border-radius: var(--uzu-radius-micro);
+      background: color-mix(in srgb, var(--uzu-surface-soft) 48%, var(--uzu-surface));
+    }
+
+    .uzu-doc-guidance h3 {
+      margin: 0 0 8px;
+      color: var(--uzu-fg-strong);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .uzu-doc-tutorial {
+      display: grid;
+      gap: 14px;
+    }
+
+    .uzu-doc-tutorial h3 {
+      margin-bottom: 0;
+    }
+
+    .uzu-doc-tutorial-section {
+      min-width: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .uzu-doc-tutorial-section h4 {
+      margin: 0;
+      color: var(--uzu-fg-strong);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .uzu-doc-tutorial-section .uzu-text {
+      margin: 0;
+    }
+
+    .uzu-doc-tutorial-list {
+      margin: 0;
+      padding-left: 1.15em;
+      color: var(--uzu-muted);
+      display: grid;
+      gap: 6px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .uzu-doc-tutorial-list li,
+    .uzu-doc-tutorial-note {
+      overflow-wrap: anywhere;
+    }
+
+    .uzu-doc-inline-code {
+      margin: 0 1px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .uzu-doc-tutorial-note {
+      margin: 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--uzu-border-strong);
+      background: color-mix(in srgb, var(--uzu-surface-soft) 52%, transparent);
+      color: var(--uzu-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .uzu-doc-guidance ul {
+      margin: 0;
+      padding-left: 1.15em;
+      color: var(--uzu-muted);
+      display: grid;
+      gap: 7px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .uzu-doc-interface {
+      display: grid;
+      gap: 10px;
+    }
+
+    .uzu-doc-interface h3 {
+      margin: 0;
+      color: var(--uzu-fg-strong);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .uzu-doc-interface-group {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .uzu-doc-interface-label {
+      margin: 0;
+      color: var(--uzu-subtle);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .uzu-doc-interface-description {
+      margin: 0;
+      color: var(--uzu-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .uzu-doc-interface-list {
+      min-width: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .uzu-doc-interface-item {
+      min-width: 0;
+      padding-top: 8px;
+      border-top: 1px solid var(--uzu-border-soft);
+      display: grid;
+      gap: 5px;
+    }
+
+    .uzu-doc-interface-item:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .uzu-doc-interface-item .uzu-code {
+      width: max-content;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    .uzu-doc-interface-item-text {
+      margin: 0;
+      color: var(--uzu-muted);
+      font-size: 13px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .uzu-doc-interface-example-line {
+      min-width: 0;
+      margin: 0;
+      color: var(--uzu-subtle);
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 4px 6px;
+      align-items: start;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .uzu-doc-interface-example-line [data-lang="en"] {
+      display: none;
+    }
+
+    .uzu-doc-interface-example-line .uzu-code {
+      grid-column: 1 / -1;
+      width: auto;
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .uzu-doc-tutorial-code {
+      --uzu-code-block-max-height: 180px;
+      --uzu-code-block-padding: 10px 42px 10px 12px;
+      margin-top: 2px;
+    }
+
+    .uzu-doc-tutorial-code pre,
+    .uzu-doc-tutorial-code pre.uzu-code-block-body {
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .uzu-doc-classes,
+    .uzu-doc-interface-values {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .uzu-doc-interface-values {
+      min-width: 0;
+    }
+
+    .uzu-doc-demo {
+      min-width: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .uzu-doc-demo-tabs {
+      gap: 18px;
+    }
+
+    .uzu-doc-example {
+      min-width: 0;
+      max-width: 100%;
+      padding: 18px;
+      border: 1px solid var(--uzu-border);
+      border-radius: var(--uzu-radius-micro);
+      background: color-mix(in srgb, var(--uzu-surface-soft) 54%, var(--uzu-surface));
+      display: grid;
+      gap: 16px;
+    }
+
+    .uzu-doc-example-inline {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .uzu-doc-preview,
+    .uzu-doc-code-panel {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    @media (max-width: 920px) {
+      .uzu-doc-topbar {
+        margin-bottom: 24px;
+        padding-right: 0;
+      }
+
+      .uzu-doc-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .uzu-doc-sidebar {
+        max-height: none;
+        margin: -4px 0 0;
+        padding: 8px 0 10px;
+        position: sticky;
+        top: 0;
+        z-index: 4;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-block: 1px solid var(--uzu-border-soft);
+        background: color-mix(in srgb, var(--uzu-bg) 94%, transparent);
+        backdrop-filter: blur(10px);
+      }
+
+      .uzu-doc-sidebar .uzu-panel-nav {
+        width: max-content;
+        min-width: 100%;
+        display: flex;
+        gap: 8px;
+      }
+
+      .uzu-doc-sidebar .uzu-panel-nav-section {
+        display: contents;
+      }
+
+      .uzu-doc-sidebar .uzu-panel-nav-title,
+      .uzu-doc-sidebar .uzu-panel-nav-meta {
+        display: none;
+      }
+
+      .uzu-doc-sidebar .uzu-panel-nav-button {
+        width: auto;
+        min-height: 34px;
+        flex: 0 0 auto;
+        padding: 7px 11px;
+        white-space: nowrap;
+      }
+
+      .uzu-doc-guidance-block {
+        grid-template-columns: 1fr;
+        margin-top: 18px;
+      }
+
+    }
+  </style>
 </head>
 <body class="uzu-app">
   <div class="uzu-floating-controls" aria-label="Page settings">
@@ -22,12 +385,12 @@
     </button>
   </div>
   <main class="uzu-page">
-    <header class="uzu-topbar">
+    <header class="uzu-topbar uzu-doc-topbar">
       <span class="uzu-brand-link uzu-doc-brand" style="--uzu-doc-brand-size: 18px">Usuzumi</span>
       <nav class="uzu-nav" aria-label="Site navigation">
         <a href="index.html"><span data-lang="zh">首页</span><span data-lang="en">Home</span></a>
         <a href="components.html" aria-current="page"><span data-lang="zh">组件</span><span data-lang="en">Components</span></a>
-        <a href="../README.zh-CN.md"><span data-lang="zh">文档</span><span data-lang="en">Docs</span></a>
+        <a href="#component-page"><span data-lang="zh">文档</span><span data-lang="en">Docs</span></a>
         <a href="https://github.com/Mashiro0619/Usuzumi">Github</a>
       </nav>
     </header>
@@ -46,15 +409,24 @@
             <button class="uzu-panel-nav-button" id="component-tab-page" type="button" data-uzu-panel-target="#component-page" aria-controls="component-page" aria-pressed="false"><span data-lang="zh">页面容器</span><span class="uzu-panel-nav-meta">Page</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-section-centered" type="button" data-uzu-panel-target="#component-section-centered" aria-controls="component-section-centered" aria-pressed="false"><span data-lang="zh">居中区块</span><span class="uzu-panel-nav-meta">Centered</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-grid" type="button" data-uzu-panel-target="#component-grid" aria-controls="component-grid" aria-pressed="false"><span data-lang="zh">网格</span><span class="uzu-panel-nav-meta">Grid</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-layout-primitives" type="button" data-uzu-panel-target="#component-layout-primitives" aria-controls="component-layout-primitives" aria-pressed="false"><span data-lang="zh">布局原语</span><span class="uzu-panel-nav-meta">Stack / Flex</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-split-pane" type="button" data-uzu-panel-target="#component-split-pane" aria-controls="component-split-pane" aria-pressed="false"><span data-lang="zh">分栏面板</span><span class="uzu-panel-nav-meta">Split Pane</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-resizable" type="button" data-uzu-panel-target="#component-resizable" aria-controls="component-resizable" aria-pressed="false"><span data-lang="zh">可调整面板</span><span class="uzu-panel-nav-meta">Resizable</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-topbar" type="button" data-uzu-panel-target="#component-topbar" aria-controls="component-topbar" aria-pressed="false"><span data-lang="zh">顶部栏</span><span class="uzu-panel-nav-meta">Topbar</span></button>
           </section>
           <section class="uzu-panel-nav-section" aria-labelledby="nav-display">
             <p class="uzu-panel-nav-title" id="nav-display"><span data-lang="zh">展示</span><span data-lang="en">Display</span></p>
             <button class="uzu-panel-nav-button" id="component-tab-card" type="button" data-uzu-panel-target="#component-card" aria-controls="component-card" aria-pressed="false"><span data-lang="zh">卡片</span><span class="uzu-panel-nav-meta">Card</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-stat" type="button" data-uzu-panel-target="#component-stat" aria-controls="component-stat" aria-pressed="false"><span data-lang="zh">指标</span><span class="uzu-panel-nav-meta">Stat</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-list" type="button" data-uzu-panel-target="#component-list" aria-controls="component-list" aria-pressed="false"><span data-lang="zh">列表</span><span class="uzu-panel-nav-meta">List</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-table" type="button" data-uzu-panel-target="#component-table" aria-controls="component-table" aria-pressed="false"><span data-lang="zh">表格</span><span class="uzu-panel-nav-meta">Table</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-data-grid" type="button" data-uzu-panel-target="#component-data-grid" aria-controls="component-data-grid" aria-pressed="false"><span data-lang="zh">数据网格</span><span class="uzu-panel-nav-meta">Data Grid</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-tree" type="button" data-uzu-panel-target="#component-tree" aria-controls="component-tree" aria-pressed="false"><span data-lang="zh">树形视图</span><span class="uzu-panel-nav-meta">Tree</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-avatar" type="button" data-uzu-panel-target="#component-avatar" aria-controls="component-avatar" aria-pressed="false"><span data-lang="zh">头像</span><span class="uzu-panel-nav-meta">Avatar</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-separator" type="button" data-uzu-panel-target="#component-separator" aria-controls="component-separator" aria-pressed="false"><span data-lang="zh">分割线</span><span class="uzu-panel-nav-meta">Separator</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-code" type="button" data-uzu-panel-target="#component-code" aria-controls="component-code" aria-pressed="false"><span data-lang="zh">代码和键位</span><span class="uzu-panel-nav-meta">Code / Kbd</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-json-viewer" type="button" data-uzu-panel-target="#component-json-viewer" aria-controls="component-json-viewer" aria-pressed="false"><span data-lang="zh">JSON 查看器</span><span class="uzu-panel-nav-meta">JSON</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-diff-viewer" type="button" data-uzu-panel-target="#component-diff-viewer" aria-controls="component-diff-viewer" aria-pressed="false"><span data-lang="zh">差异查看器</span><span class="uzu-panel-nav-meta">Diff</span></button>
           </section>
           <section class="uzu-panel-nav-section" aria-labelledby="nav-actions">
             <p class="uzu-panel-nav-title" id="nav-actions"><span data-lang="zh">操作</span><span data-lang="en">Actions</span></p>
@@ -63,17 +435,37 @@
             <button class="uzu-panel-nav-button" id="component-tab-toolbar" type="button" data-uzu-panel-target="#component-toolbar" aria-controls="component-toolbar" aria-pressed="false"><span data-lang="zh">工具栏</span><span class="uzu-panel-nav-meta">Toolbar</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-breadcrumb" type="button" data-uzu-panel-target="#component-breadcrumb" aria-controls="component-breadcrumb" aria-pressed="false"><span data-lang="zh">面包屑</span><span class="uzu-panel-nav-meta">Breadcrumb</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-pagination" type="button" data-uzu-panel-target="#component-pagination" aria-controls="component-pagination" aria-pressed="false"><span data-lang="zh">分页</span><span class="uzu-panel-nav-meta">Pagination</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-menu" type="button" data-uzu-panel-target="#component-menu" aria-controls="component-menu" aria-pressed="false"><span data-lang="zh">菜单</span><span class="uzu-panel-nav-meta">Menu</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-menubar" type="button" data-uzu-panel-target="#component-menubar" aria-controls="component-menubar" aria-pressed="false"><span data-lang="zh">菜单栏</span><span class="uzu-panel-nav-meta">Menubar</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-command" type="button" data-uzu-panel-target="#component-command" aria-controls="component-command" aria-pressed="false"><span data-lang="zh">命令菜单</span><span class="uzu-panel-nav-meta">Command</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-sidebar" type="button" data-uzu-panel-target="#component-sidebar" aria-controls="component-sidebar" aria-pressed="false"><span data-lang="zh">侧边栏</span><span class="uzu-panel-nav-meta">Sidebar</span></button>
           </section>
           <section class="uzu-panel-nav-section" aria-labelledby="nav-controls">
             <p class="uzu-panel-nav-title" id="nav-controls"><span data-lang="zh">控件</span><span data-lang="en">Controls</span></p>
             <button class="uzu-panel-nav-button" id="component-tab-tabs" type="button" data-uzu-panel-target="#component-tabs" aria-controls="component-tabs" aria-pressed="false"><span data-lang="zh">标签页</span><span class="uzu-panel-nav-meta">Tabs</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-segmented" type="button" data-uzu-panel-target="#component-segmented" aria-controls="component-segmented" aria-pressed="false"><span data-lang="zh">分段控件</span><span class="uzu-panel-nav-meta">Segmented</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-select" type="button" data-uzu-panel-target="#component-select" aria-controls="component-select" aria-pressed="false"><span data-lang="zh">选择器</span><span class="uzu-panel-nav-meta">Select</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-combobox" type="button" data-uzu-panel-target="#component-combobox" aria-controls="component-combobox" aria-pressed="false"><span data-lang="zh">组合框</span><span class="uzu-panel-nav-meta">Combobox</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-switch" type="button" data-uzu-panel-target="#component-switch" aria-controls="component-switch" aria-pressed="false"><span data-lang="zh">开关</span><span class="uzu-panel-nav-meta">Switch</span></button>
+          </section>
+          <section class="uzu-panel-nav-section" aria-labelledby="nav-editors">
+            <p class="uzu-panel-nav-title" id="nav-editors"><span data-lang="zh">编辑</span><span data-lang="en">Editing</span></p>
+            <button class="uzu-panel-nav-button" id="component-tab-rich-editor" type="button" data-uzu-panel-target="#component-rich-editor" aria-controls="component-rich-editor" aria-pressed="false"><span data-lang="zh">富文本编辑</span><span class="uzu-panel-nav-meta">Rich Text</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-markdown-editor" type="button" data-uzu-panel-target="#component-markdown-editor" aria-controls="component-markdown-editor" aria-pressed="false"><span data-lang="zh">Markdown 编辑</span><span class="uzu-panel-nav-meta">Markdown</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-code-editor" type="button" data-uzu-panel-target="#component-code-editor" aria-controls="component-code-editor" aria-pressed="false"><span data-lang="zh">代码编辑</span><span class="uzu-panel-nav-meta">Code</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-plain-editor" type="button" data-uzu-panel-target="#component-plain-editor" aria-controls="component-plain-editor" aria-pressed="false"><span data-lang="zh">纯文本编辑</span><span class="uzu-panel-nav-meta">Plain</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-inline-editor" type="button" data-uzu-panel-target="#component-inline-editor" aria-controls="component-inline-editor" aria-pressed="false"><span data-lang="zh">行内编辑</span><span class="uzu-panel-nav-meta">Inline</span></button>
           </section>
           <section class="uzu-panel-nav-section" aria-labelledby="nav-forms">
             <p class="uzu-panel-nav-title" id="nav-forms"><span data-lang="zh">表单</span><span data-lang="en">Form</span></p>
+            <button class="uzu-panel-nav-button" id="component-tab-form" type="button" data-uzu-panel-target="#component-form" aria-controls="component-form" aria-pressed="false"><span data-lang="zh">表单结构</span><span class="uzu-panel-nav-meta">Form</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-input" type="button" data-uzu-panel-target="#component-input" aria-controls="component-input" aria-pressed="false"><span data-lang="zh">字段</span><span class="uzu-panel-nav-meta">Fields</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-input-group" type="button" data-uzu-panel-target="#component-input-group" aria-controls="component-input-group" aria-pressed="false"><span data-lang="zh">输入组合</span><span class="uzu-panel-nav-meta">Input Group</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-search" type="button" data-uzu-panel-target="#component-search" aria-controls="component-search" aria-pressed="false"><span data-lang="zh">搜索框</span><span class="uzu-panel-nav-meta">Search</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-password" type="button" data-uzu-panel-target="#component-password" aria-controls="component-password" aria-pressed="false"><span data-lang="zh">密码输入</span><span class="uzu-panel-nav-meta">Password</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-file-upload" type="button" data-uzu-panel-target="#component-file-upload" aria-controls="component-file-upload" aria-pressed="false"><span data-lang="zh">文件上传</span><span class="uzu-panel-nav-meta">File Upload</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-slider" type="button" data-uzu-panel-target="#component-slider" aria-controls="component-slider" aria-pressed="false"><span data-lang="zh">滑块</span><span class="uzu-panel-nav-meta">Slider</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-stepper" type="button" data-uzu-panel-target="#component-stepper" aria-controls="component-stepper" aria-pressed="false"><span data-lang="zh">步进器</span><span class="uzu-panel-nav-meta">Stepper</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-checkbox-radio" type="button" data-uzu-panel-target="#component-checkbox-radio" aria-controls="component-checkbox-radio" aria-pressed="false"><span data-lang="zh">复选和单选</span><span class="uzu-panel-nav-meta">Checkbox / Radio</span></button>
           </section>
           <section class="uzu-panel-nav-section" aria-labelledby="nav-feedback">
@@ -84,13 +476,20 @@
             <button class="uzu-panel-nav-button" id="component-tab-progress" type="button" data-uzu-panel-target="#component-progress" aria-controls="component-progress" aria-pressed="false"><span data-lang="zh">进度与活动</span><span class="uzu-panel-nav-meta">Progress</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-skeleton" type="button" data-uzu-panel-target="#component-skeleton" aria-controls="component-skeleton" aria-pressed="false"><span data-lang="zh">骨架屏</span><span class="uzu-panel-nav-meta">Skeleton</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-process" type="button" data-uzu-panel-target="#component-process" aria-controls="component-process" aria-pressed="false"><span data-lang="zh">流程</span><span class="uzu-panel-nav-meta">Process</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-step-nav" type="button" data-uzu-panel-target="#component-step-nav" aria-controls="component-step-nav" aria-pressed="false"><span data-lang="zh">步骤导航</span><span class="uzu-panel-nav-meta">Step Nav</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-toast" type="button" data-uzu-panel-target="#component-toast" aria-controls="component-toast" aria-pressed="false"><span data-lang="zh">Toast</span><span class="uzu-panel-nav-meta">Toast</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-tag" type="button" data-uzu-panel-target="#component-tag" aria-controls="component-tag" aria-pressed="false"><span data-lang="zh">标签</span><span class="uzu-panel-nav-meta">Tag</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-empty-error" type="button" data-uzu-panel-target="#component-empty-error" aria-controls="component-empty-error" aria-pressed="false"><span data-lang="zh">空和错误</span><span class="uzu-panel-nav-meta">Empty / Error</span></button>
           </section>
           <section class="uzu-panel-nav-section" aria-labelledby="nav-overlay">
             <p class="uzu-panel-nav-title" id="nav-overlay"><span data-lang="zh">浮层</span><span data-lang="en">Overlay</span></p>
             <button class="uzu-panel-nav-button" id="component-tab-disclosure" type="button" data-uzu-panel-target="#component-disclosure" aria-controls="component-disclosure" aria-pressed="false"><span data-lang="zh">折叠面板</span><span class="uzu-panel-nav-meta">Disclosure</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-accordion" type="button" data-uzu-panel-target="#component-accordion" aria-controls="component-accordion" aria-pressed="false"><span data-lang="zh">手风琴</span><span class="uzu-panel-nav-meta">Accordion</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-dialog" type="button" data-uzu-panel-target="#component-dialog" aria-controls="component-dialog" aria-pressed="false"><span data-lang="zh">弹窗</span><span class="uzu-panel-nav-meta">Dialog</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-alert-dialog" type="button" data-uzu-panel-target="#component-alert-dialog" aria-controls="component-alert-dialog" aria-pressed="false"><span data-lang="zh">警告弹窗</span><span class="uzu-panel-nav-meta">Alert Dialog</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-drawer" type="button" data-uzu-panel-target="#component-drawer" aria-controls="component-drawer" aria-pressed="false"><span data-lang="zh">抽屉</span><span class="uzu-panel-nav-meta">Drawer</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-popover" type="button" data-uzu-panel-target="#component-popover" aria-controls="component-popover" aria-pressed="false"><span data-lang="zh">浮动面板</span><span class="uzu-panel-nav-meta">Popover</span></button>
+            <button class="uzu-panel-nav-button" id="component-tab-hover-card" type="button" data-uzu-panel-target="#component-hover-card" aria-controls="component-hover-card" aria-pressed="false"><span data-lang="zh">悬浮卡片</span><span class="uzu-panel-nav-meta">Hover Card</span></button>
             <button class="uzu-panel-nav-button" id="component-tab-tooltip" type="button" data-uzu-panel-target="#component-tooltip" aria-controls="component-tooltip" aria-pressed="false"><span data-lang="zh">工具提示</span><span class="uzu-panel-nav-meta">Tooltip</span></button>
           </section>
         </nav>
@@ -124,11 +523,6 @@
                 </div>
               </article>
             </div>
-          </div>
-          <div class="uzu-doc-meta uzu-mt-block">
-            <code class="uzu-code">--uzu-bg</code>
-            <code class="uzu-code">--uzu-surface</code>
-            <code class="uzu-code">--uzu-border</code>
           </div>
         </section>
 
@@ -167,7 +561,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Foundation</p>
             <h2 class="uzu-section-title"><span data-lang="zh">动效令牌</span><span data-lang="en">Motion Tokens</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">动效只用在加载、切换、展开和关闭这类变化上，不让按钮或卡片在悬浮时整体位移。</span><span data-lang="en">Motion appears in loading, switching, expanding, and closing states, without shifting whole buttons or cards on hover.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">动效用于加载、切换、展开和关闭这类状态变化；悬浮态通过颜色、边框或内部指示表达。</span><span data-lang="en">Motion appears in loading, switching, expanding, and closing states; hover states use color, borders, or internal indicators.</span></p>
           </div>
           <div class="uzu-doc-example">
             <div class="uzu-progress uzu-progress-indeterminate" role="progressbar" aria-label="Syncing changes">
@@ -178,11 +572,6 @@
               <span class="uzu-activity-dot" aria-hidden="true"></span>
               <span class="uzu-activity-dot" aria-hidden="true"></span>
             </span>
-          </div>
-          <div class="uzu-doc-meta uzu-mt-block">
-            <code class="uzu-code">--uzu-motion-quick</code>
-            <code class="uzu-code">--uzu-motion-base</code>
-            <code class="uzu-code">--uzu-motion-slow</code>
           </div>
         </section>
 
@@ -213,8 +602,8 @@
               <p class="uzu-body-large"><span data-lang="zh">页面里引入 CSS；需要交互控件时再引入 JS。</span><span data-lang="en">Load the CSS first; add the JS when the page needs interactive controls.</span></p>
             </div>
             <div class="uzu-download-actions">
-              <a class="uzu-button uzu-button-primary" href="../README.md">README</a>
-              <a class="uzu-button" href="../DESIGN.md">DESIGN</a>
+              <button class="uzu-button uzu-button-primary" type="button"><span data-lang="zh">复制链接</span><span data-lang="en">Copy link</span></button>
+              <button class="uzu-button" type="button"><span data-lang="zh">查看示例</span><span data-lang="en">View example</span></button>
             </div>
           </section>
         </section>
@@ -238,7 +627,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Layout</p>
             <h2 class="uzu-section-title"><span data-lang="zh">顶部栏</span><span data-lang="en">Topbar</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">顶部栏用于页面品牌和少量全局链接。保持短文本，避免塞进主要操作流。</span><span data-lang="en">Topbars hold brand text and a small set of global links. Keep labels short and separate from local actions.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">顶部栏用于页面品牌和少量全局链接，适合放短标签和全局入口。</span><span data-lang="en">Topbars hold brand text, short labels, and a small set of global links.</span></p>
           </div>
           <div class="uzu-doc-example">
             <header class="uzu-topbar">
@@ -246,9 +635,77 @@
               <nav class="uzu-nav" aria-label="Example navigation">
                 <a href="index.html"><span data-lang="zh">首页</span><span data-lang="en">Home</span></a>
                 <a href="components.html"><span data-lang="zh">组件</span><span data-lang="en">Components</span></a>
-                <a href="../README.zh-CN.md"><span data-lang="zh">文档</span><span data-lang="en">Docs</span></a>
+                <a href="#component-page"><span data-lang="zh">文档</span><span data-lang="en">Docs</span></a>
               </nav>
             </header>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-layout-primitives" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Layout</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">布局原语</span><span data-lang="en">Layout Primitives</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">Stack、Flex、Spacer、Aspect 和 Scroll Area 用于常见排版骨架，由 CSS 控制间距、排列和局部滚动。</span><span data-lang="en">Stack, Flex, Spacer, Aspect, and Scroll Area cover common layout scaffolding with CSS-controlled spacing, alignment, and local scrolling.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-stack uzu-stack-tight">
+              <div class="uzu-flex uzu-flex-between">
+                <span class="uzu-badge">Stack</span>
+                <span class="uzu-text">Gap is controlled by <code class="uzu-code">--uzu-stack-gap</code>.</span>
+              </div>
+              <div class="uzu-aspect" style="--uzu-aspect-ratio: 4 / 1">
+                <div class="uzu-card uzu-scroll-area" style="--uzu-scroll-area-max-height: 92px">
+                  <div class="uzu-title-pair">
+                    <h3>Scroll area</h3>
+                    <p>Use it for a fixed-height local region with its own scroll area.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-split-pane" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Layout</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">分栏面板</span><span data-lang="en">Split Pane</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">分栏面板用于同一任务里的主从区域，例如列表和详情、编辑和预览。</span><span data-lang="en">Split panes place two related regions in one task, such as list and detail or editor and preview.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-split-pane" data-uzu-split-pane data-uzu-split-size="42" data-uzu-split-min="24" data-uzu-split-max="72">
+              <section class="uzu-split-panel">
+                <div class="uzu-title-pair">
+                  <h3><span data-lang="zh">列表</span><span data-lang="en">List</span></h3>
+                  <p><span data-lang="zh">拖动中间条，或聚焦后按左右方向键。</span><span data-lang="en">Drag the divider, or focus it and use arrow keys.</span></p>
+                </div>
+              </section>
+              <button class="uzu-split-resizer" type="button" data-uzu-split-resizer aria-label="Resize panels"></button>
+              <section class="uzu-split-panel">
+                <div class="uzu-title-pair">
+                  <h3><span data-lang="zh">详情</span><span data-lang="en">Detail</span></h3>
+                  <p><span data-lang="zh">尺寸会写入 CSS 变量，可在项目里持久化。</span><span data-lang="en">The size is written to a CSS variable and can be persisted.</span></p>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-resizable" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Layout</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">可调整面板</span><span data-lang="en">Resizable Panel</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">可调整面板适合局部预览、控制台或小型编辑区域；多面板界面可组合网格和分栏。</span><span data-lang="en">Resizable panels fit local previews, consoles, or compact editing areas; multi-pane screens can combine grids and split panes.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-resizable" data-uzu-resizable data-uzu-resizable-width="360" data-uzu-resizable-height="170" data-uzu-resizable-min-width="220" data-uzu-resizable-min-height="120">
+              <div class="uzu-resizable-content">
+                <div class="uzu-title-pair">
+                  <h3><span data-lang="zh">可调整区域</span><span data-lang="en">Resizable area</span></h3>
+                  <p><span data-lang="zh">拖动右下角，或聚焦手柄后用方向键调整。</span><span data-lang="en">Drag the lower-right handle, or focus it and use arrow keys.</span></p>
+                </div>
+              </div>
+              <button class="uzu-resizable-handle" type="button" data-uzu-resizable-handle aria-label="Resize panel"></button>
+            </div>
           </div>
         </section>
 
@@ -329,11 +786,108 @@
           </div>
         </section>
 
+        <section class="uzu-doc-panel" id="component-data-grid" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Display</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">数据网格</span><span data-lang="en">Data Grid</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">数据网格在表格基础上增加排序、行选择和键盘移动，适合轻量数据列表。</span><span data-lang="en">Data grids add sorting, row selection, and keyboard movement to table markup for lightweight data lists.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-data-grid-wrap">
+              <table class="uzu-data-grid" data-uzu-data-grid aria-label="Release channels">
+                <thead>
+                  <tr>
+                    <th data-uzu-grid-sort scope="col"><span data-lang="zh">版本</span><span data-lang="en">Version</span></th>
+                    <th data-uzu-grid-sort scope="col"><span data-lang="zh">状态</span><span data-lang="en">State</span></th>
+                    <th data-uzu-grid-sort scope="col"><span data-lang="zh">数量</span><span data-lang="en">Count</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-uzu-grid-row="stable"><td>Stable</td><td><span data-lang="zh">已发布</span><span data-lang="en">Released</span></td><td>18</td></tr>
+                  <tr data-uzu-grid-row="next"><td>Next</td><td><span data-lang="zh">测试中</span><span data-lang="en">Testing</span></td><td>7</td></tr>
+                  <tr data-uzu-grid-row="draft"><td>Draft</td><td><span data-lang="zh">草稿</span><span data-lang="en">Draft</span></td><td>3</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-tree" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Display</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">树形视图</span><span data-lang="en">Tree View</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">树形视图展示层级对象，脚本会处理展开、收起、选中和方向键。</span><span data-lang="en">Tree views show hierarchical objects. The script handles expand, collapse, selection, and arrow-key movement.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <ul class="uzu-tree" data-uzu-tree aria-label="Project files">
+              <li class="uzu-tree-item is-open" data-uzu-tree-item data-uzu-tree-value="docs">
+                <div class="uzu-tree-row">
+                  <button class="uzu-tree-toggle" type="button" data-uzu-tree-toggle aria-label="Toggle docs"></button>
+                  <span class="uzu-tree-label" data-uzu-tree-label>docs</span>
+                </div>
+                <ul class="uzu-tree-group">
+                  <li class="uzu-tree-item is-selected" data-uzu-tree-item data-uzu-tree-value="overview"><div class="uzu-tree-row"><span class="uzu-tree-label" data-uzu-tree-label><span data-lang="zh">概览</span><span data-lang="en">Overview</span></span></div></li>
+                  <li class="uzu-tree-item" data-uzu-tree-item data-uzu-tree-value="tokens"><div class="uzu-tree-row"><span class="uzu-tree-label" data-uzu-tree-label><span data-lang="zh">令牌</span><span data-lang="en">Tokens</span></span></div></li>
+                </ul>
+              </li>
+              <li class="uzu-tree-item" data-uzu-tree-item data-uzu-tree-value="ui">
+                <div class="uzu-tree-row">
+                  <button class="uzu-tree-toggle" type="button" data-uzu-tree-toggle aria-label="Toggle ui"></button>
+                  <span class="uzu-tree-label" data-uzu-tree-label>ui</span>
+                </div>
+                <ul class="uzu-tree-group" hidden>
+                  <li class="uzu-tree-item" data-uzu-tree-item data-uzu-tree-value="css"><div class="uzu-tree-row"><span class="uzu-tree-label" data-uzu-tree-label>usuzumi.css</span></div></li>
+                  <li class="uzu-tree-item" data-uzu-tree-item data-uzu-tree-value="js"><div class="uzu-tree-row"><span class="uzu-tree-label" data-uzu-tree-label>usuzumi.js</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-list" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Display</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">列表</span><span data-lang="en">List</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">列表用于同类对象的短信息行，右侧可以放一个明确动作。</span><span data-lang="en">Lists show short rows of peer objects with an optional action on the right.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <ul class="uzu-list">
+              <li class="uzu-list-item">
+                <div>
+                  <strong><span data-lang="zh">发布说明</span><span data-lang="en">Release notes</span></strong>
+                  <p class="uzu-list-meta"><span data-lang="zh">最后更新：今天</span><span data-lang="en">Updated today</span></p>
+                </div>
+                <a class="uzu-button uzu-button-ghost uzu-list-action" href="#component-page">View</a>
+              </li>
+              <li class="uzu-list-item">
+                <div>
+                  <strong><span data-lang="zh">组件目录</span><span data-lang="en">Component index</span></strong>
+                  <p class="uzu-list-meta"><span data-lang="zh">包含交互示例。</span><span data-lang="en">Includes interactive examples.</span></p>
+                </div>
+                <button class="uzu-button" type="button"><span data-lang="zh">打开</span><span data-lang="en">Open</span></button>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-avatar" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Display</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">头像</span><span data-lang="en">Avatar</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">头像用于人物或账号标识，支持图片、文字缩写和占位。</span><span data-lang="en">Avatars identify people or accounts with images, initials, or placeholders.</span></p>
+          </div>
+          <div class="uzu-doc-example uzu-doc-example-inline uzu-gap-2">
+            <span class="uzu-avatar" aria-label="Mashiro">M</span>
+            <span class="uzu-avatar" style="--uzu-avatar-size: 44px" aria-label="Usuzumi">U</span>
+            <span class="uzu-avatar" aria-hidden="true"></span>
+          </div>
+        </section>
+
         <section class="uzu-doc-panel" id="component-separator" hidden>
           <div class="uzu-section-head">
             <p class="uzu-section-label">Display</p>
             <h2 class="uzu-section-title"><span data-lang="zh">分割线</span><span data-lang="en">Separator</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">分割线用于紧凑表面内的明确分组，不替代大区块间距。</span><span data-lang="en">Separators divide compact surfaces. They should not replace section spacing.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">分割线用于紧凑表面内的明确分组，可和区块间距一起建立层级。</span><span data-lang="en">Separators divide compact surfaces and work with section spacing to build hierarchy.</span></p>
           </div>
           <div class="uzu-doc-example">
             <p class="uzu-text">Alpha</p>
@@ -356,6 +910,39 @@
             <code class="uzu-code">.uzu-scope</code>
             <kbd class="uzu-kbd">Ctrl</kbd>
             <kbd class="uzu-kbd">K</kbd>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-json-viewer" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Display</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">JSON 查看器</span><span data-lang="en">JSON Viewer</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">JSON 查看器把合法 JSON 渲染成可折叠树，适合设置、响应预览和调试输出。</span><span data-lang="en">JSON viewers render valid JSON as a collapsible tree for settings, response previews, and debug output.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <pre class="uzu-json-viewer" data-uzu-json-viewer>{
+  "name": "Usuzumi",
+  "version": "0.5.0",
+  "modules": ["css", "runtime"],
+  "theme": {
+    "light": true,
+    "dark": true
+  }
+}</pre>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-diff-viewer" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Display</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">差异查看器</span><span data-lang="en">Diff Viewer</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">差异查看器展示统一 diff 风格文本，让新增、删除和元信息更容易扫读。</span><span data-lang="en">Diff viewers display unified diff style text so additions, removals, and metadata scan clearly.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <pre class="uzu-diff-viewer" data-uzu-diff-viewer>@@ ui/usuzumi.css
+- .old-panel { padding: 10px; }
++ .uzu-card { padding: 16px; }
+  .uzu-button { min-height: 40px; }</pre>
           </div>
         </section>
 
@@ -383,7 +970,7 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Actions</p>
             <h2 class="uzu-section-title"><span data-lang="zh">文本链接</span><span data-lang="en">Text Link</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">用于页面跳转或低强调操作。主要动作仍应使用按钮。</span><span data-lang="en">Use text links for navigation or low-emphasis actions. Primary actions should stay as buttons.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">用于页面跳转或低强调操作；主要命令可以用按钮承载。</span><span data-lang="en">Use text links for navigation or low-emphasis actions; buttons can carry primary commands.</span></p>
           </div>
           <div class="uzu-doc-example">
             <a class="uzu-text-link" href="index.html"><span data-lang="zh">返回首页</span><span data-lang="en">Back home</span></a>
@@ -467,6 +1054,111 @@
           </div>
         </section>
 
+        <section class="uzu-doc-panel" id="component-menu" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Actions</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">菜单</span><span data-lang="en">Menu</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">菜单用于把低频命令收进触发按钮；右键菜单复用同一套菜单项结构。</span><span data-lang="en">Menus collect low-frequency commands behind a trigger; context menus reuse the same item structure.</span></p>
+          </div>
+          <div class="uzu-doc-example uzu-doc-example-inline uzu-gap-2">
+            <div class="uzu-menu" data-uzu-menu>
+              <button class="uzu-button uzu-menu-trigger" type="button" data-uzu-menu-trigger><span data-lang="zh">更多操作</span><span data-lang="en">More actions</span></button>
+              <div class="uzu-menu-content" data-uzu-menu-content>
+                <button class="uzu-menu-item" type="button" data-uzu-menu-value="rename"><span data-lang="zh">重命名</span><span data-lang="en">Rename</span></button>
+                <button class="uzu-menu-item" type="button" data-uzu-menu-value="copy-link"><span data-lang="zh">复制链接</span><span data-lang="en">Copy link</span></button>
+                <span class="uzu-menu-separator" role="separator"></span>
+                <button class="uzu-menu-item is-danger" type="button" data-uzu-menu-value="delete"><span data-lang="zh">删除</span><span data-lang="en">Delete</span></button>
+              </div>
+            </div>
+            <div class="uzu-menu" data-uzu-context-menu data-uzu-context-menu-trigger="#context-menu-demo">
+              <button class="uzu-button" id="context-menu-demo" type="button"><span data-lang="zh">右键目标</span><span data-lang="en">Context target</span></button>
+              <div class="uzu-menu-content" data-uzu-menu-content>
+                <button class="uzu-menu-item" type="button" data-uzu-menu-value="open"><span data-lang="zh">打开</span><span data-lang="en">Open</span></button>
+                <button class="uzu-menu-item" type="button" data-uzu-menu-value="archive"><span data-lang="zh">归档</span><span data-lang="en">Archive</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-menubar" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Actions</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">菜单栏</span><span data-lang="en">Menubar</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">菜单栏用于一组横向命令或模式入口，支持方向键移动焦点。</span><span data-lang="en">Menubars group horizontal commands or modes and support arrow-key focus movement.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-menubar" data-uzu-menubar aria-label="Editor menu">
+              <button class="uzu-menubar-item is-active" type="button" data-uzu-menubar-value="file"><span data-lang="zh">文件</span><span data-lang="en">File</span></button>
+              <button class="uzu-menubar-item" type="button" data-uzu-menubar-value="edit"><span data-lang="zh">编辑</span><span data-lang="en">Edit</span></button>
+              <button class="uzu-menubar-item" type="button" data-uzu-menubar-value="view"><span data-lang="zh">视图</span><span data-lang="en">View</span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-command" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Actions</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">命令菜单</span><span data-lang="en">Command Menu</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">命令菜单提供本地过滤和键盘选择，适合中等数量的命令入口。</span><span data-lang="en">Command menus provide local filtering and keyboard selection for medium-sized command sets.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-command" data-uzu-command>
+              <label class="uzu-label uzu-sr-only" for="command-demo-input">Command</label>
+              <input class="uzu-command-input" id="command-demo-input" data-uzu-command-input placeholder="Search command">
+              <div class="uzu-command-list uzu-scroll" data-uzu-command-list>
+                <button class="uzu-command-item" type="button" data-uzu-command-value="new"><span data-lang="zh">新建页面</span><span data-lang="en">New page</span></button>
+                <button class="uzu-command-item" type="button" data-uzu-command-value="theme"><span data-lang="zh">切换主题</span><span data-lang="en">Toggle theme</span></button>
+                <button class="uzu-command-item" type="button" data-uzu-command-value="publish"><span data-lang="zh">发布草稿</span><span data-lang="en">Publish draft</span></button>
+                <p class="uzu-command-empty" hidden><span data-lang="zh">没有匹配项。</span><span data-lang="en">No matches.</span></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-sidebar" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Actions</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">侧边栏</span><span data-lang="en">Sidebar</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">侧边栏用于应用内的局部导航或设置分组，点击项目可以在当前界面切换内容。</span><span data-lang="en">Sidebars are for local navigation or settings groups, with items that switch content in place.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-grid uzu-grid-2">
+              <aside class="uzu-sidebar" aria-label="Project sidebar">
+                <section class="uzu-sidebar-section">
+                  <p class="uzu-micro-label"><span data-lang="zh">项目</span><span data-lang="en">Project</span></p>
+                  <nav class="uzu-panel-nav" data-uzu-panel-nav data-uzu-panel-selector=".uzu-panel" aria-label="Sidebar demo">
+                    <ul class="uzu-sidebar-nav">
+                      <li><button class="is-active" type="button" data-uzu-panel-target="#sidebar-demo-components" aria-controls="sidebar-demo-components" aria-pressed="true"><span data-lang="zh">组件</span><span data-lang="en">Components</span></button></li>
+                      <li><button type="button" data-uzu-panel-target="#sidebar-demo-notes" aria-controls="sidebar-demo-notes" aria-pressed="false"><span data-lang="zh">设计说明</span><span data-lang="en">Design notes</span></button></li>
+                      <li><button type="button" data-uzu-panel-target="#sidebar-demo-settings" aria-controls="sidebar-demo-settings" aria-pressed="false"><span data-lang="zh">设置</span><span data-lang="en">Settings</span></button></li>
+                    </ul>
+                  </nav>
+                </section>
+              </aside>
+              <article class="uzu-card">
+                <div class="uzu-panel" id="sidebar-demo-components">
+                  <div class="uzu-title-pair">
+                    <h3><span data-lang="zh">组件</span><span data-lang="en">Components</span></h3>
+                    <p><span data-lang="zh">侧边栏项目会在右侧切换内容。</span><span data-lang="en">Sidebar items switch the content on the right.</span></p>
+                  </div>
+                </div>
+                <div class="uzu-panel" id="sidebar-demo-notes" hidden>
+                  <div class="uzu-title-pair">
+                    <h3><span data-lang="zh">设计说明</span><span data-lang="en">Design notes</span></h3>
+                    <p><span data-lang="zh">外部文档可以放在单独的链接区域，当前列表专注于界面内切换。</span><span data-lang="en">External docs can live in a separate link area while this list focuses on in-place switching.</span></p>
+                  </div>
+                </div>
+                <div class="uzu-panel" id="sidebar-demo-settings" hidden>
+                  <div class="uzu-title-pair">
+                    <h3><span data-lang="zh">设置</span><span data-lang="en">Settings</span></h3>
+                    <p><span data-lang="zh">这里可以承载过滤、偏好或当前页面的局部状态。</span><span data-lang="en">Use this area for filters, preferences, or local page state.</span></p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
         <section class="uzu-doc-panel" id="component-tabs" hidden>
           <div class="uzu-section-head">
             <p class="uzu-section-label">Controls</p>
@@ -518,6 +1210,29 @@
           </div>
         </section>
 
+        <section class="uzu-doc-panel" id="component-combobox" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Controls</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">组合框</span><span data-lang="en">Combobox</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">组合框适合从中等数量的选项里搜索并选择一个值。它保留文本输入，同时同步隐藏表单值。</span><span data-lang="en">Comboboxes help users search and choose one value from a medium-sized option set while syncing a hidden form value.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-field">
+              <label class="uzu-label" for="component-combobox-input"><span data-lang="zh">组件</span><span data-lang="en">Component</span></label>
+              <div class="uzu-combobox" data-uzu-combobox data-uzu-combobox-name="component">
+                <input class="uzu-input uzu-combobox-input" id="component-combobox-input" data-uzu-combobox-input autocomplete="off" placeholder="Search">
+                <div class="uzu-combobox-list" data-uzu-combobox-list>
+                  <button class="uzu-combobox-option is-selected" type="button" data-uzu-combobox-option data-uzu-combobox-value="button">Button</button>
+                  <button class="uzu-combobox-option" type="button" data-uzu-combobox-option data-uzu-combobox-value="dialog">Dialog</button>
+                  <button class="uzu-combobox-option" type="button" data-uzu-combobox-option data-uzu-combobox-value="data-grid">Data Grid</button>
+                  <button class="uzu-combobox-option" type="button" data-uzu-combobox-option data-uzu-combobox-value="tree">Tree View</button>
+                  <p class="uzu-combobox-empty" hidden><span data-lang="zh">没有匹配项。</span><span data-lang="en">No matches.</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="uzu-doc-panel" id="component-switch" hidden>
           <div class="uzu-section-head">
             <p class="uzu-section-label">Controls</p>
@@ -556,11 +1271,134 @@
           </div>
         </section>
 
+        <section class="uzu-doc-panel" id="component-form" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Form</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">表单结构</span><span data-lang="en">Form Structure</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">表单结构把字段、字段组、说明和错误消息放进统一间距里。</span><span data-lang="en">Form structure keeps fields, fieldsets, helper messages, and errors in one spacing system.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <form class="uzu-form">
+              <fieldset class="uzu-fieldset">
+                <legend><span data-lang="zh">账号</span><span data-lang="en">Account</span></legend>
+                <div class="uzu-field">
+                  <label class="uzu-label" for="form-email">Email</label>
+                  <input class="uzu-input" id="form-email" type="email" value="hello@example.com">
+                  <p class="uzu-form-message"><span data-lang="zh">表单提示用于补充提交前需要知道的信息。</span><span data-lang="en">Form messages add context before submit.</span></p>
+                </div>
+                <p class="uzu-form-error" role="alert"><span data-lang="zh">错误消息应该说明下一步怎么修正。</span><span data-lang="en">Error messages should say how to fix the problem.</span></p>
+              </fieldset>
+            </form>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-input-group" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Form</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">输入组合</span><span data-lang="en">Input Group</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">输入组合用于单位、固定前缀或和输入框绑定的局部动作。</span><span data-lang="en">Input groups attach units, fixed prefixes, or local actions to an input.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-field">
+              <label class="uzu-label" for="input-group-price"><span data-lang="zh">预算</span><span data-lang="en">Budget</span></label>
+              <div class="uzu-input-group">
+                <span class="uzu-input-addon">$</span>
+                <input class="uzu-input" id="input-group-price" inputmode="decimal" value="128">
+                <span class="uzu-input-addon">USD</span>
+                <button class="uzu-button uzu-input-action" type="button"><span data-lang="zh">应用</span><span data-lang="en">Apply</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-search" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Form</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">搜索框</span><span data-lang="en">Search Input</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">搜索框保留原生 search 输入，清空按钮只负责清空值并触发 input/change。</span><span data-lang="en">Search inputs keep native search behavior; the clear button only clears the value and emits input/change.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-field">
+              <label class="uzu-label" for="site-search"><span data-lang="zh">搜索组件</span><span data-lang="en">Search components</span></label>
+              <div class="uzu-search" data-uzu-search>
+                <input class="uzu-input uzu-search-input" id="site-search" type="search" value="button">
+                <button class="uzu-icon-button uzu-search-clear" type="button" data-uzu-search-clear aria-label="Clear search">x</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-password" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Form</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">密码输入</span><span data-lang="en">Password Input</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">密码输入使用原生 input，并用按钮切换显示状态。</span><span data-lang="en">Password inputs use a native input and a button to toggle visibility.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-field">
+              <label class="uzu-label" for="account-password"><span data-lang="zh">密码</span><span data-lang="en">Password</span></label>
+              <div class="uzu-password" data-uzu-password>
+                <input class="uzu-input uzu-password-input" id="account-password" type="password" value="usuzumi">
+                <button class="uzu-icon-button uzu-password-toggle" type="button" data-uzu-password-toggle aria-label="Toggle password visibility">••</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-file-upload" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Form</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">文件上传</span><span data-lang="en">File Upload</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">文件上传保留原生 input，第一版只提供清晰的选择区域和说明。</span><span data-lang="en">File upload keeps the native input and adds a clear selection surface.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <label class="uzu-file-upload">
+              <span class="uzu-label"><span data-lang="zh">选择文件</span><span data-lang="en">Choose a file</span></span>
+              <input class="uzu-file-input" type="file">
+              <span class="uzu-file-summary"><span data-lang="zh">保留浏览器原生文件选择，不模拟上传队列。</span><span data-lang="en">Keeps the browser file picker; no upload queue is simulated.</span></span>
+            </label>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-slider" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Form</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">滑块</span><span data-lang="en">Slider</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">滑块基于原生 range，适合连续数值；金额这类精确值可以搭配输入框。</span><span data-lang="en">Sliders are native range inputs for continuous values; precise values can pair the slider with an input.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-field">
+              <label class="uzu-label" for="density-slider"><span data-lang="zh">密度</span><span data-lang="en">Density</span></label>
+              <input class="uzu-slider" id="density-slider" type="range" min="0" max="100" value="64" aria-valuetext="64%">
+            </div>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-stepper" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Form</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">步进器</span><span data-lang="en">Stepper</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">步进器用于小范围数字调整，脚本会处理 min、max、step 和 change 事件。</span><span data-lang="en">Steppers adjust small numeric ranges; the script handles min, max, step, and change events.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-field">
+              <label class="uzu-label" for="member-count"><span data-lang="zh">成员数量</span><span data-lang="en">Members</span></label>
+              <div class="uzu-stepper" data-uzu-stepper>
+                <input class="uzu-input uzu-stepper-input" id="member-count" type="number" min="1" max="12" step="1" value="3">
+                <span class="uzu-stepper-controls">
+                  <button class="uzu-icon-button uzu-stepper-button" type="button" data-uzu-stepper-decrement aria-label="Decrease">-</button>
+                  <button class="uzu-icon-button uzu-stepper-button" type="button" data-uzu-stepper-increment aria-label="Increase">+</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="uzu-doc-panel" id="component-checkbox-radio" hidden>
           <div class="uzu-section-head">
             <p class="uzu-section-label">Form</p>
             <h2 class="uzu-section-title"><span data-lang="zh">复选和单选</span><span data-lang="en">Checkbox And Radio</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">复选用于多选，单选用于互斥选择。原生控件保留浏览器可访问性。</span><span data-lang="en">Checkboxes allow multiple choices; radios are mutually exclusive. Native controls preserve browser accessibility.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">复选用于多选，单选用于互斥选择。标准 input 保留浏览器可访问性。</span><span data-lang="en">Checkboxes allow multiple choices; radios are mutually exclusive. Standard inputs preserve browser accessibility.</span></p>
           </div>
           <div class="uzu-doc-example">
             <label class="uzu-check-row"><input type="checkbox" checked> <span><span data-lang="zh">启用通知</span><span data-lang="en">Enable notifications</span></span></label>
@@ -570,11 +1408,93 @@
           </div>
         </section>
 
+        <section class="uzu-doc-panel" id="component-rich-editor" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Editing</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">富文本编辑器</span><span data-lang="en">Rich Text Editor</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">富文本编辑器用于少量格式化文字。它提供可编辑表面、工具栏按钮、命令事件和按钮选中状态。</span><span data-lang="en">Rich text editors are for small formatted text. They provide an editable surface, toolbar buttons, command events, and pressed button states.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <section class="uzu-editor" data-uzu-rich-editor>
+              <div class="uzu-editor-toolbar" role="toolbar" aria-label="Rich text tools">
+                <button class="uzu-toolbar-button" type="button" data-uzu-editor-command="bold" aria-label="Bold">B</button>
+                <button class="uzu-toolbar-button" type="button" data-uzu-editor-command="italic" aria-label="Italic">I</button>
+                <button class="uzu-toolbar-button" type="button" data-uzu-editor-command="underline" aria-label="Underline">U</button>
+                <button class="uzu-toolbar-button" type="button" data-uzu-editor-command="insertUnorderedList" aria-label="Bullet list">•</button>
+                <button class="uzu-toolbar-button" type="button" data-uzu-editor-command="insertOrderedList" aria-label="Numbered list">1.</button>
+                <button class="uzu-toolbar-button" type="button" data-uzu-editor-command="formatBlock" data-uzu-editor-value="h3" aria-label="Heading">H3</button>
+              </div>
+              <div class="uzu-editor-surface" data-uzu-editor-surface>
+                <p><strong>Usuzumi</strong> can style a focused writing surface.</p>
+                <p>Select text, then use the toolbar.</p>
+              </div>
+              <p class="uzu-editor-status"><span data-lang="zh">工具栏会同步选中状态，并派发命令事件。协作、历史记录和粘贴清洗可以接入专门编辑器。</span><span data-lang="en">The toolbar syncs pressed states and emits command events. Collaboration, history, and paste cleanup can connect to a dedicated editor.</span></p>
+            </section>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-markdown-editor" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Editing</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">Markdown 编辑器</span><span data-lang="en">Markdown Editor</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">Markdown 编辑器由源码输入和预览组成，和富文本编辑器分开用于文档、说明和轻量笔记。</span><span data-lang="en">Markdown editors combine source input and preview for docs, notes, and lightweight writing, separate from rich text editing.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <section class="uzu-editor uzu-markdown-editor" data-uzu-markdown-editor>
+              <textarea class="uzu-markdown-source" data-uzu-markdown-source># Markdown
+
+- Preview updates as you type.
+- Inline `code` and links are rendered.
+- Keep the parser small and predictable.</textarea>
+              <div class="uzu-markdown-preview" data-uzu-markdown-preview></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-code-editor" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Editing</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">代码编辑器</span><span data-lang="en">Code Editor</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">代码编辑器是等宽文本输入外壳，适合短配置、片段和命令内容。语法高亮、补全和多光标可以接入专门编辑器。</span><span data-lang="en">Code editors are monospace text shells for short config, snippets, and commands. Syntax highlighting, completion, and multi-cursor editing can connect to a dedicated editor.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <textarea class="uzu-code-editor" spellcheck="false" aria-label="Code editor sample">const theme = {
+  name: "Usuzumi",
+  density: "comfortable"
+};</textarea>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-plain-editor" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Editing</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">纯文本编辑器</span><span data-lang="en">Plain Text Editor</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">纯文本编辑器用于没有格式的长文本输入，例如内部备注、审核意见或发布摘要。</span><span data-lang="en">Plain text editors are for unformatted longer input such as internal notes, review comments, or release summaries.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <textarea class="uzu-plain-editor" aria-label="Plain text editor sample">Usuzumi keeps the editing surface quiet so longer notes can be read and revised in a focused area.</textarea>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-inline-editor" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Editing</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">行内编辑器</span><span data-lang="en">Inline Editor</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">行内编辑器用于原地改名或短字段编辑。它保留文本流位置，只在聚焦时显示编辑边界。</span><span data-lang="en">Inline editors edit short labels in place. They keep their text-flow position and show the editing boundary only while focused.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <p class="uzu-text">
+              <span data-lang="zh">当前条目：</span><span data-lang="en">Current item: </span>
+              <span class="uzu-inline-editor" data-uzu-inline-editor data-placeholder="Untitled">Usuzumi note</span>
+            </p>
+          </div>
+        </section>
+
         <section class="uzu-doc-panel" id="component-badge" hidden>
           <div class="uzu-section-head">
             <p class="uzu-section-label">Feedback</p>
             <h2 class="uzu-section-title"><span data-lang="zh">徽章</span><span data-lang="en">Badge</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">徽章用于短状态文字，不承担复杂说明。</span><span data-lang="en">Badges show short status text and should not carry complex explanations.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">徽章用于短状态文字；状态需要细节时可以搭配正文说明。</span><span data-lang="en">Badges show short status text; pair them with body copy when the state needs detail.</span></p>
           </div>
           <div class="uzu-doc-example uzu-doc-example-inline uzu-gap-2">
             <span class="uzu-badge uzu-badge-success"><span data-lang="zh">已同步</span><span data-lang="en">Synced</span></span>
@@ -611,19 +1531,19 @@
           <div class="uzu-section-head">
             <p class="uzu-section-label">Feedback</p>
             <h2 class="uzu-section-title"><span data-lang="zh">说明块</span><span data-lang="en">Callout</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">说明块属于阅读流，用于补充背景、限制或建议，不用于紧急错误。</span><span data-lang="en">Callouts live in the reading flow for context, constraints, or guidance, not urgent errors.</span></p>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">说明块属于阅读流，用于补充背景、限制和操作说明，保持为可慢读的页面内容。</span><span data-lang="en">Callouts live in the reading flow for context, constraints, and guidance that can be read at page pace.</span></p>
           </div>
           <aside class="uzu-callout uzu-callout-note">
             <h3 class="uzu-callout-title"><span data-lang="zh">使用说明</span><span data-lang="en">Usage note</span></h3>
-            <p><span data-lang="zh">当信息需要被读完，但不需要立即处理时使用。</span><span data-lang="en">Use this when the message should be read but does not require immediate action.</span></p>
+            <p><span data-lang="zh">适合需要被读完、处理优先级较低的信息。</span><span data-lang="en">Use this for information that should be read with lower action priority.</span></p>
           </aside>
         </section>
 
         <section class="uzu-doc-panel" id="component-progress" hidden>
           <div class="uzu-section-head">
             <p class="uzu-section-label">Feedback</p>
-            <h2 class="uzu-section-title"><span data-lang="zh">进度与活动</span><span data-lang="en">Progress And Activity</span></h2>
-            <p class="uzu-text uzu-doc-note"><span data-lang="zh">线性进度用于任务进展，环形进度适合小空间，活动点表示短暂后台处理。</span><span data-lang="en">Use linear progress for task progress, circular progress in small spaces, and activity dots for brief background work.</span></p>
+            <h2 class="uzu-section-title"><span data-lang="zh">进度与加载</span><span data-lang="en">Progress And Loading</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">线性进度用于任务进展，环形进度和 spinner 适合小空间，活动点表示短暂后台处理。</span><span data-lang="en">Use linear progress for task progress, circular progress and spinners in small spaces, and activity dots for brief background work.</span></p>
           </div>
           <div class="uzu-doc-example">
             <div class="uzu-progress uzu-progress-indeterminate" role="progressbar" aria-label="Syncing changes"><span class="uzu-progress-bar"></span></div>
@@ -638,6 +1558,7 @@
                 <span class="uzu-activity-dot" aria-hidden="true"></span>
                 <span class="uzu-activity-dot" aria-hidden="true"></span>
               </span>
+              <span class="uzu-spinner" role="status" aria-label="Loading"></span>
             </div>
           </div>
         </section>
@@ -670,6 +1591,21 @@
           </div>
         </section>
 
+        <section class="uzu-doc-panel" id="component-step-nav" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Feedback</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">步骤导航</span><span data-lang="en">Step Navigation</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">步骤导航用于可点击的分步流程，脚本会同步当前步骤和完成状态。</span><span data-lang="en">Step navigation is for clickable staged flows; the script syncs current and completed states.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <ol class="uzu-step-nav" data-uzu-step-nav aria-label="Setup steps">
+              <li class="uzu-step-nav-item"><button class="uzu-step-nav-button is-complete" type="button" data-uzu-step-value="account"><span data-lang="zh">账号</span><span data-lang="en">Account</span></button></li>
+              <li class="uzu-step-nav-item"><button class="uzu-step-nav-button is-active" type="button" data-uzu-step-value="profile" aria-current="step"><span data-lang="zh">资料</span><span data-lang="en">Profile</span></button></li>
+              <li class="uzu-step-nav-item"><button class="uzu-step-nav-button" type="button" data-uzu-step-value="finish"><span data-lang="zh">完成</span><span data-lang="en">Finish</span></button></li>
+            </ol>
+          </div>
+        </section>
+
         <section class="uzu-doc-panel" id="component-toast" hidden>
           <div class="uzu-section-head">
             <p class="uzu-section-label">Feedback</p>
@@ -689,6 +1625,43 @@
           </div>
         </section>
 
+        <section class="uzu-doc-panel" id="component-tag" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Feedback</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">标签</span><span data-lang="en">Tag</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">标签用于对象分类或可移除筛选项，和短状态徽章分开。</span><span data-lang="en">Tags classify objects or removable filters and stay separate from short status badges.</span></p>
+          </div>
+          <div class="uzu-doc-example uzu-doc-example-inline uzu-gap-2">
+            <span class="uzu-tag" data-uzu-tag><span data-lang="zh">文档</span><span data-lang="en">Docs</span></span>
+            <button class="uzu-tag is-selected" type="button" data-uzu-tag data-uzu-tag-selectable="true" data-uzu-tag-value="selected" aria-pressed="true"><span data-lang="zh">已选</span><span data-lang="en">Selected</span></button>
+            <span class="uzu-tag" data-uzu-tag data-uzu-tag-value="filter"><span data-lang="zh">筛选</span><span data-lang="en">Filter</span><button class="uzu-tag-close" type="button" data-uzu-tag-close aria-label="Remove tag">x</button></span>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-empty-error" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Feedback</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">空和错误状态</span><span data-lang="en">Empty And Error States</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">空状态说明当前没有内容；错误状态说明发生了问题并给出下一步。</span><span data-lang="en">Empty states explain that no content exists; error states describe what failed and what to do next.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-grid uzu-grid-2">
+              <section class="uzu-empty-state">
+                <div class="uzu-title-pair">
+                  <h3><span data-lang="zh">没有项目</span><span data-lang="en">No projects</span></h3>
+                  <p><span data-lang="zh">新建一个项目后会显示在这里。</span><span data-lang="en">Create a project and it will appear here.</span></p>
+                </div>
+              </section>
+              <section class="uzu-error-state" role="alert">
+                <div class="uzu-title-pair">
+                  <h3><span data-lang="zh">加载失败</span><span data-lang="en">Load failed</span></h3>
+                  <p><span data-lang="zh">检查网络后再试一次。</span><span data-lang="en">Check the connection and try again.</span></p>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+
         <section class="uzu-doc-panel" id="component-disclosure" hidden>
           <div class="uzu-section-head">
             <p class="uzu-section-label">Overlay</p>
@@ -705,6 +1678,26 @@
                 <span data-lang="en">Opening and closing use the library height animation.</span>
               </div>
             </article>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-accordion" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Overlay</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">手风琴</span><span data-lang="en">Accordion</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">手风琴把多个折叠面板组成一组，默认同一时间只展开一个。</span><span data-lang="en">Accordions group several disclosures and keep one panel open by default.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <div class="uzu-accordion" data-uzu-accordion>
+              <article class="uzu-disclosure is-open" data-uzu-disclosure>
+                <button class="uzu-disclosure-trigger" type="button" data-uzu-disclosure-trigger aria-expanded="true"><span data-lang="zh">安装</span><span data-lang="en">Install</span></button>
+                <div class="uzu-disclosure-panel" data-uzu-disclosure-panel><span data-lang="zh">引入 CSS；需要交互时再引入 JS。</span><span data-lang="en">Load the CSS; add JS when interaction is needed.</span></div>
+              </article>
+              <article class="uzu-disclosure" data-uzu-disclosure>
+                <button class="uzu-disclosure-trigger" type="button" data-uzu-disclosure-trigger><span data-lang="zh">初始化</span><span data-lang="en">Initialize</span></button>
+                <div class="uzu-disclosure-panel" data-uzu-disclosure-panel hidden><span data-lang="zh">动态内容插入后调用 window.Usuzumi.init(container)。</span><span data-lang="en">Call window.Usuzumi.init(container) after inserting dynamic content.</span></div>
+              </article>
+            </div>
           </div>
         </section>
 
@@ -733,6 +1726,65 @@
           </div>
         </section>
 
+        <section class="uzu-doc-panel" id="component-alert-dialog" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Overlay</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">警告弹窗</span><span data-lang="en">Alert Dialog</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">警告弹窗用于确认危险或不可轻易撤销的操作。它复用 dialog 的打开、关闭和焦点管理，只改变语义和视觉重心。</span><span data-lang="en">Alert dialogs confirm dangerous or hard-to-undo actions. They reuse dialog behavior and add danger-focused semantics and layout.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <button class="uzu-button uzu-button-danger" type="button" data-uzu-dialog-target="#site-alert-dialog">
+              <span data-lang="zh">删除项目</span><span data-lang="en">Delete project</span>
+            </button>
+          </div>
+          <div class="uzu-dialog-overlay" data-uzu-dialog-overlay hidden>
+            <section class="uzu-modal uzu-alert-dialog" id="site-alert-dialog" data-uzu-dialog hidden tabindex="-1" role="alertdialog" aria-labelledby="site-alert-dialog-title" aria-describedby="site-alert-dialog-desc">
+              <div class="uzu-title-pair">
+                <h3 id="site-alert-dialog-title"><span data-lang="zh">确认删除？</span><span data-lang="en">Delete this project?</span></h3>
+                <p id="site-alert-dialog-desc"><span data-lang="zh">这个操作会移除项目设置和当前草稿。继续前请确认目标无误。</span><span data-lang="en">This removes project settings and the current draft. Check the target before continuing.</span></p>
+              </div>
+              <div class="uzu-dialog-actions">
+                <button class="uzu-button" type="button" data-uzu-dialog-close><span data-lang="zh">取消</span><span data-lang="en">Cancel</span></button>
+                <button class="uzu-button uzu-button-danger" type="button" data-uzu-dialog-close><span data-lang="zh">删除</span><span data-lang="en">Delete</span></button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-drawer" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Overlay</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">抽屉和侧滑面板</span><span data-lang="en">Drawer And Sheet</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">抽屉和侧滑面板复用 dialog 运行时，用于临时设置、过滤或详情。</span><span data-lang="en">Drawers and sheets reuse the dialog runtime for temporary settings, filters, or details.</span></p>
+          </div>
+          <div class="uzu-doc-example uzu-doc-example-inline uzu-gap-2">
+            <button class="uzu-button uzu-button-primary" type="button" data-uzu-dialog-target="#site-drawer"><span data-lang="zh">打开抽屉</span><span data-lang="en">Open drawer</span></button>
+            <button class="uzu-button" type="button" data-uzu-dialog-target="#site-sheet"><span data-lang="zh">打开面板</span><span data-lang="en">Open sheet</span></button>
+          </div>
+          <div class="uzu-dialog-overlay" data-uzu-dialog-overlay hidden>
+            <aside class="uzu-drawer uzu-drawer-end" id="site-drawer" data-uzu-dialog hidden tabindex="-1" aria-labelledby="site-drawer-title">
+              <div class="uzu-title-pair">
+                <h3 id="site-drawer-title"><span data-lang="zh">过滤设置</span><span data-lang="en">Filter settings</span></h3>
+                <p><span data-lang="zh">适合放少量局部设置。</span><span data-lang="en">Useful for a small set of local settings.</span></p>
+              </div>
+              <div class="uzu-dialog-actions">
+                <button class="uzu-button" type="button" data-uzu-dialog-close><span data-lang="zh">关闭</span><span data-lang="en">Close</span></button>
+              </div>
+            </aside>
+          </div>
+          <div class="uzu-dialog-overlay" data-uzu-dialog-overlay hidden>
+            <section class="uzu-sheet" id="site-sheet" data-uzu-dialog hidden tabindex="-1" aria-labelledby="site-sheet-title">
+              <div class="uzu-title-pair">
+                <h3 id="site-sheet-title"><span data-lang="zh">面板内容</span><span data-lang="en">Sheet content</span></h3>
+                <p><span data-lang="zh">Sheet 是居中的临时表面。</span><span data-lang="en">Sheets are centered temporary surfaces.</span></p>
+              </div>
+              <div class="uzu-dialog-actions">
+                <button class="uzu-button" type="button" data-uzu-dialog-close><span data-lang="zh">关闭</span><span data-lang="en">Close</span></button>
+              </div>
+            </section>
+          </div>
+        </section>
+
         <section class="uzu-doc-panel" id="component-popover" hidden>
           <div class="uzu-section-head">
             <p class="uzu-section-label">Overlay</p>
@@ -742,9 +1794,28 @@
           <aside class="uzu-popover">
             <div class="uzu-title-pair">
               <h3><span data-lang="zh">视图设置</span><span data-lang="en">View settings</span></h3>
-              <p><span data-lang="zh">适合短内容，不适合复杂表单。</span><span data-lang="en">Good for short content, not complex forms.</span></p>
+              <p><span data-lang="zh">适合短内容；复杂表单可以打开对话框或页面区域。</span><span data-lang="en">Good for short content; complex forms can open a dialog or page region.</span></p>
             </div>
           </aside>
+        </section>
+
+        <section class="uzu-doc-panel" id="component-hover-card" hidden>
+          <div class="uzu-section-head">
+            <p class="uzu-section-label">Overlay</p>
+            <h2 class="uzu-section-title"><span data-lang="zh">悬浮卡片</span><span data-lang="en">Hover Card</span></h2>
+            <p class="uzu-text uzu-doc-note"><span data-lang="zh">悬浮卡片在悬浮或聚焦时显示少量补充信息，保持为轻量阅读层。</span><span data-lang="en">Hover cards show small supporting information on hover or focus as a lightweight reading layer.</span></p>
+          </div>
+          <div class="uzu-doc-example">
+            <span class="uzu-hover-card" data-uzu-hover-card>
+              <button class="uzu-button" type="button" data-uzu-hover-card-trigger>Usuzumi</button>
+              <span class="uzu-hover-card-content" data-uzu-hover-card-content>
+                <span class="uzu-title-pair">
+                  <strong><span data-lang="zh">直接使用的 UI 库</span><span data-lang="en">Drop-in UI library</span></strong>
+                  <span><span data-lang="zh">悬浮和键盘聚焦都会打开。</span><span data-lang="en">Hover and keyboard focus both open it.</span></span>
+                </span>
+              </span>
+            </span>
+          </div>
         </section>
 
         <section class="uzu-doc-panel" id="component-tooltip" hidden>
@@ -778,206 +1849,336 @@
         colors: {
           classes: ['--uzu-bg', '--uzu-surface', '--uzu-border'],
           usage: ['把变量覆盖在 :root、.uzu-scope 或具体组件节点上。', 'Override variables on :root, .uzu-scope, or a component node.'],
-          note: ['状态色要同时覆盖文字色和背景色，避免只改其中一项。', 'Override text and background state colors together.'],
-          tip: ['局部换色时优先放在组件外层，便于删除或复用。', 'Put local color overrides on a wrapper so they are easy to remove or reuse.']
         },
         typography: {
           classes: ['.uzu-page-title', '.uzu-section-title', '.uzu-text'],
-          usage: ['按页面标题、区块标题、正文的顺序组合，不要用字号临时模拟层级。', 'Compose page titles, section titles, and body text instead of one-off font sizes.'],
-          note: ['签名字体需要额外引入 usuzumi-signature.css。', 'The signature font requires usuzumi-signature.css.'],
-          tip: ['长说明优先使用 .uzu-text 或 .uzu-body-large，保持阅读节奏一致。', 'Use .uzu-text or .uzu-body-large for longer copy to keep rhythm consistent.']
+          usage: ['按页面标题、区块标题、正文的顺序组合，让层级来自稳定类名。', 'Compose page titles, section titles, and body text with stable classes.'],
         },
         motion: {
           classes: ['--uzu-motion-base', '.uzu-progress-indeterminate', '.uzu-activity'],
           usage: ['加载、保存、展开和关闭这类变化用进度条、活动点或高度动画表达。', 'Use progress, activity dots, or expansion motion for loading, saving, expanding, and closing states.'],
-          note: ['不要让整个按钮或卡片在悬浮时位移。', 'Do not move whole buttons or cards on hover.'],
-          tip: ['自定义动画时复用 --uzu-ease-standard，和内置控件保持一致。', 'Reuse --uzu-ease-standard for custom motion.']
         },
         page: {
           classes: ['.uzu-page', '.uzu-page-narrow', '.uzu-section'],
           usage: ['页面外层用 .uzu-page，内容分组用 .uzu-section。', 'Use .uzu-page for the outer container and .uzu-section for content groups.'],
-          note: ['页面最大宽度可用变量或作用域覆盖，不必改库文件。', 'Override width through variables or scope styles instead of editing the library.'],
-          tip: ['文档、设置页和短表单可以用 .uzu-page-narrow。', 'Use .uzu-page-narrow for docs, settings pages, and short forms.']
         },
         'section-centered': {
           classes: ['.uzu-section-centered', '.uzu-section-head', '.uzu-download-actions'],
           usage: ['用于短介绍、下载入口或空状态，让标题、说明和操作居中。', 'Use it for short intros, download groups, or empty states.'],
-          note: ['只适合内容较短的区块；长正文仍应使用普通 .uzu-section。', 'Use regular .uzu-section for long-form content.'],
-          tip: ['按钮仍保持默认宽度，不会因为居中区块被拉满。', 'Buttons keep their default width inside centered sections.']
         },
         grid: {
           classes: ['.uzu-grid', '.uzu-grid-2', '.uzu-grid-3'],
           usage: ['同等级内容并排展示时使用网格。', 'Use grids for peer content.'],
-          note: ['每个网格项需要能在窄屏单列显示。', 'Each grid item should still work in a single column.'],
-          tip: ['需要非等宽布局时，在项目层覆盖 grid-template-columns。', 'Override grid-template-columns locally when equal columns are not enough.']
+        },
+        'layout-primitives': {
+          classes: ['.uzu-stack', '.uzu-flex', '.uzu-spacer', '.uzu-aspect', '.uzu-scroll-area'],
+          purpose: ['用于页面内部的小型排版骨架，用公开变量调整常见间距。', 'Use these for small layout scaffolds inside a page with public variables for common spacing.'],
+          structure: ['Stack 负责纵向间距，Flex 负责行内排列，Spacer 占据剩余空间，Aspect 保持固定比例，Scroll Area 限制局部滚动高度。', 'Stack controls vertical gaps, Flex arranges inline content, Spacer takes remaining space, Aspect keeps a fixed ratio, and Scroll Area limits local scroll height.'],
+          behavior: ['布局原语没有脚本行为；用 CSS 变量 `--uzu-stack-gap`、`--uzu-flex-gap`、`--uzu-aspect-ratio`、`--uzu-scroll-area-max-height` 调整。', 'Layout primitives have no script behavior; tune them with `--uzu-stack-gap`, `--uzu-flex-gap`, `--uzu-aspect-ratio`, and `--uzu-scroll-area-max-height`.'],
+        },
+        'split-pane': {
+          classes: ['.uzu-split-pane', '.uzu-split-panel', '.uzu-split-resizer'],
+          purpose: ['用于同一任务里的两个关联区域，例如列表 / 详情、编辑 / 预览。', 'Use it for two related regions in one task, such as list/detail or editor/preview.'],
+          structure: ['外层加 `data-uzu-split-pane`，两个 `.uzu-split-panel` 中间放一个 `data-uzu-split-resizer`。', 'Add `data-uzu-split-pane` to the wrapper, place two `.uzu-split-panel` nodes around one `data-uzu-split-resizer`.'],
+          behavior: ['拖动分隔条会更新 `--uzu-split-primary-size`；分隔条获得焦点后支持方向键、Home 和 End。', 'Dragging the divider updates `--uzu-split-primary-size`; focused dividers support arrow keys, Home, and End.'],
+        },
+        resizable: {
+          classes: ['.uzu-resizable', '.uzu-resizable-content', '.uzu-resizable-handle'],
+          purpose: ['用于局部可调整区域，例如预览窗、控制台、小型编辑区。', 'Use it for local adjustable regions such as previews, consoles, and compact editors.'],
+          structure: ['外层加 `data-uzu-resizable`，内容放进 `.uzu-resizable-content`，右下角按钮加 `data-uzu-resizable-handle`。', 'Add `data-uzu-resizable` outside, place content in `.uzu-resizable-content`, and add a lower-right `data-uzu-resizable-handle` button.'],
+          behavior: ['拖拽或方向键会更新 `--uzu-resizable-width` 和 `--uzu-resizable-height`，并派发 `uzu-resizable-resize`。', 'Dragging or arrow keys update `--uzu-resizable-width` and `--uzu-resizable-height`, then emit `uzu-resizable-resize`.'],
         },
         topbar: {
           classes: ['.uzu-topbar', '.uzu-brand-link', '.uzu-nav'],
           usage: ['放品牌、全局导航和少量页面级链接。', 'Place brand text, global navigation, and a few page-level links here.'],
-          note: ['不要把表单提交、删除等局部操作放进全局顶部栏。', 'Do not put local submit or delete actions in the global topbar.'],
-          tip: ['链接数量变多时，拆成侧边栏或局部工具栏。', 'Move larger link sets into a sidebar or toolbar.']
         },
         card: {
           classes: ['.uzu-card', '.uzu-card-muted'],
           usage: ['用于成组信息、重复项目或需要明确边界的局部内容。', 'Use cards for grouped information, repeated items, or bounded local content.'],
-          note: ['避免卡片套卡片；需要分隔时用标题、间距或分割线。', 'Avoid cards inside cards; use headings, spacing, or separators.'],
-          tip: ['卡片颜色可用预设，也可以在单个卡片上覆盖变量。', 'Use presets or override variables on a single card.']
         },
         stat: {
           classes: ['.uzu-stat', '.uzu-stat-value', '.uzu-stat-note'],
           usage: ['展示一个指标、一句标签和一行解释。', 'Show one metric, one label, and one short note.'],
-          note: ['不要把多个不相关指标塞进同一个 stat。', 'Do not pack unrelated metrics into one stat.'],
-          tip: ['多个指标并排时放进 .uzu-grid。', 'Place multiple stats in .uzu-grid.']
         },
         table: {
           classes: ['.uzu-table-wrap', '.uzu-table'],
           usage: ['结构化数据用 table，外层加 .uzu-table-wrap 处理横向滚动。', 'Use table markup for structured data and wrap it with .uzu-table-wrap.'],
-          note: ['列名必须清楚，移动端不能依赖悬浮说明。', 'Column names must be clear; mobile cannot rely on hover help.'],
-          tip: ['操作列保持短标签，复杂操作移到详情页或菜单。', 'Keep action columns short and move complex actions elsewhere.']
+        },
+        'data-grid': {
+          classes: ['.uzu-data-grid-wrap', '.uzu-data-grid', '[data-uzu-data-grid]'],
+          purpose: ['用于轻量数据表的排序、选择和键盘浏览。', 'Use it for sorting, selecting, and keyboard browsing in lightweight data tables.'],
+          structure: ['保留真实 `table` 结构；可排序表头加 `data-uzu-grid-sort`，可选择行加 `data-uzu-grid-row`。', 'Keep real `table` markup; add `data-uzu-grid-sort` to sortable headers and `data-uzu-grid-row` to selectable rows.'],
+          behavior: ['点击表头切换升序 / 降序；点击行切换选择；行获得焦点后可用上下方向键移动。', 'Click headers to toggle ascending/descending sort, click rows to select, and use Up/Down when a row has focus.'],
+        },
+        tree: {
+          classes: ['.uzu-tree', '.uzu-tree-item', '.uzu-tree-group', '.uzu-tree-toggle', '.uzu-tree-label'],
+          purpose: ['用于层级对象，例如文件、分类、页面树。', 'Use it for hierarchical objects such as files, categories, and page trees.'],
+          structure: ['树根加 `data-uzu-tree`；每一项加 `data-uzu-tree-item`，子级放进 `.uzu-tree-group`。有子级的项需要一个 `data-uzu-tree-toggle`。', 'Add `data-uzu-tree` to the root; each item uses `data-uzu-tree-item`, children live in `.uzu-tree-group`, and parent items need `data-uzu-tree-toggle`.'],
+          behavior: ['脚本同步 `role=tree/treeitem`、`aria-expanded`、`aria-selected` 和 roving tabindex。方向键可展开、收起、上下移动。', 'The runtime syncs `role=tree/treeitem`, `aria-expanded`, `aria-selected`, and roving tabindex. Arrow keys expand, collapse, and move focus.'],
         },
         separator: {
           classes: ['.uzu-separator', '.uzu-separator-vertical'],
           usage: ['在紧凑表面内分隔相关内容。', 'Divide related content inside compact surfaces.'],
-          note: ['不要用分割线替代区块间距。', 'Do not use separators as a replacement for section spacing.'],
-          tip: ['水平分隔用 hr，行内分隔用 vertical 版本。', 'Use hr for horizontal separation and the vertical version inline.']
         },
         code: {
           classes: ['.uzu-code', '.uzu-kbd'],
           usage: ['类名、变量名和快捷键提示使用内联代码样式。', 'Use inline code styles for class names, variables, and keyboard hints.'],
-          note: ['长代码块请在项目层提供展示容器，不要把 .uzu-code 当整段代码块。', 'Use a project-level code block container for long snippets.'],
-          tip: ['说明文字里出现 API 或类名时直接使用 .uzu-code。', 'Use .uzu-code for API names or classes inside prose.']
+        },
+        'json-viewer': {
+          classes: ['.uzu-json-viewer', '[data-uzu-json-viewer]'],
+          purpose: ['用于展示配置、响应体或调试数据，让嵌套对象可以折叠阅读。', 'Use it for configuration, response bodies, or debug data with collapsible nested objects.'],
+          structure: ['源码里把 JSON 文本直接放在 `.uzu-json-viewer[data-uzu-json-viewer]` 中，也可以放进内部 `script type="application/json"`。', 'In source, place JSON text directly inside `.uzu-json-viewer[data-uzu-json-viewer]`, or place it in an inner `script type="application/json"`.'],
+          behavior: ['初始化后会把源码 JSON 解析成 `.uzu-json-node` 树；Elements 面板看到的是运行后 DOM，原始文本保存在 `data-uzu-json-source`。', 'Initialization parses the source JSON into a `.uzu-json-node` tree; DevTools Elements shows runtime DOM, while the source text is kept in `data-uzu-json-source`.'],
+        },
+        'diff-viewer': {
+          classes: ['.uzu-diff-viewer', '[data-uzu-diff-viewer]'],
+          purpose: ['用于展示小段变更内容，让新增、删除和元信息更容易扫读。', 'Use it for short change previews where additions, removals, and metadata need to scan clearly.'],
+          structure: ['把统一 diff 文本放进 `pre.uzu-diff-viewer[data-uzu-diff-viewer]`。', 'Place unified diff text in `pre.uzu-diff-viewer[data-uzu-diff-viewer]`.'],
+          behavior: ['初始化后逐行包裹代码和行号，按 `+`、`-`、`@` 判断行类型。', 'Initialization wraps each line with code and gutters, classifying rows by `+`, `-`, and `@`.'],
         },
         button: {
           classes: ['.uzu-button', '.uzu-button-primary', '.uzu-button-danger', '.uzu-icon-button'],
           usage: ['主要动作加 .uzu-button-primary，危险动作加 .uzu-button-danger；密集工具区使用 .uzu-icon-button。', 'Use .uzu-button-primary for primary actions, .uzu-button-danger for destructive actions, and .uzu-icon-button in dense tool areas.'],
-          note: ['危险动作不要只靠颜色表达；图标按钮必须提供 aria-label。', 'Do not rely on color alone for destructive actions; icon buttons need aria-label.'],
-          tip: ['加载态可加 .is-loading，并同步 aria-busy。', 'Add .is-loading and aria-busy for loading actions.']
         },
         'text-link': {
           classes: ['.uzu-text-link'],
           usage: ['导航和低强调操作使用文本链接。', 'Use text links for navigation and low-emphasis actions.'],
-          note: ['提交、删除、保存等命令优先用按钮。', 'Prefer buttons for submit, delete, and save commands.'],
-          tip: ['链接文字写目标，不写“点击这里”。', 'Write the destination in the link text.']
         },
         toolbar: {
           classes: ['.uzu-toolbar', '.uzu-toolbar-group'],
           usage: ['把同一上下文里的操作、筛选和视图切换放在一行。', 'Group actions, filters, and view switches for one context.'],
-          note: ['工具栏不负责页面主导航。', 'Toolbars are not page navigation.'],
-          tip: ['按钮过多时分组，或把低频项移入菜单。', 'Group many buttons or move low-frequency items into a menu.']
         },
         breadcrumb: {
           classes: ['.uzu-breadcrumb'],
           usage: ['表达层级和当前位置。', 'Show hierarchy and current location.'],
-          note: ['最后一项使用 aria-current="page"。', 'Use aria-current="page" on the last item.'],
-          tip: ['层级过深时保留首页、父级和当前页。', 'For deep trees, keep home, parent, and current page.']
         },
         pagination: {
           classes: ['.uzu-pagination', '[data-uzu-pagination]', '[data-uzu-page]'],
           usage: ['为页码容器加 data-uzu-pagination，页码按钮加 data-uzu-page。', 'Add data-uzu-pagination to the list and data-uzu-page to page buttons.'],
-          note: ['如果要切换内容面板，设置 data-uzu-pagination-target。', 'Set data-uzu-pagination-target when page panels should switch.'],
-          tip: ['脚本会同步当前页、前后按钮，并派发 change 事件。', 'The script syncs the current page, prev/next buttons, and change events.']
         },
         tabs: {
           classes: ['.uzu-tabs', '.uzu-tab', '[data-uzu-tabs]'],
           usage: ['同级内容切换用 tabs；按钮用 data-uzu-tab-target 关联面板。', 'Use tabs for peer content; connect buttons to panels with data-uzu-tab-target.'],
-          note: ['不要把 tabs 用成页面主导航。', 'Do not use tabs as primary site navigation.'],
-          tip: ['隐藏面板里的 tabs 会在显示后刷新下划线位置。', 'Tabs inside hidden panels refresh their indicator after reveal.']
         },
         segmented: {
           classes: ['.uzu-segmented', '.uzu-segment', '[data-uzu-segmented]'],
           usage: ['紧凑模式切换或筛选切换使用 segmented。', 'Use segmented controls for compact mode or filter switching.'],
-          note: ['选项数量保持少，超过四项通常改用 tabs 或 select。', 'Keep options few; more than four often belongs in tabs or select.'],
-          tip: ['监听 uzu-segmented-change 可以读取当前 value。', 'Listen to uzu-segmented-change to read the current value.']
         },
         select: {
           classes: ['.uzu-select', '[data-uzu-select]', '[data-uzu-select-option]'],
           usage: ['自定义选择器需要 trigger、menu 和 option，并可设置 data-uzu-select-name。', 'Custom selects need trigger, menu, option, and can set data-uzu-select-name.'],
-          note: ['需要提交表单值时必须提供 name 或隐藏值配置。', 'Provide a name or hidden value configuration when forms submit it.'],
-          tip: ['短选项列表适合 select；复杂筛选用 popover 或独立面板。', 'Use select for short lists; use popover or panels for complex filters.']
+        },
+        combobox: {
+          classes: ['.uzu-combobox', '.uzu-combobox-input', '.uzu-combobox-list', '.uzu-combobox-option'],
+          purpose: ['用于可搜索的单选值，例如组件名、成员、标签或项目。', 'Use it for searchable single-value choices such as components, members, tags, or projects.'],
+          structure: ['外层加 `data-uzu-combobox`；输入框加 `data-uzu-combobox-input`；列表加 `data-uzu-combobox-list`；每个选项加 `data-uzu-combobox-option` 和值。', 'Add `data-uzu-combobox` outside, `data-uzu-combobox-input` to the input, `data-uzu-combobox-list` to the list, and `data-uzu-combobox-option` plus a value to each option.'],
+          behavior: ['输入时会本地过滤选项；上下方向键移动高亮，Enter 选择，Esc 关闭；设置 `data-uzu-combobox-name` 会生成隐藏 input。', 'Typing filters local options; Up/Down moves the active option, Enter selects, Escape closes, and `data-uzu-combobox-name` creates a hidden input.'],
         },
         switch: {
           classes: ['.uzu-switch', '[data-uzu-switch]'],
           usage: ['立即生效的二元设置用开关。', 'Use switches for binary settings that apply immediately.'],
-          note: ['需要保存确认的设置不要用 switch，改用 checkbox 加提交按钮。', 'Use checkbox plus submit for settings that need confirmation.'],
-          tip: ['脚本会同步 .is-on 与 aria-checked。', 'The script syncs .is-on and aria-checked.']
         },
         input: {
           classes: ['.uzu-field', '.uzu-label', '.uzu-input', '.uzu-textarea', '.uzu-help'],
           usage: ['字段用 .uzu-field 包住 label、输入控件和帮助文字。', 'Wrap labels, controls, and helper text in .uzu-field.'],
-          note: ['label 用 for 关联输入，不要只靠占位符说明字段含义。', 'Connect labels with for; do not rely on placeholder text alone.'],
-          tip: ['错误状态加在 .uzu-field 上，输入框同步 aria-invalid。', 'Put invalid state on .uzu-field and sync aria-invalid on the input.']
+        },
+        form: {
+          classes: ['.uzu-form', '.uzu-fieldset', '.uzu-form-message', '.uzu-form-error'],
+          purpose: ['用于真实提交区、设置页和短表单，把字段组、说明和错误消息放在同一套间距里。', 'Use it for real submit areas, settings pages, and short forms with shared spacing for fieldsets, messages, and errors.'],
+          structure: ['外层使用 `.uzu-form`，分组使用 `fieldset.uzu-fieldset`，字段仍然使用现有 `.uzu-field`。', 'Use `.uzu-form` outside, `fieldset.uzu-fieldset` for groups, and keep `.uzu-field` for individual controls.'],
+          behavior: ['表单结构没有脚本行为；验证状态仍由项目代码设置 `.is-invalid`、`aria-invalid` 和错误消息。', 'Form structure has no script behavior; application code still sets `.is-invalid`, `aria-invalid`, and error messages.'],
+        },
+        'input-group': {
+          classes: ['.uzu-input-group', '.uzu-input-addon', '.uzu-input-action'],
+          purpose: ['用于单位、固定前缀或与输入值绑定的局部动作。', 'Use it for units, fixed prefixes, or local actions tied to the input value.'],
+          structure: ['把 `.uzu-input`、`.uzu-input-addon` 和可选按钮放进 `.uzu-input-group`，首尾圆角由容器处理。', 'Place `.uzu-input`, `.uzu-input-addon`, and optional buttons inside `.uzu-input-group`; the group handles edge radius.'],
+          behavior: ['输入组合没有脚本行为；按钮仍按普通 `.uzu-button` 处理。', 'Input groups have no script behavior; buttons behave as normal `.uzu-button` controls.'],
+        },
+        search: {
+          classes: ['.uzu-search', '.uzu-search-input', '.uzu-search-clear', '[data-uzu-search]', '[data-uzu-search-clear]'],
+          purpose: ['用于列表、表格或命令区的短文本过滤。', 'Use it for short text filtering in lists, tables, or command surfaces.'],
+          structure: ['外层加 `.uzu-search` 和 `data-uzu-search`，输入使用 `.uzu-search-input`，清空按钮加 `data-uzu-search-clear`。', 'Add `.uzu-search` and `data-uzu-search` to the wrapper, use `.uzu-search-input` for the input, and add `data-uzu-search-clear` to the clear button.'],
+          behavior: ['清空按钮会在有值时显示；点击后清空输入并派发 `input` 与 `change`。', 'The clear button appears when a value exists; clicking it clears the input and emits `input` and `change`.'],
+        },
+        password: {
+          classes: ['.uzu-password', '.uzu-password-input', '.uzu-password-toggle', '[data-uzu-password]', '[data-uzu-password-toggle]'],
+          purpose: ['用于需要临时查看输入内容的密码字段。', 'Use it for password fields where the value may need to be revealed temporarily.'],
+          structure: ['外层加 `.uzu-password` 和 `data-uzu-password`，输入使用 `.uzu-password-input`，按钮加 `data-uzu-password-toggle`。', 'Add `.uzu-password` and `data-uzu-password` to the wrapper, use `.uzu-password-input` for the input, and add `data-uzu-password-toggle` to the button.'],
+          behavior: ['切换按钮会在 `password` 与 `text` 之间切换，并同步 `aria-pressed`，派发 `uzu-password-toggle`。', 'The toggle switches between `password` and `text`, syncs `aria-pressed`, and emits `uzu-password-toggle`.'],
+        },
+        'file-upload': {
+          classes: ['.uzu-file-upload', '.uzu-file-input', '.uzu-file-summary'],
+          purpose: ['用于文件选择入口，保留浏览器原生选择体验。', 'Use it for file selection while keeping the browser-native picker.'],
+          structure: ['`.uzu-file-upload` 可以包住 `.uzu-file-input` 和 `.uzu-file-summary`，也可以作为独立选择区域。', '`.uzu-file-upload` can wrap `.uzu-file-input` and `.uzu-file-summary`, or act as a standalone selection surface.'],
+          behavior: ['组件负责选择入口和说明文字；项目代码负责读取文件、展示上传进度和保存结果。', 'The component covers the picker surface and helper copy; application code reads files, shows upload progress, and saves results.'],
+        },
+        slider: {
+          classes: ['.uzu-slider', 'input[type="range"]'],
+          purpose: ['用于连续范围值，例如密度、透明度、音量。', 'Use it for continuous ranges such as density, opacity, or volume.'],
+          structure: ['把 `.uzu-slider` 加在原生 `input[type="range"]` 上，并用 label 描述数值含义。', 'Add `.uzu-slider` to a native `input[type="range"]` and label what the value means.'],
+          behavior: ['滑块使用浏览器原生行为；项目需要自己显示当前值或同步 `aria-valuetext`。', 'The slider uses native browser behavior; application code should show the current value or sync `aria-valuetext`.'],
+        },
+        stepper: {
+          classes: ['.uzu-stepper', '.uzu-stepper-input', '.uzu-stepper-button', '[data-uzu-stepper]'],
+          purpose: ['用于小范围数字调整，例如成员数量、份数、间距倍率。', 'Use it for small numeric ranges such as members, quantity, or spacing scale.'],
+          structure: ['外层加 `data-uzu-stepper`，输入使用 `.uzu-stepper-input`，加减按钮分别使用 `data-uzu-stepper-decrement` 和 `data-uzu-stepper-increment`。', 'Add `data-uzu-stepper` to the wrapper, use `.uzu-stepper-input`, and mark buttons with `data-uzu-stepper-decrement` and `data-uzu-stepper-increment`.'],
+          behavior: ['脚本读取 `min`、`max`、`step`，更新禁用态，并派发 `uzu-stepper-change`。', 'The script reads `min`, `max`, and `step`, updates disabled states, and emits `uzu-stepper-change`.'],
         },
         'checkbox-radio': {
           classes: ['.uzu-check-row', 'input[type="checkbox"]', 'input[type="radio"]'],
           usage: ['多选用 checkbox，互斥选择用 radio。', 'Use checkboxes for multiple choices and radios for mutually exclusive choices.'],
-          note: ['同一组 radio 需要共享 name。', 'Radio options in one group need the same name.'],
-          tip: ['把说明文字放在 label 内，扩大点击区域。', 'Put copy inside the label to increase the hit area.']
+        },
+        'rich-editor': {
+          classes: ['.uzu-editor', '.uzu-editor-toolbar', '.uzu-toolbar-button', '.uzu-editor-surface', '[data-uzu-rich-editor]'],
+          purpose: ['用于少量格式化文字，例如说明、短备注和内部文案草稿。', 'Use it for small formatted text such as notes, short descriptions, and internal copy drafts.'],
+          structure: ['外层使用 `data-uzu-rich-editor`，工具栏按钮使用 `data-uzu-editor-command`，可编辑区域使用 `data-uzu-editor-surface`。', 'Use `data-uzu-rich-editor` on the wrapper, `data-uzu-editor-command` on toolbar buttons, and `data-uzu-editor-surface` for the editable area.'],
+          behavior: ['运行时会设置 contenteditable、执行浏览器编辑命令、同步可切换按钮的 `aria-pressed`，并派发 `uzu-editor-command` 和 `uzu-editor-change`。', 'The runtime sets contenteditable, runs browser editing commands, syncs toggle button `aria-pressed`, and emits `uzu-editor-command` and `uzu-editor-change`.'],
+        },
+        'markdown-editor': {
+          classes: ['.uzu-markdown-editor', '.uzu-markdown-source', '.uzu-markdown-preview', '[data-uzu-markdown-editor]'],
+          purpose: ['用于 Markdown 源码输入和预览，例如文档、说明、发布草稿。', 'Use it for Markdown source input and preview, such as docs, notes, and publishing drafts.'],
+          structure: ['外层使用 `data-uzu-markdown-editor`，源码区域使用 `data-uzu-markdown-source`，预览区域使用 `data-uzu-markdown-preview`。', 'Use `data-uzu-markdown-editor` on the wrapper, `data-uzu-markdown-source` for source, and `data-uzu-markdown-preview` for preview.'],
+          behavior: ['输入变化会调用内置 Markdown 解析器刷新预览；渲染完成后派发 `uzu-markdown-editor-render`。', 'Input changes refresh the preview through the built-in Markdown parser and emit `uzu-markdown-editor-render`.'],
+        },
+        'code-editor': {
+          classes: ['.uzu-code-editor'],
+          purpose: ['用于短代码、配置片段和命令文本输入。', 'Use it for short code, configuration snippets, and command text input.'],
+          structure: ['把 `.uzu-code-editor` 加在 `textarea` 上；需要更复杂能力时，把外部编辑器挂进 `.uzu-editor` 外壳。', 'Add `.uzu-code-editor` to a `textarea`; for richer behavior, mount a dedicated editor inside the `.uzu-editor` shell.'],
+          behavior: ['浏览器负责文本输入、选择、滚动和表单提交；项目代码可以按需要接入保存、校验或编辑器增强。', 'The browser handles text input, selection, scrolling, and form submission; application code can add save, validation, or editor enhancements.'],
+        },
+        'plain-editor': {
+          classes: ['.uzu-plain-editor'],
+          purpose: ['用于没有格式的长文本，例如备注、说明、审核意见和发布摘要。', 'Use it for unformatted longer text such as notes, descriptions, review comments, and release summaries.'],
+          structure: ['把 `.uzu-plain-editor` 加在 `textarea` 上，并提供可见 label 或清楚的 `aria-label`。', 'Add `.uzu-plain-editor` to a `textarea` and provide a visible label or a clear `aria-label`.'],
+          behavior: ['浏览器负责文本输入、选择、滚动和表单提交；项目代码可以接入验证、自动保存和字数统计。', 'The browser handles text input, selection, scrolling, and form submission; application code can add validation, autosave, and word counts.'],
+        },
+        'inline-editor': {
+          classes: ['.uzu-inline-editor', '[data-uzu-inline-editor]'],
+          purpose: ['用于原地编辑短标题、名称或单行字段。', 'Use it for in-place editing of short titles, names, or single-line fields.'],
+          structure: ['外层元素加 `.uzu-inline-editor` 和 `data-uzu-inline-editor`；空值提示可用 `data-placeholder`。', 'Add `.uzu-inline-editor` and `data-uzu-inline-editor` to the element; use `data-placeholder` for empty text.'],
+          behavior: ['运行时会设置 `contenteditable` 和 `role="textbox"`，输入时派发 `uzu-inline-editor-change`。', 'The runtime sets `contenteditable` and `role="textbox"`, then emits `uzu-inline-editor-change` on input.'],
         },
         badge: {
           classes: ['.uzu-badge', '.uzu-badge-success', '.uzu-badge-warning'],
           usage: ['短状态、计数或标签使用 badge。', 'Use badges for short status, counts, or tags.'],
-          note: ['不要把长句放进徽章。', 'Do not put sentences inside badges.'],
-          tip: ['状态含义重要时，旁边保留文字说明。', 'Keep explanatory text nearby when the status matters.']
         },
         alert: {
           classes: ['.uzu-alert', '.uzu-alert-info', '.uzu-alert-danger'],
           usage: ['页面内消息使用 alert。', 'Use alerts for in-page messages.'],
-          note: ['错误提示要说明用户下一步能做什么。', 'Error alerts should say what the user can do next.'],
-          tip: ['成功、警告、危险和信息都有预设。', 'Success, warning, danger, and info presets are available.']
         },
         callout: {
           classes: ['.uzu-callout', '.uzu-callout-note', '.uzu-callout-compact'],
           usage: ['阅读流里的补充说明、限制或建议使用 callout。', 'Use callouts for context, constraints, or advice in the reading flow.'],
-          note: ['紧急错误不要用 callout，改用 alert。', 'Use alert, not callout, for urgent errors.'],
-          tip: ['说明很短时加 .uzu-callout-compact。', 'Add .uzu-callout-compact for short notes.']
         },
         progress: {
           classes: ['.uzu-progress', '.uzu-progress-circular', '.uzu-activity'],
           usage: ['已知进度设置 --uzu-progress-value，未知进度使用 indeterminate，短后台状态可用 activity。', 'Set --uzu-progress-value for known progress, use indeterminate for unknown progress, and activity for brief background work.'],
-          note: ['需要给进度控件提供 aria-label 或 aria-valuenow。', 'Provide aria-label or aria-valuenow for progress controls.'],
-          tip: ['环形进度适合小面积状态，不要替代完整任务说明。', 'Circular progress suits compact status, not full task messaging.']
         },
         skeleton: {
           classes: ['.uzu-skeleton', '.uzu-skeleton-title', '.uzu-skeleton-text'],
           usage: ['加载真实内容前使用骨架占位。', 'Use skeletons before real content is available.'],
-          note: ['骨架形状应接近最终内容。', 'Skeleton shape should resemble the final content.'],
-          tip: ['只给会很快出现的区域放骨架，避免整页闪烁。', 'Use skeletons for areas that resolve soon to avoid full-page flicker.']
         },
         process: {
           classes: ['.uzu-process', '.uzu-process-step', '.is-active'],
           usage: ['多步骤任务展示完成、当前和未完成状态。', 'Show complete, current, and pending states for multi-step work.'],
-          note: ['当前步骤加 aria-current="step"。', 'Add aria-current="step" to the current step.'],
-          tip: ['步骤名保持短，说明放在旁边正文里。', 'Keep step labels short and put details in nearby text.']
         },
         toast: {
           classes: ['.uzu-toast', '[data-uzu-toast]', '[data-uzu-toast-close]'],
           usage: ['短反馈消息使用 toast，关闭按钮加 data-uzu-toast-close。', 'Use toast for short feedback; add data-uzu-toast-close to the close button.'],
-          note: ['不要把长段落或必须处理的错误放进 toast。', 'Do not put long copy or blocking errors in toasts.'],
-          tip: ['默认宽度紧凑；需要更宽时在项目层覆盖变量或宽度。', 'The default width is compact; override width locally when needed.']
         },
         disclosure: {
           classes: ['.uzu-disclosure', '[data-uzu-disclosure]', '[data-uzu-disclosure-panel]'],
           usage: ['默认隐藏的补充内容使用 disclosure。', 'Use disclosures for supporting content hidden by default.'],
-          note: ['折叠后面板应 hidden，不继续占位。', 'Collapsed panels should be hidden and not reserve space.'],
-          tip: ['脚本会处理高度动画、aria-expanded 和 hidden。', 'The script handles height animation, aria-expanded, and hidden.']
         },
         dialog: {
           classes: ['.uzu-dialog-overlay', '.uzu-modal', '[data-uzu-dialog]'],
           usage: ['需要临时阻塞用户处理的任务使用 dialog。', 'Use dialogs for temporary tasks that need user attention.'],
-          note: ['必须有标题关联，如 aria-labelledby。', 'Provide a labelled title, for example aria-labelledby.'],
-          tip: ['触发按钮用 data-uzu-dialog-target 指向弹窗 id。', 'Point data-uzu-dialog-target at the dialog id.']
         },
         popover: {
           classes: ['.uzu-popover'],
           usage: ['短说明、局部菜单或少量设置使用 popover。', 'Use popovers for short notes, local menus, or a small set of settings.'],
-          note: ['复杂表单不要塞进 popover。', 'Do not put complex forms inside popovers.'],
-          tip: ['放在触发控件附近，避免弹出位置离目标太远。', 'Place it close to its trigger.']
+        },
+        list: {
+          classes: ['.uzu-list', '.uzu-list-item', '.uzu-list-meta', '.uzu-list-action'],
+          purpose: ['用于展示同一类对象、记录或任务，每一项可以带说明和末尾操作。', 'Use lists for related objects, records, or tasks with optional meta copy and trailing actions.'],
+          structure: ['外层使用 `.uzu-list`，每一项使用 `.uzu-list-item`；说明放进 `.uzu-list-meta`，末尾按钮放进 `.uzu-list-action`。', 'Use `.uzu-list` outside and `.uzu-list-item` for each row; place supporting copy in `.uzu-list-meta` and trailing controls in `.uzu-list-action`.'],
+          behavior: ['列表保留静态 HTML 结构；项目代码可以在列表项里放链接、按钮和选中状态。', 'Lists keep a static HTML structure; application code can place links, buttons, and selection states inside rows.'],
+        },
+        avatar: {
+          classes: ['.uzu-avatar'],
+          purpose: ['用于用户、团队或对象的紧凑身份标识，支持图片、缩写或占位字符。', 'Use avatars as compact identity markers for users, teams, or objects, with an image, initials, or fallback text.'],
+          structure: ['在 `.uzu-avatar` 中放 `img` 或短文本；尺寸通过 `--uzu-avatar-size` 调整。', 'Place an `img` or short text inside `.uzu-avatar`; tune size with `--uzu-avatar-size`.'],
+          behavior: ['头像使用静态内容表达身份；可访问名称可以来自相邻文本或 `aria-label`。', 'Avatars express identity with static content; the accessible name can come from nearby text or `aria-label`.'],
+        },
+        menu: {
+          classes: ['.uzu-menu', '.uzu-menu-trigger', '.uzu-menu-content', '.uzu-menu-item', '[data-uzu-menu]', '[data-uzu-context-menu]'],
+          purpose: ['用于把低频命令收进触发按钮，也可复用为右键菜单。', 'Use menus to collect low-frequency commands behind a trigger, or reuse the same structure for context menus.'],
+          structure: ['普通菜单使用 `data-uzu-menu`、`data-uzu-menu-trigger` 和 `data-uzu-menu-content`；右键菜单使用 `data-uzu-context-menu` 并指定触发目标。', 'Use `data-uzu-menu`, `data-uzu-menu-trigger`, and `data-uzu-menu-content` for dropdowns; use `data-uzu-context-menu` with a trigger selector for context menus.'],
+          behavior: ['运行时同步 `aria-expanded`，支持外部点击、Esc、方向键、Enter/Space，并派发 open、close、select 事件。', 'The runtime syncs `aria-expanded`, supports outside click, Escape, arrow keys, Enter/Space, and emits open, close, and select events.'],
+        },
+        menubar: {
+          classes: ['.uzu-menubar', '.uzu-menubar-item', '[data-uzu-menubar]'],
+          purpose: ['用于横向放置一组命令入口或编辑模式，适合工具型表面。', 'Use menubars for a horizontal set of commands or editor modes on tool-like surfaces.'],
+          structure: ['外层使用 `.uzu-menubar` 和 `data-uzu-menubar`，子项使用 `.uzu-menubar-item`，可设置 `data-uzu-menubar-value`。', 'Use `.uzu-menubar` with `data-uzu-menubar`; children use `.uzu-menubar-item` and can set `data-uzu-menubar-value`.'],
+          behavior: ['运行时设置 menubar/menuitem 角色，方向键移动焦点，点击派发 `uzu-menubar-change`。', 'The runtime sets menubar/menuitem roles, moves focus with arrow keys, and emits `uzu-menubar-change` on click.'],
+        },
+        command: {
+          classes: ['.uzu-command', '.uzu-command-input', '.uzu-command-list', '.uzu-command-item', '[data-uzu-command]'],
+          purpose: ['用于本地命令搜索和快速选择，适合中等数量的动作入口。', 'Use command menus for local command search and quick selection across a medium-sized action set.'],
+          structure: ['外层使用 `data-uzu-command`，输入框使用 `.uzu-command-input`，列表使用 `.uzu-command-list`，项目使用 `.uzu-command-item`。', 'Use `data-uzu-command` outside, `.uzu-command-input` for the input, `.uzu-command-list` for results, and `.uzu-command-item` for options.'],
+          behavior: ['运行时按文本过滤本地项目，维护 active 项，支持方向键和 Enter，并派发 filter/select 事件。', 'The runtime filters local items by text, maintains the active item, supports arrow keys and Enter, and emits filter/select events.'],
+        },
+        sidebar: {
+          classes: ['.uzu-sidebar', '.uzu-sidebar-section', '.uzu-sidebar-nav'],
+          purpose: ['用于较长的局部导航、设置分组或产品内侧边区。', 'Use sidebars for longer local navigation, settings groups, or in-product side regions.'],
+          structure: ['外层使用 `.uzu-sidebar`，分组使用 `.uzu-sidebar-section`，导航列表使用 `.uzu-sidebar-nav`。', 'Use `.uzu-sidebar` outside, `.uzu-sidebar-section` for groups, and `.uzu-sidebar-nav` for the navigation list.'],
+          behavior: ['当前项用 `aria-current="page"` 或 `.is-active` 标记；需要面板切换时可在内部按钮上配合 `data-uzu-panel-target`。', 'Mark the current item with `aria-current="page"` or `.is-active`; pair internal buttons with `data-uzu-panel-target` when the sidebar switches local panels.'],
+        },
+        'step-nav': {
+          classes: ['.uzu-step-nav', '.uzu-step-nav-item', '.uzu-step-nav-button', '[data-uzu-step-nav]'],
+          purpose: ['用于可点击的步骤切换，和只展示状态的 `.uzu-process` 区分开。', 'Use step nav for clickable step switching, separate from status-only `.uzu-process`.'],
+          structure: ['外层使用 `ol.uzu-step-nav[data-uzu-step-nav]`，每步按钮使用 `.uzu-step-nav-button` 和可选 `data-uzu-step-value`。', 'Use `ol.uzu-step-nav[data-uzu-step-nav]`; each step button uses `.uzu-step-nav-button` and optional `data-uzu-step-value`.'],
+          behavior: ['运行时同步 `.is-active`、`.is-complete`、`aria-current="step"`，点击或方向键切换并派发 `uzu-step-nav-change`。', 'The runtime syncs `.is-active`, `.is-complete`, and `aria-current="step"`, changes on click or arrow keys, and emits `uzu-step-nav-change`.'],
+        },
+        tag: {
+          classes: ['.uzu-tag', '.uzu-tag-close', '[data-uzu-tag]', '[data-uzu-tag-close]'],
+          purpose: ['用于分类、已选筛选项或可移除的短标签，语义上不同于状态徽章。', 'Use tags for categories, selected filters, or removable short labels, separate from status badges.'],
+          structure: ['静态标签只需要 `.uzu-tag`；可选择标签加 `data-uzu-tag-selectable="true"`；可关闭标签内放 `.uzu-tag-close`。', 'Static tags only need `.uzu-tag`; selectable tags add `data-uzu-tag-selectable="true"`; removable tags include `.uzu-tag-close`.'],
+          behavior: ['运行时可切换 `aria-pressed` 和 `.is-selected`，关闭按钮派发 `uzu-tag-close`，选择变化派发 `uzu-tag-change`。', 'The runtime can toggle `aria-pressed` and `.is-selected`; close buttons emit `uzu-tag-close` and selection changes emit `uzu-tag-change`.'],
+        },
+        'empty-error': {
+          classes: ['.uzu-empty-state', '.uzu-error-state'],
+          purpose: ['用于内容缺失或加载失败时的占位说明。', 'Use these for empty content or failed loading states.'],
+          structure: ['外层使用 `.uzu-empty-state` 或 `.uzu-error-state`，内部放标题、说明和可选操作。', 'Use `.uzu-empty-state` or `.uzu-error-state` outside, with a title, message, and optional action inside.'],
+          behavior: ['空状态可以承载下一步操作；错误状态需要被读屏及时播报时添加 `role="alert"`。', 'Empty states can carry the next action; add `role="alert"` when an error state should be announced immediately.'],
+        },
+        accordion: {
+          classes: ['.uzu-accordion', '[data-uzu-accordion]', '[data-uzu-accordion-multiple]'],
+          purpose: ['用于把多个 disclosure 组成一组，减少长页面里的同时展开内容。', 'Use accordions to group several disclosures and reduce simultaneous open content on long pages.'],
+          structure: ['外层使用 `.uzu-accordion[data-uzu-accordion]`，内部放多个 `data-uzu-disclosure`。', 'Use `.uzu-accordion[data-uzu-accordion]` outside and place several `data-uzu-disclosure` items inside.'],
+          behavior: ['默认同一时间只打开一个面板；设置 `data-uzu-accordion-multiple="true"` 可允许多开，并派发 `uzu-accordion-change`。', 'By default only one panel stays open; set `data-uzu-accordion-multiple="true"` to allow multiple open panels and emit `uzu-accordion-change`.'],
+        },
+        'alert-dialog': {
+          classes: ['.uzu-alert-dialog', 'role="alertdialog"', '[data-uzu-dialog]'],
+          purpose: ['用于危险、破坏性或不可轻易撤销的确认流程。', 'Use alert dialogs for dangerous, destructive, or hard-to-undo confirmations.'],
+          structure: ['在 `.uzu-modal` 上加 `.uzu-alert-dialog`，使用 `role="alertdialog"`，并提供 `aria-labelledby` 和 `aria-describedby`。', 'Add `.uzu-alert-dialog` to `.uzu-modal`, use `role="alertdialog"`, and provide `aria-labelledby` plus `aria-describedby`.'],
+          behavior: ['它复用 dialog 运行时：触发器、关闭按钮、Esc、遮罩点击和焦点返回都相同。', 'It reuses the dialog runtime: trigger, close buttons, Escape, backdrop click, and focus return work the same way.'],
+        },
+        drawer: {
+          classes: ['.uzu-drawer', '.uzu-drawer-start', '.uzu-drawer-end', '.uzu-sheet', '[data-uzu-dialog]'],
+          purpose: ['用于临时设置、筛选、详情或较短的侧向任务面板。', 'Use drawers and sheets for temporary settings, filters, details, or short side tasks.'],
+          structure: ['把 `.uzu-drawer` 或 `.uzu-sheet` 放进 `.uzu-dialog-overlay`，并继续使用 `data-uzu-dialog`。', 'Place `.uzu-drawer` or `.uzu-sheet` inside `.uzu-dialog-overlay` and keep using `data-uzu-dialog`.'],
+          behavior: ['运行时完全复用 dialog 的打开、关闭、焦点管理和事件。', 'The runtime reuses dialog opening, closing, focus management, and events.'],
+        },
+        'hover-card': {
+          classes: ['.uzu-hover-card', '.uzu-hover-card-content', '[data-uzu-hover-card]'],
+          purpose: ['用于悬浮或聚焦时展示少量补充信息。', 'Use hover cards for small supporting information on hover or focus.'],
+          structure: ['外层使用 `data-uzu-hover-card`，触发器使用 `data-uzu-hover-card-trigger`，内容使用 `data-uzu-hover-card-content`。', 'Use `data-uzu-hover-card` outside, `data-uzu-hover-card-trigger` for the trigger, and `data-uzu-hover-card-content` for the content.'],
+          behavior: ['运行时处理打开、关闭、延迟、焦点和 Esc，并派发 open/close 事件。', 'The runtime handles open, close, delay, focus, Escape, and emits open/close events.'],
         },
         tooltip: {
           classes: ['[data-uzu-tooltip]', '.uzu-tooltip'],
           usage: ['短标签或补充解释使用 tooltip。', 'Use tooltips for short labels or explanations.'],
-          note: ['tooltip 内容应该能一眼读完。', 'Tooltip text should be quick to read.'],
-          tip: ['图标含义不明显时加 tooltip，并保留 aria-label。', 'Use tooltips for unclear icons and keep aria-label.']
         }
       };
 
@@ -1005,6 +2206,23 @@
           presets: ['.uzu-grid-2', '.uzu-grid-3'],
           scope: ['override grid-template-columns on .uzu-grid']
         },
+        'layout-primitives': {
+          variables: ['--uzu-stack-gap', '--uzu-flex-gap', '--uzu-aspect-ratio', '--uzu-scroll-area-max-height'],
+          presets: ['.uzu-stack-tight', '.uzu-stack-loose', '.uzu-flex-between'],
+          related: ['.uzu-stack', '.uzu-flex', '.uzu-spacer', '.uzu-aspect', '.uzu-scroll-area']
+        },
+        'split-pane': {
+          variables: ['--uzu-split-primary-size', '--uzu-split-resizer-size'],
+          attributes: ['data-uzu-split-pane', 'data-uzu-split-resizer', 'data-uzu-split-size', 'data-uzu-split-min', 'data-uzu-split-max', 'data-uzu-split-orientation', 'data-uzu-split-key'],
+          events: ['uzu-split-resize'],
+          states: ['.is-resizing', 'aria-valuenow', 'aria-orientation']
+        },
+        resizable: {
+          variables: ['--uzu-resizable-width', '--uzu-resizable-height'],
+          attributes: ['data-uzu-resizable', 'data-uzu-resizable-handle', 'data-uzu-resizable-axis', 'data-uzu-resizable-min-width', 'data-uzu-resizable-min-height', 'data-uzu-resizable-key'],
+          events: ['uzu-resizable-resize'],
+          states: ['.is-resizing']
+        },
         topbar: {
           related: ['.uzu-brand-link', '.uzu-nav'],
           states: ['aria-current="page"']
@@ -1021,6 +2239,16 @@
           related: ['.uzu-table-wrap'],
           states: ['horizontal scroll in .uzu-table-wrap']
         },
+        'data-grid': {
+          attributes: ['data-uzu-data-grid', 'data-uzu-grid-sort', 'data-uzu-grid-row', 'data-uzu-data-grid-multi'],
+          events: ['uzu-data-grid-sort', 'uzu-data-grid-select'],
+          states: ['aria-sort', 'aria-selected', '.is-selected', 'tabindex on rows']
+        },
+        tree: {
+          attributes: ['data-uzu-tree', 'data-uzu-tree-item', 'data-uzu-tree-toggle', 'data-uzu-tree-label', 'data-uzu-tree-value'],
+          events: ['uzu-tree-toggle', 'uzu-tree-select', 'change'],
+          states: ['aria-expanded', 'aria-selected', '.is-open', '.is-selected', 'roving tabindex']
+        },
         separator: {
           presets: ['.uzu-separator', '.uzu-separator-vertical'],
           variables: ['--uzu-border-soft', '--uzu-space-1']
@@ -1028,6 +2256,16 @@
         code: {
           related: ['.uzu-code', '.uzu-kbd'],
           variables: ['--uzu-font-mono']
+        },
+        'json-viewer': {
+          variables: ['--uzu-viewer-max-height', '--uzu-json-indent'],
+          attributes: ['data-uzu-json-viewer', 'data-uzu-json-source', 'script[type="application/json"]'],
+          states: ['.is-invalid', '.is-collapsed', '.uzu-json-node']
+        },
+        'diff-viewer': {
+          variables: ['--uzu-viewer-max-height'],
+          attributes: ['data-uzu-diff-viewer'],
+          states: ['.uzu-diff-line-add', '.uzu-diff-line-remove', '.uzu-diff-line-meta']
         },
         button: {
           presets: ['.uzu-button-primary', '.uzu-button-ghost', '.uzu-button-danger', '.uzu-icon-button'],
@@ -1065,6 +2303,12 @@
           events: ['change', 'uzu-select-change'],
           states: ['aria-expanded', 'aria-selected', 'data-uzu-select-value']
         },
+        combobox: {
+          variables: ['--uzu-combobox-list-max-height'],
+          attributes: ['data-uzu-combobox', 'data-uzu-combobox-input', 'data-uzu-combobox-list', 'data-uzu-combobox-option', 'data-uzu-combobox-value', 'data-uzu-combobox-name'],
+          events: ['uzu-combobox-open', 'uzu-combobox-close', 'uzu-combobox-filter', 'uzu-combobox-change'],
+          states: ['aria-expanded', 'aria-selected', 'aria-activedescendant', '.is-open', '.is-active', '.is-selected']
+        },
         switch: {
           attributes: ['data-uzu-switch'],
           events: ['uzu-switch-change'],
@@ -1075,9 +2319,70 @@
           states: ['.is-invalid', 'aria-invalid', ':disabled'],
           related: ['.uzu-help']
         },
+        form: {
+          variables: ['--uzu-form-gap'],
+          related: ['.uzu-form', '.uzu-fieldset', '.uzu-form-message', '.uzu-form-error', '.uzu-field'],
+          states: ['.is-invalid', 'aria-invalid', 'role="alert"']
+        },
+        'input-group': {
+          related: ['.uzu-input', '.uzu-input-addon', '.uzu-input-action', '.uzu-button'],
+          states: [':disabled on child controls']
+        },
+        search: {
+          attributes: ['data-uzu-search', 'data-uzu-search-clear'],
+          events: ['input', 'change'],
+          states: ['[hidden] on clear button']
+        },
+        password: {
+          attributes: ['data-uzu-password', 'data-uzu-password-toggle'],
+          events: ['uzu-password-toggle'],
+          states: ['aria-pressed', '.is-visible']
+        },
+        'file-upload': {
+          variables: ['--uzu-file-upload-min-height'],
+          related: ['input[type="file"]', '.uzu-file-summary'],
+          states: ['.is-dragging', ':disabled on input']
+        },
+        slider: {
+          related: ['input[type="range"]'],
+          states: [':disabled', 'aria-valuetext']
+        },
+        stepper: {
+          attributes: ['data-uzu-stepper', 'data-uzu-stepper-decrement', 'data-uzu-stepper-increment'],
+          events: ['uzu-stepper-change', 'input', 'change'],
+          states: [':disabled on buttons', 'min', 'max', 'step']
+        },
         'checkbox-radio': {
           attributes: ['type="checkbox"', 'type="radio"', 'name for radio groups'],
           states: [':checked', ':disabled']
+        },
+        'rich-editor': {
+          variables: ['--uzu-editor-min-height'],
+          attributes: ['data-uzu-rich-editor', 'data-uzu-editor-surface', 'data-uzu-editor-command', 'data-uzu-editor-value'],
+          events: ['uzu-editor-command', 'uzu-editor-change'],
+          states: ['contenteditable', 'role="textbox"', 'aria-pressed', '.is-active'],
+          related: ['.uzu-editor-toolbar', '.uzu-toolbar-button']
+        },
+        'markdown-editor': {
+          variables: ['--uzu-editor-min-height'],
+          attributes: ['data-uzu-markdown-editor', 'data-uzu-markdown-source', 'data-uzu-markdown-preview'],
+          events: ['uzu-markdown-editor-render'],
+          related: ['window.Usuzumi.renderMarkdown', '.uzu-code-block']
+        },
+        'code-editor': {
+          variables: ['--uzu-editor-min-height'],
+          related: ['textarea.uzu-code-editor', '.uzu-editor'],
+          states: [':focus-visible', ':disabled', 'spellcheck="false" when appropriate']
+        },
+        'plain-editor': {
+          variables: ['--uzu-editor-min-height'],
+          related: ['textarea.uzu-plain-editor', '.uzu-field'],
+          states: [':focus-visible', ':disabled', 'aria-invalid']
+        },
+        'inline-editor': {
+          attributes: ['data-uzu-inline-editor', 'data-placeholder'],
+          events: ['uzu-inline-editor-change'],
+          states: ['contenteditable', 'role="textbox"', '.is-empty', ':focus-visible']
         },
         badge: {
           presets: ['.uzu-badge-success', '.uzu-badge-warning', '.uzu-badge-danger'],
@@ -1124,6 +2429,74 @@
           variables: ['--uzu-shadow-popover'],
           states: ['visible near its trigger']
         },
+        list: {
+          related: ['.uzu-list-item', '.uzu-list-meta', '.uzu-list-action'],
+          states: ['links and buttons keep native states']
+        },
+        avatar: {
+          variables: ['--uzu-avatar-size'],
+          related: ['img inside .uzu-avatar', 'text fallback']
+        },
+        menu: {
+          variables: ['--uzu-menu-min-width', '--uzu-menu-offset', '--uzu-menu-content-width'],
+          attributes: ['data-uzu-menu', 'data-uzu-menu-trigger', 'data-uzu-menu-content', 'data-uzu-context-menu', 'data-uzu-context-menu-trigger', 'data-uzu-menu-value'],
+          events: ['uzu-menu-open', 'uzu-menu-close', 'uzu-menu-select'],
+          states: ['aria-expanded', '.is-open', '.is-closing', '.is-active']
+        },
+        menubar: {
+          attributes: ['data-uzu-menubar', 'data-uzu-menubar-value'],
+          events: ['uzu-menubar-change'],
+          states: ['role="menubar"', 'role="menuitem"', '.is-active', 'tabindex']
+        },
+        command: {
+          variables: ['--uzu-command-max-height'],
+          attributes: ['data-uzu-command', 'data-uzu-command-input', 'data-uzu-command-list', 'data-uzu-command-value', 'data-uzu-command-text'],
+          events: ['uzu-command-filter', 'uzu-command-select'],
+          states: ['aria-activedescendant', '[hidden] on filtered items', '.is-active']
+        },
+        sidebar: {
+          variables: ['--uzu-sidebar-width'],
+          related: ['.uzu-sidebar-section', '.uzu-sidebar-nav'],
+          states: ['aria-current="page"', '.is-active']
+        },
+        'step-nav': {
+          variables: ['--uzu-step-nav-gap'],
+          attributes: ['data-uzu-step-nav', 'data-uzu-step-value'],
+          events: ['uzu-step-nav-change'],
+          states: ['.is-active', '.is-complete', 'aria-current="step"']
+        },
+        tag: {
+          attributes: ['data-uzu-tag', 'data-uzu-tag-selectable', 'data-uzu-tag-value', 'data-uzu-tag-close'],
+          events: ['uzu-tag-change', 'uzu-tag-close'],
+          states: ['.is-selected', 'aria-pressed', '[hidden] after default close']
+        },
+        'empty-error': {
+          related: ['.uzu-empty-state', '.uzu-error-state'],
+          states: ['role="alert" when the error should be announced']
+        },
+        accordion: {
+          attributes: ['data-uzu-accordion', 'data-uzu-accordion-multiple', 'data-uzu-disclosure'],
+          events: ['uzu-accordion-change', 'uzu-disclosure-change'],
+          states: ['single-open default', 'multiple-open opt-in']
+        },
+        'alert-dialog': {
+          variables: ['--uzu-alert-dialog-accent-color'],
+          attributes: ['role="alertdialog"', 'aria-labelledby', 'aria-describedby', 'data-uzu-dialog'],
+          events: ['uzu-dialog-open', 'uzu-dialog-close'],
+          states: ['.is-open', '.is-closing', '[hidden]']
+        },
+        drawer: {
+          variables: ['--uzu-drawer-width', '--uzu-sheet-width'],
+          presets: ['.uzu-drawer-start', '.uzu-drawer-end', '.uzu-sheet'],
+          attributes: ['data-uzu-dialog', 'data-uzu-dialog-target', 'data-uzu-dialog-close'],
+          events: ['uzu-dialog-open', 'uzu-dialog-close']
+        },
+        'hover-card': {
+          variables: ['--uzu-hover-card-width'],
+          attributes: ['data-uzu-hover-card', 'data-uzu-hover-card-trigger', 'data-uzu-hover-card-content', 'data-uzu-hover-card-delay', 'data-uzu-hover-card-close-delay'],
+          events: ['uzu-hover-card-open', 'uzu-hover-card-close'],
+          states: ['aria-expanded', '.is-open', '.is-closing', '[hidden]']
+        },
         tooltip: {
           attributes: ['data-uzu-tooltip', 'aria-label'],
           related: ['.uzu-tooltip'],
@@ -1143,49 +2516,516 @@
         scope: ['作用域', 'Scope']
       };
 
+      function appendDocInline(parent, value) {
+        const pattern = /(`[^`]+`)/g;
+        String(value || '').split(pattern).forEach((part) => {
+          if (!part) return;
+          if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+            const code = document.createElement('code');
+            code.className = 'uzu-code uzu-doc-inline-code';
+            code.textContent = part.slice(1, -1);
+            parent.append(code);
+            return;
+          }
+          parent.append(document.createTextNode(part));
+        });
+      }
+
       function textPair(zh, en) {
         const fragment = document.createDocumentFragment();
         const zhSpan = document.createElement('span');
         const enSpan = document.createElement('span');
         zhSpan.dataset.lang = 'zh';
         enSpan.dataset.lang = 'en';
-        zhSpan.textContent = zh;
-        enSpan.textContent = en;
+        appendDocInline(zhSpan, zh);
+        appendDocInline(enSpan, en);
         fragment.append(zhSpan, enSpan);
         return fragment;
       }
 
-      function createGuidance(info) {
-        const guidance = document.createElement('aside');
-        guidance.className = 'uzu-doc-guidance';
-        const title = document.createElement('h3');
-        title.append(textPair('用法', 'How To Use'));
+      function pairValue(value, fallbackZh = '', fallbackEn = '') {
+        if (Array.isArray(value)) return [value[0] || fallbackZh, value[1] || value[0] || fallbackEn || fallbackZh];
+        if (typeof value === 'string') return [value, value];
+        return [fallbackZh, fallbackEn || fallbackZh];
+      }
+
+      function createDocText(value, className = 'uzu-text') {
+        const paragraph = document.createElement('p');
+        paragraph.className = className;
+        const pair = pairValue(value);
+        paragraph.append(textPair(pair[0], pair[1]));
+        return paragraph;
+      }
+
+      function createDocList(items = []) {
         const list = document.createElement('ul');
-        [info.usage, info.note, info.tip].filter(Boolean).forEach((item) => {
-          const entry = document.createElement('li');
-          entry.append(textPair(item[0], item[1]));
-          list.append(entry);
+        list.className = 'uzu-doc-tutorial-list';
+        items.forEach((item) => {
+          const li = document.createElement('li');
+          const pair = pairValue(item);
+          li.append(textPair(pair[0], pair[1]));
+          list.append(li);
         });
-        guidance.append(title, list);
+        return list;
+      }
+
+      function safePair(value) {
+        if (value == null) return null;
+        const pair = pairValue(value);
+        if (!pair.some((item) => String(item || '').trim())) return null;
+        return pair;
+      }
+
+      function inlineList(values = [], limit = 3) {
+        return values.slice(0, limit).map((value) => `\`${value}\``).join('、');
+      }
+
+      function stripCodeSyntax(value) {
+        return String(value || '').replace(/^`|`$/g, '');
+      }
+
+      function firstClassToken(values = []) {
+        return values.find((value) => String(value).startsWith('.')) || '';
+      }
+
+      function firstAttributeToken(values = []) {
+        return values.find((value) => /^data-uzu-|^aria-|^role=/.test(String(value))) || '';
+      }
+
+      function firstScopeSelector(values = []) {
+        return values.find((value) => /^(:root|\.[A-Za-z0-9_-]+)$/.test(String(value))) || '';
+      }
+
+      function toClassName(token) {
+        return String(token || '').replace(/^\./, '').trim();
+      }
+
+      function toAttributeSnippet(token) {
+        const value = stripCodeSyntax(token);
+        if (!value) return '';
+        if (value.startsWith('[') && value.endsWith(']')) return value.slice(1, -1);
+        if (/^[\w:-]+="[^"]*"$/.test(value)) return value;
+        if (/^data-uzu-|^aria-/.test(value)) return value;
+        if (/^role=/.test(value)) return value;
+        return '';
+      }
+
+      function createDocCodeBlock(codeText, language = '') {
+        const shell = document.createElement('div');
+        shell.className = 'uzu-code-block uzu-doc-tutorial-code';
+        const pre = document.createElement('pre');
+        pre.className = 'uzu-code-block-body uzu-scroll';
+        const code = document.createElement('code');
+        if (language) code.className = `language-${language}`;
+        code.textContent = String(codeText || '').trim();
+        pre.append(code);
+
+        const button = document.createElement('button');
+        button.className = 'uzu-icon-button uzu-code-block-copy';
+        button.type = 'button';
+        button.setAttribute('aria-label', 'Copy code');
+        button.setAttribute('data-uzu-code-copy', '');
+        button.dataset.uzuCopyText = 'Copy';
+        button.dataset.uzuCopiedText = 'Copied';
+        button.dataset.uzuCopyFailedText = 'Copy failed';
+        button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><rect x="8" y="8" width="10" height="10" rx="1.8" stroke="currentColor" stroke-width="1.7"/><path d="M6 15H5.8A1.8 1.8 0 0 1 4 13.2V5.8A1.8 1.8 0 0 1 5.8 4h7.4A1.8 1.8 0 0 1 15 5.8V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span data-uzu-code-copy-label>Copy</span>';
+        shell.append(pre, button);
+        return shell;
+      }
+
+      function buildStructureCode(info, details) {
+        if ((info.classes || []).includes('.uzu-json-viewer')) {
+          return `<pre class="uzu-json-viewer" data-uzu-json-viewer>{
+  "name": "Usuzumi",
+  "modules": ["css", "runtime"]
+}</pre>`;
+        }
+        const baseClass = firstClassToken(info.classes || []);
+        const childClasses = (info.classes || []).filter((value) => String(value).startsWith('.') && value !== baseClass).slice(0, 2);
+        const attr = toAttributeSnippet(firstAttributeToken([...(details.attributes || []), ...(info.classes || [])]));
+        if (baseClass) {
+          const base = toClassName(baseClass);
+          const attrText = attr ? ` ${attr}` : '';
+          if (childClasses.length) {
+            const children = childClasses.map((item) => `  <div class="${toClassName(item)}"></div>`).join('\n');
+            return `<div class="${base}"${attrText}>\n${children}\n</div>`;
+          }
+          return `<div class="${base}"${attrText}>\n  ...\n</div>`;
+        }
+        if (details.variables?.length) {
+          return `:root {\n  ${details.variables[0]}: ...;\n}`;
+        }
+        return '';
+      }
+
+      function buildBehaviorCode(details) {
+        const eventName = (details.events || []).find((event) => !String(event).includes('/')) || '';
+        if (eventName) {
+          return `element.addEventListener('${stripCodeSyntax(eventName)}', (event) => {\n  console.log(event.detail);\n});`;
+        }
+        const state = (details.states || []).find((item) => String(item).startsWith('.') || String(item).startsWith('aria-')) || '';
+        if (state) {
+          if (String(state).startsWith('.')) return `<div class="${toClassName(state)}">...</div>`;
+          return `<button ${stripCodeSyntax(state)}="true">...</button>`;
+        }
+        return '';
+      }
+
+      function buildCustomizationCode(info, details) {
+        if (details.variables?.length) {
+          const scope = firstScopeSelector(details.scope || []) || firstClassToken(info.classes || []) || '.uzu-scope';
+          const declarations = details.variables.slice(0, 3).map((variable) => `  ${variable}: ...;`).join('\n');
+          return `${stripCodeSyntax(scope)} {\n${declarations}\n}`;
+        }
+        if (details.presets?.length) {
+          const base = toClassName(firstClassToken(info.classes || []) || '.uzu-button');
+          const preset = toClassName(firstClassToken(details.presets) || details.presets[0]);
+          return `<button class="${base} ${preset}">...</button>`;
+        }
+        if (details.scope?.length) {
+          const scope = firstScopeSelector(details.scope) || '.uzu-scope';
+          return `${stripCodeSyntax(scope)} {\n  --uzu-example-token: ...;\n}`;
+        }
+        return '';
+      }
+
+      function buildStructureCopy(info) {
+        const ownStructure = safePair(info.structure);
+        if (ownStructure) return ownStructure;
+        if (info.classes?.length) {
+          const base = inlineList(info.classes, 1);
+          const parts = inlineList(info.classes.slice(1), 3);
+          return [
+            parts ? `从 ${base} 开始，按完整示例组合 ${parts} 等子项。` : `从 ${base} 开始，完整示例展示可直接复制的 HTML 结构。`,
+            parts ? `Start with ${base}, then compose child parts such as ${parts} from the complete example.` : `Start with ${base}; the complete example shows copy-ready HTML.`
+          ];
+        }
+        return [
+          '完整示例展示推荐 HTML 结构，外层负责语义和尺寸，内部子项负责具体内容。',
+          'The complete example shows the recommended HTML: the wrapper handles semantics and sizing, and child parts hold the content.'
+        ];
+      }
+
+      function buildBehaviorCopy(info, details) {
+        const ownBehavior = safePair(info.behavior);
+        if (ownBehavior) return ownBehavior;
+        if (details.attributes?.length || details.events?.length) {
+          const attribute = inlineList(details.attributes || [], 1);
+          const event = inlineList(details.events || [], 2);
+          return [
+            `${attribute ? `添加 ${attribute} 后，` : ''}运行时会同步交互状态；${event ? `监听 ${event} 可以把变化接到项目逻辑里。` : '项目代码可以监听原生事件或更新公开状态。'}`,
+            `${attribute ? `Add ${attribute}; ` : ''}the runtime syncs interaction state. ${event ? `Listen for ${event} to connect changes to application logic.` : 'Application code can listen for native events or update public states.'}`
+          ];
+        }
+        if (details.states?.length) {
+          const states = inlineList(details.states, 3);
+          return [
+            `状态通过 ${states} 表达，项目代码可以按这些公开状态同步界面。`,
+            `State is expressed with ${states}, so application code can keep the interface in sync through public state hooks.`
+          ];
+        }
+        return [
+          '这个组件主要由 HTML 和 CSS 表达；项目代码通过公开类名、属性和原生事件同步状态。',
+          'This component is mainly HTML and CSS; application code syncs state through public classes, attributes, and native events.'
+        ];
+      }
+
+      function buildCustomizationCopy(info, details) {
+        if (details.variables?.length) {
+          const variables = inlineList(details.variables, 3);
+          return [
+            `把 ${variables} 写在组件外层、\`.uzu-scope\` 或 \`:root\` 上，可调整尺寸、间距、颜色或滚动范围。`,
+            `Set ${variables} on the component wrapper, \`.uzu-scope\`, or \`:root\` to tune size, spacing, color, or scroll range.`
+          ];
+        }
+        if (details.presets?.length) {
+          const presets = inlineList(details.presets, 3);
+          return [
+            `${presets} 是可叠加的预设外观，和基础类一起使用即可切换常见变体。`,
+            `${presets} are composable presets; combine them with the base class to switch common variants.`
+          ];
+        }
+        if (details.related?.length) {
+          const related = inlineList(details.related, 3);
+          return [
+            `${related} 是常见组合项，用来补齐内容结构、辅助文字或局部操作。`,
+            `${related} are common companion parts for content structure, supporting copy, or local actions.`
+          ];
+        }
+        return [
+          '上方代码里的公开类名就是主要接入点；需要调整时优先在组件外层设置公开变量。',
+          'The public classes in the example are the main integration points. Tune the component by setting public variables on the wrapper.'
+        ];
+      }
+
+      function buildTutorialSections(info, key) {
+        const details = componentInterfaces[key] || {};
+        return [
+          {
+            title: ['基本结构', 'Basic Structure'],
+            body: buildStructureCopy(info),
+            code: buildStructureCode(info, details),
+            language: 'html'
+          },
+          {
+            title: ['交互与状态', 'Interaction And State'],
+            body: buildBehaviorCopy(info, details),
+            code: buildBehaviorCode(details),
+            language: 'js'
+          },
+          {
+            title: ['配置方式', 'Configuration'],
+            body: buildCustomizationCopy(info, details),
+            code: buildCustomizationCode(info, details),
+            language: details.variables?.length || details.scope?.length ? 'css' : 'html'
+          }
+        ];
+      }
+
+      function createGuidance(info, key) {
+        const guidance = document.createElement('aside');
+        guidance.className = 'uzu-doc-guidance uzu-doc-tutorial';
+        const title = document.createElement('h3');
+        title.append(textPair('使用教程', 'Usage Guide'));
+        guidance.append(title);
+        buildTutorialSections(info, key).forEach((section) => {
+          const article = document.createElement('section');
+          article.className = 'uzu-doc-tutorial-section';
+          const heading = document.createElement('h4');
+          const sectionTitle = pairValue(section.title, '基本用法', 'Basic Usage');
+          heading.append(textPair(sectionTitle[0], sectionTitle[1]));
+          article.append(heading);
+          if (section.body) article.append(createDocText(section.body));
+          if (section.bullets?.length) article.append(createDocList(section.bullets));
+          if (section.code) article.append(createDocCodeBlock(section.code, section.language));
+          guidance.append(article);
+        });
         return guidance;
       }
 
-      function createInterfaceGroup(label, values) {
+      const interfaceDescriptions = {
+        base: ['这些类名是组件的入口和子结构。外层类决定组件类型，子项类决定内容、操作和辅助区域。', 'These classes are the component entry and child structure. The wrapper class defines the component, while child classes define content, actions, and supporting areas.'],
+        variables: ['CSS 变量写在组件外层、作用域容器或 :root 上，用来调整尺寸、间距、颜色和滚动范围。', 'Set CSS variables on the wrapper, scoped container, or :root to tune size, spacing, color, and scroll range.'],
+        attributes: ['data-uzu-* 启用运行时行为；ARIA 与原生属性表达当前值、展开状态和可访问语义。', 'data-uzu-* enables runtime behavior; ARIA and native attributes express current value, expansion state, and accessible semantics.'],
+        events: ['这些事件把选择、打开、关闭、输入和渲染结果交给项目代码处理。', 'These events pass selection, open, close, input, and render results to application code.'],
+        states: ['这些状态会出现在 DOM 或计算样式中，可用于调试，也可让项目代码读取当前状态。', 'These states appear in the DOM or computed styles for debugging and for application code that needs to read current state.'],
+        presets: ['预设类用于常见视觉变体，和基础类叠加即可切换外观。', 'Preset classes cover common visual variants and compose with the base class.'],
+        related: ['这些组合项通常和主组件一起出现，用来补齐布局、说明、按钮或局部内容。', 'These related parts commonly appear with the component to provide layout, copy, buttons, or local content.'],
+        files: ['按需引入这些文件；主样式和可选字体资源可以分开加载。', 'Load these files as needed; the main styles and optional font assets can be included separately.'],
+        scope: ['作用域决定覆盖范围。把变量放在更小的容器上，可以只影响局部示例或某一块界面。', 'Scope controls reach. Put variables on a smaller wrapper to affect only a local demo or one interface region.']
+      };
+
+      function describeVariable(item) {
+        const token = stripCodeSyntax(item);
+        const lower = token.toLowerCase();
+        if (lower.includes('max-width')) return ['控制最大宽度，常写在页面或组件外层。', 'Controls max width, usually set on the page or component wrapper.'];
+        if (lower.includes('width')) return ['控制宽度或可视区域宽度。', 'Controls width or visible area width.'];
+        if (lower.includes('height')) return ['控制高度、最大高度或可调整区域高度。', 'Controls height, max height, or resizable area height.'];
+        if (lower.includes('gap') || lower.includes('space')) return ['控制元素之间的间距。', 'Controls spacing between elements.'];
+        if (lower.includes('radius')) return ['控制圆角大小。', 'Controls corner radius.'];
+        if (lower.includes('font')) return ['控制字体族或字体资源。', 'Controls the font family or font resource.'];
+        if (lower.includes('motion') || lower.includes('ease')) return ['控制状态切换和过程动画的速度或缓动。', 'Controls timing or easing for state transitions and process motion.'];
+        if (lower.includes('bg') || lower.includes('surface') || lower.includes('color') || lower.includes('border') || lower.includes('danger') || lower.includes('warning') || lower.includes('success') || lower.includes('info')) return ['控制背景、边框或语义色。', 'Controls background, border, or semantic color.'];
+        if (lower.includes('padding')) return ['控制内部留白。', 'Controls internal padding.'];
+        if (lower.includes('size')) return ['控制组件或图形标记的尺寸。', 'Controls component or marker size.'];
+        if (lower.includes('value')) return ['表达当前数值，通常由项目代码或运行时更新。', 'Represents the current value, usually updated by app code or the runtime.'];
+        return ['可在组件外层、作用域容器或 :root 上覆盖。', 'Can be overridden on the component wrapper, scoped container, or :root.'];
+      }
+
+      function describeInterfaceItem(name, item, context = {}) {
+        const value = stripCodeSyntax(item);
+        const baseClass = firstClassToken(context.classes || []);
+        if (name === 'variables') return describeVariable(value);
+        if (name === 'scope') {
+          if (value === ':root') return ['设置全站默认值，适合主题级颜色、字体和运动参数。', 'Sets site-wide defaults for theme colors, fonts, and motion.'];
+          if (value === '.uzu-app') return ['限制在完整 Usuzumi 应用外层内生效。', 'Applies within a full Usuzumi application wrapper.'];
+          if (value === '.uzu-scope') return ['限制在局部迁移或嵌入区域内生效。', 'Applies within a scoped migration or embedded region.'];
+          if (/local wrapper/i.test(value)) return ['写在任意局部容器上，只影响该容器里的组件。', 'Set it on any local wrapper to affect only components inside that wrapper.'];
+          return ['决定覆盖范围，适合把变量或状态限制在局部界面。', 'Defines the reach of variables or state for a local interface region.'];
+        }
+        if (name === 'base') {
+          if (value.startsWith('--')) return describeVariable(value);
+          if (value === baseClass) return ['组件外层入口类，决定主要布局、边框、背景和状态范围。', 'The wrapper entry class; it defines layout, border, background, and state scope.'];
+          if (value.startsWith('.')) return ['组件子结构类，用来承载内容、辅助文字或局部操作。', 'A child structure class for content, supporting text, or local actions.'];
+          if (value.startsWith('[')) return ['运行时入口属性，写在外层或控制元素上启用行为。', 'Runtime entry attribute; set it on the wrapper or control to enable behavior.'];
+          return ['公开接口项，可直接写在 HTML 或 CSS 中。', 'A public interface item that can be used directly in HTML or CSS.'];
+        }
+        if (name === 'attributes') {
+          if (value.startsWith('data-uzu-')) return ['启用或配置 Usuzumi 运行时行为。', 'Enables or configures Usuzumi runtime behavior.'];
+          if (value.startsWith('aria-')) return ['表达可访问状态，让辅助技术读取当前值或关系。', 'Expresses accessible state so assistive technology can read value or relationship.'];
+          if (value.startsWith('role=')) return ['声明语义角色，补齐自定义结构的可访问含义。', 'Declares semantic role for custom structures.'];
+          return ['原生属性或 ARIA 属性，用来传递值、约束或语义。', 'A native or ARIA attribute for value, constraints, or semantics.'];
+        }
+        if (name === 'events') {
+          if (value.startsWith('uzu-')) return ['Usuzumi 自定义事件，可从 event.detail 读取组件状态。', 'A Usuzumi custom event; read component state from event.detail.'];
+          return ['浏览器原生事件，可按普通表单或控件逻辑监听。', 'A native browser event that can be handled with normal form or control logic.'];
+        }
+        if (name === 'states') {
+          if (value.startsWith('.')) return ['状态类，由组件或项目代码切换，用于视觉状态和调试。', 'A state class toggled by the component or app code for visual state and debugging.'];
+          if (value.startsWith('aria-')) return ['可访问状态属性，和视觉状态保持同步。', 'An accessible state attribute kept in sync with visual state.'];
+          if (value.startsWith(':')) return ['浏览器伪类状态，来自焦点、悬浮、禁用或选中等交互。', 'A browser pseudo-class state from focus, hover, disabled, or selection.'];
+          return ['公开状态值，可被样式、测试或项目代码读取。', 'A public state value readable by styles, tests, or app code.'];
+        }
+        if (name === 'presets') return ['和基础类叠加使用，快速切换常见外观。', 'Compose it with the base class to switch a common visual variant.'];
+        if (name === 'related') return ['常和主组件一起使用，补齐布局、内容或操作。', 'Commonly used with the main component for layout, content, or actions.'];
+        if (name === 'files') return ['按需加载的文件入口。', 'A file entry to load as needed.'];
+        return ['公开项，可直接在项目代码中使用。', 'A public item that can be used directly in application code.'];
+      }
+
+      function sampleCssValue(variable) {
+        const token = stripCodeSyntax(variable).toLowerCase();
+        if (token.includes('font-serif')) return '"Iowan Old Style", Georgia, serif';
+        if (token.includes('font-signature')) return 'Meddon, cursive';
+        if (token.includes('font-mono')) return 'ui-monospace, SFMono-Regular, monospace';
+        if (token.includes('ease')) return 'cubic-bezier(.2, 0, 0, 1)';
+        if (token.includes('motion-quick')) return '120ms';
+        if (token.includes('motion-slow')) return '320ms';
+        if (token.includes('motion')) return '180ms';
+        if (token.includes('max-width')) return '1040px';
+        if (token.includes('width')) return '320px';
+        if (token.includes('min-height') || token.includes('height')) return '180px';
+        if (token.includes('gap')) return '12px';
+        if (token.includes('space')) return '16px';
+        if (token.includes('radius')) return '10px';
+        if (token.includes('padding')) return '16px';
+        if (token.includes('stroke')) return '2px';
+        if (token.includes('size')) return '36px';
+        if (token.includes('value')) return '64%';
+        if (token.includes('indent')) return '20px';
+        if (token.includes('danger')) return '#7f3730';
+        if (token.includes('warning')) return '#7a5a1e';
+        if (token.includes('success')) return '#3f6f4a';
+        if (token.includes('info')) return '#46616f';
+        if (token.includes('border')) return '#d8d6ce';
+        if (token.includes('surface') || token.includes('bg')) return '#f4f3f0';
+        if (token.includes('muted') || token.includes('subtle') || token.includes('soft')) return '#686866';
+        return 'var(--uzu-fg)';
+      }
+
+      function sampleAttributeValue(attribute) {
+        const value = stripCodeSyntax(attribute);
+        if (value.includes('=')) return value;
+        if (value === 'script[type="application/json"]') return '<script type="application/json">{"name":"Usuzumi"}<\/script>';
+        if (value === 'input[type="range"]') return '<input class="uzu-slider" type="range" min="0" max="100" value="64">';
+        if (value === 'type="checkbox"' || value === 'type="radio"') return `<input ${value}>`;
+        if (/name for radio groups/i.test(value)) return 'name="density"';
+        if (value.endsWith('-target') || value.includes('dialog-target') || value.includes('pagination-target')) return `${value}="#panel-id"`;
+        if (value.endsWith('-name')) return `${value}="fieldName"`;
+        if (value.endsWith('-value') || value.endsWith('-row') || value.endsWith('-page')) return `${value}="value"`;
+        if (value.endsWith('-key')) return `${value}="local-storage-key"`;
+        if (value.endsWith('-min')) return `${value}="20"`;
+        if (value.endsWith('-max')) return `${value}="80"`;
+        if (value.endsWith('-size')) return `${value}="48"`;
+        if (value.endsWith('-axis')) return `${value}="both"`;
+        if (value.endsWith('-orientation')) return `${value}="horizontal"`;
+        if (value.endsWith('-delay') || value.endsWith('-close-delay') || value.endsWith('-timeout')) return `${value}="120"`;
+        if (value.startsWith('aria-')) return `${value}="true"`;
+        if (value.startsWith('role')) return value;
+        if (value.startsWith('data-uzu-')) return value;
+        return value;
+      }
+
+      function sampleStateValue(state, context = {}) {
+        const value = stripCodeSyntax(state);
+        const base = toClassName(firstClassToken(context.classes || []) || '.uzu-button');
+        if (value.startsWith('.')) return `<div class="${base} ${toClassName(value)}">...</div>`;
+        if (value.startsWith(':disabled')) return '<button class="uzu-button" disabled>...</button>';
+        if (value.startsWith(':checked')) return '<input type="checkbox" checked>';
+        if (value.startsWith(':focus-visible')) return 'element.focus()';
+        if (value.startsWith('[hidden]')) return '<div hidden>...</div>';
+        if (value.startsWith('aria-')) return `<button ${value}="true">...</button>`;
+        if (value.includes('=')) return `<button ${value}>...</button>`;
+        if (/min|max|step/.test(value)) return '<input type="number" min="1" max="9" step="1">';
+        if (/contenteditable/.test(value)) return '<div contenteditable="true" role="textbox"></div>';
+        if (/horizontal scroll/i.test(value)) return '<div class="uzu-table-wrap">...</div>';
+        return value;
+      }
+
+      function buildInterfaceExample(name, item, context = {}) {
+        const value = stripCodeSyntax(item);
+        const base = toClassName(firstClassToken(context.classes || []) || '.uzu-button');
+        if (name === 'variables') return `${value}: ${sampleCssValue(value)};`;
+        if (name === 'scope') {
+          if (value === ':root') return ':root { --uzu-motion-base: 180ms; }';
+          if (value === '.uzu-app') return '.uzu-app { --uzu-page-max-width: 1080px; }';
+          if (value === '.uzu-scope') return '.uzu-scope { --uzu-card-block-gap: 12px; }';
+          if (/local wrapper/i.test(value)) return '.settings-panel { --uzu-field-gap: 6px; }';
+          if (value.includes('.uzu-section-centered')) return '<section class="uzu-section uzu-section-centered">...</section>';
+          if (value.includes('grid-template-columns')) return '.uzu-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }';
+          if (value.startsWith('.')) return `${value} { --uzu-example-token: 12px; }`;
+          return value;
+        }
+        if (name === 'base') {
+          if (value.startsWith('--')) return `${value}: ${sampleCssValue(value)};`;
+          if (value.startsWith('.')) return `<div class="${toClassName(value)}">...</div>`;
+          if (value.startsWith('[')) return `<div ${value.slice(1, -1)}></div>`;
+          return value;
+        }
+        if (name === 'attributes') return sampleAttributeValue(value);
+        if (name === 'events') return `element.addEventListener('${value}', (event) => {\n  console.log(event.detail);\n});`;
+        if (name === 'states') return sampleStateValue(value, context);
+        if (name === 'presets') {
+          const preset = toClassName(value);
+          if (value === '.uzu-icon-button') return '<button class="uzu-icon-button" aria-label="Search">...</button>';
+          if (value === '.uzu-activity') return '<span class="uzu-activity" role="status">Syncing</span>';
+          if (value === '.uzu-separator') return '<hr class="uzu-separator">';
+          if (value === '.uzu-separator-vertical') return '<span class="uzu-separator-vertical" aria-hidden="true"></span>';
+          return `<div class="${base} ${preset}">...</div>`;
+        }
+        if (name === 'related') {
+          if (value.startsWith('.')) return `<div class="${toClassName(value)}">...</div>`;
+          if (value.includes('>')) return `<${value.split(' ')[0].replace(/[>.].*$/, '')}>...</${value.split(' ')[0].replace(/[>.].*$/, '')}>`;
+          return value;
+        }
+        if (name === 'files') {
+          if (value.endsWith('.css')) return `<link rel="stylesheet" href="${value}">`;
+          if (value.endsWith('.js')) return `<script src="${value}"><\/script>`;
+          return value;
+        }
+        return value;
+      }
+
+      function createInterfaceExample(item, name, context) {
+        const example = buildInterfaceExample(name, item, context);
+        if (!example) return null;
+        const line = document.createElement('p');
+        line.className = 'uzu-doc-interface-example-line';
+        const zh = document.createElement('span');
+        const en = document.createElement('span');
+        zh.dataset.lang = 'zh';
+        en.dataset.lang = 'en';
+        zh.textContent = '示例';
+        en.textContent = 'Example';
+        const code = document.createElement('code');
+        code.className = 'uzu-code';
+        code.textContent = example;
+        line.append(zh, en, code);
+        return line;
+      }
+
+      function createInterfaceGroup(name, label, values, context = {}) {
         if (!values || !values.length) return null;
         const group = document.createElement('div');
         group.className = 'uzu-doc-interface-group';
         const title = document.createElement('p');
         title.className = 'uzu-doc-interface-label';
         title.append(textPair(label[0], label[1]));
-        const chips = document.createElement('div');
-        chips.className = 'uzu-doc-interface-values';
+        const description = createDocText(interfaceDescriptions[name] || ['这些公开项可以直接在项目代码中使用。', 'These public items can be used directly in application code.'], 'uzu-doc-interface-description');
+        const list = document.createElement('div');
+        list.className = 'uzu-doc-interface-list';
         values.forEach((item) => {
+          const row = document.createElement('div');
+          row.className = 'uzu-doc-interface-item';
           const code = document.createElement('code');
           code.className = 'uzu-code';
           code.textContent = item;
-          chips.append(code);
+          const itemText = createDocText(describeInterfaceItem(name, item, context), 'uzu-doc-interface-item-text');
+          const example = createInterfaceExample(item, name, context);
+          row.append(code, itemText);
+          if (example) row.append(example);
+          list.append(row);
         });
-        group.append(title, chips);
+        group.append(title, description, list);
         return group;
       }
 
@@ -1208,7 +3048,7 @@
           ['scope', details.scope]
         ];
         groups.forEach(([name, values]) => {
-          const group = createInterfaceGroup(interfaceLabels[name], values);
+          const group = createInterfaceGroup(name, interfaceLabels[name], values, { info, details, classes: info.classes || [] });
           if (group) panel.append(group);
         });
         return panel;
@@ -1216,6 +3056,11 @@
 
       function cleanupClone(root) {
         if (!(root instanceof Element)) return root;
+        [root, ...root.querySelectorAll('[data-uzu-json-viewer]')].forEach((viewer) => {
+          if (!viewer.matches('[data-uzu-json-viewer]')) return;
+          const source = viewer.querySelector('script[type="application/json"]')?.textContent || viewer.dataset.uzuJsonSource;
+          if (source) viewer.textContent = source.trim();
+        });
         [root, ...root.querySelectorAll('*')].forEach((node) => {
           [...node.attributes].forEach((attribute) => {
             if (/^data-uzu-.*-initialized$/.test(attribute.name)) node.removeAttribute(attribute.name);
@@ -1324,32 +3169,52 @@
         const key = panel.id.replace('component-', '');
         const info = componentNotes[key];
         const heading = panel.querySelector('.uzu-section-head');
+        const preview = panel.querySelector(':scope > .uzu-doc-example, :scope > .uzu-callout, :scope > .uzu-popover, :scope > .uzu-type-list');
+        let demo = null;
+        if (preview) {
+          const extraNodes = ['dialog', 'alert-dialog', 'drawer'].includes(key) ? [...panel.querySelectorAll(':scope > .uzu-dialog-overlay')] : [];
+          const codeText = snippetFrom(preview, extraNodes);
+          const placeholder = document.createComment(`${panel.id}-demo`);
+          preview.before(placeholder);
+          demo = buildCodePanel(panel, preview, codeText);
+          placeholder.replaceWith(demo);
+        }
         if (info && heading) {
           const block = document.createElement('div');
           block.className = 'uzu-doc-guidance-block';
-          block.append(createGuidance(info), createInterface(info, key));
-          heading.after(block);
+          block.append(createGuidance(info, key), createInterface(info, key));
+          (demo || heading).after(block);
         }
+      }
 
-        const preview = panel.querySelector(':scope > .uzu-doc-example, :scope > .uzu-callout, :scope > .uzu-popover, :scope > .uzu-type-list');
-        if (!preview) return;
-        const extraNodes = key === 'dialog' ? [...panel.querySelectorAll(':scope > .uzu-dialog-overlay')] : [];
-        const codeText = snippetFrom(preview, extraNodes);
-        const placeholder = document.createComment(`${panel.id}-demo`);
-        preview.before(placeholder);
-        placeholder.replaceWith(buildCodePanel(panel, preview, codeText));
+      function applyInitialHash() {
+        const target = window.location.hash;
+        if (!target) return;
+        let panel = null;
+        try {
+          panel = document.querySelector(target);
+        } catch (_) {
+          panel = null;
+        }
+        const control = document.querySelector(`[data-uzu-panel-target="${target}"]`);
+        if (!panel || !control) return;
+        document.querySelectorAll('.uzu-doc-panel').forEach((item) => {
+          item.hidden = item !== panel;
+        });
+        document.querySelectorAll('[data-uzu-panel-target^="#component-"]').forEach((item) => {
+          const active = item === control;
+          item.classList.toggle('is-active', active);
+          item.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
       }
 
       function enhanceComponentDocs() {
         document.querySelectorAll('.uzu-doc-panel').forEach(enhancePanel);
-        if (window.Usuzumi) window.Usuzumi.init(document.querySelector('.uzu-doc-main'));
+        applyInitialHash();
+        if (window.Usuzumi) window.Usuzumi.init(document);
       }
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', enhanceComponentDocs, { once: true });
-      } else {
-        enhanceComponentDocs();
-      }
+      enhanceComponentDocs();
     })();
   </script>
 </body>

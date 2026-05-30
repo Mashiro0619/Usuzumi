@@ -42,7 +42,7 @@ function cleanReference(value) {
 function checkExistingReference(filePath, rawValue, label) {
   if (!rawValue || isExternalReference(rawValue)) return;
   const cleaned = cleanReference(rawValue);
-  if (!cleaned || cleaned.startsWith('{') || cleaned.startsWith('var(')) return;
+  if (!cleaned || cleaned.startsWith('{') || cleaned.startsWith('var(') || cleaned.includes('${')) return;
   const resolved = path.resolve(path.dirname(filePath), cleaned);
   if (!existsSync(resolved)) {
     report(filePath, `${label} reference does not exist: ${rawValue}`);
@@ -86,12 +86,16 @@ function checkGuardrails(filePath, text) {
   if (filePath.endsWith('.css') && /border-radius\s*:\s*(?:0|1px|2px|3px)\b/i.test(text)) {
     report(filePath, 'visible border-radius below 4px is not allowed');
   }
+  if (filePath.startsWith(path.join(root, 'ui')) && /catalog-body/i.test(text)) {
+    report(filePath, 'site-only catalog selectors must not live in ui/ styles');
+  }
 }
 
 function validateTextFiles() {
   for (const filePath of walk(root)) {
     const extension = path.extname(filePath);
     if (!textExtensions.has(extension)) continue;
+    if (extension === '.html' && !filePath.startsWith(path.join(root, 'example'))) continue;
     const text = readText(filePath);
     checkGuardrails(filePath, text);
     if (extension === '.html') checkHtmlReferences(filePath, text);

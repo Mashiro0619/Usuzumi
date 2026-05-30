@@ -8,8 +8,15 @@
   const disclosureCloseTimers = new WeakMap();
   const dialogCloseTimers = new WeakMap();
   const toastCloseTimers = new WeakMap();
+  const menuCloseTimers = new WeakMap();
+  const menuActiveTriggers = new WeakMap();
+  const hoverCardCloseTimers = new WeakMap();
+  const hoverCardOpenTimers = new WeakMap();
   const indicatorInstantTimers = new WeakMap();
   const codeCopyDefaultContent = new WeakMap();
+  const comboboxSelectionInputs = new WeakSet();
+  const richEditorSyncers = new WeakMap();
+  let richEditorSelectionListenerInitialized = false;
 
   const storage = {
     get(key) {
@@ -890,6 +897,599 @@
     });
   }
 
+  function setSearchClearState(search) {
+    const input = search.querySelector('.uzu-search-input, input[type="search"], input[type="text"]');
+    const clear = search.querySelector('[data-uzu-search-clear]');
+    if (!input || !clear) return;
+    clear.hidden = !input.value;
+    clear.setAttribute('aria-hidden', input.value ? 'false' : 'true');
+  }
+
+  function initSearches(root = document) {
+    queryAll(root, '[data-uzu-search]').forEach((search) => {
+      const input = search.querySelector('.uzu-search-input, input[type="search"], input[type="text"]');
+      const clear = search.querySelector('[data-uzu-search-clear]');
+      if (!input || !clear) return;
+      setSearchClearState(search);
+      if (!markInitialized(search, 'Search')) return;
+      input.addEventListener('input', () => setSearchClearState(search));
+      clear.addEventListener('click', () => {
+        if (input.disabled || input.readOnly) return;
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        setSearchClearState(search);
+        input.focus();
+      });
+    });
+  }
+
+  function setPasswordVisible(password, visible, emit = true) {
+    const input = password.querySelector('.uzu-password-input, input[type="password"], input[type="text"]');
+    const toggle = password.querySelector('[data-uzu-password-toggle]');
+    if (!input || !toggle) return;
+    input.type = visible ? 'text' : 'password';
+    password.classList.toggle('is-visible', visible);
+    toggle.setAttribute('aria-pressed', visible ? 'true' : 'false');
+    if (emit) {
+      password.dispatchEvent(new CustomEvent('uzu-password-toggle', {
+        bubbles: true,
+        detail: { visible, password, input, toggle }
+      }));
+    }
+  }
+
+  function initPasswords(root = document) {
+    queryAll(root, '[data-uzu-password]').forEach((password) => {
+      const input = password.querySelector('.uzu-password-input, input[type="password"], input[type="text"]');
+      const toggle = password.querySelector('[data-uzu-password-toggle]');
+      if (!input || !toggle) return;
+      setPasswordVisible(password, input.type === 'text', false);
+      if (!markInitialized(password, 'Password')) return;
+      toggle.addEventListener('click', () => {
+        if (input.disabled || toggle.disabled || toggle.getAttribute('aria-disabled') === 'true') return;
+        setPasswordVisible(password, input.type !== 'text');
+      });
+    });
+  }
+
+  function getStepperInput(stepper) {
+    return stepper.querySelector('.uzu-stepper-input, input[type="number"]');
+  }
+
+  function getNumberAttribute(input, name, fallback) {
+    const value = Number.parseFloat(input.getAttribute(name));
+    return Number.isFinite(value) ? value : fallback;
+  }
+
+  function getInputNumber(input) {
+    const value = Number.parseFloat(input.value);
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  function clampNumber(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function getStepPrecision(step) {
+    const text = String(step);
+    if (/e/i.test(text)) {
+      const fixed = Number(step).toFixed(12).replace(/0+$/, '');
+      const fixedIndex = fixed.indexOf('.');
+      return fixedIndex === -1 ? 0 : fixed.length - fixedIndex - 1;
+    }
+    const index = text.indexOf('.');
+    return index === -1 ? 0 : text.length - index - 1;
+  }
+
+  function syncStepperDisabled(stepper) {
+    const input = getStepperInput(stepper);
+    if (!input) return;
+    const min = getNumberAttribute(input, 'min', Number.NEGATIVE_INFINITY);
+    const max = getNumberAttribute(input, 'max', Number.POSITIVE_INFINITY);
+    const value = getInputNumber(input);
+    queryAll(stepper, '[data-uzu-stepper-decrement]').forEach((button) => {
+      button.disabled = input.disabled || value <= min;
+    });
+    queryAll(stepper, '[data-uzu-stepper-increment]').forEach((button) => {
+      button.disabled = input.disabled || value >= max;
+    });
+  }
+
+  function setStepperValue(stepper, nextValue, emit = true) {
+    const input = getStepperInput(stepper);
+    if (!input) return;
+    const min = getNumberAttribute(input, 'min', Number.NEGATIVE_INFINITY);
+    const max = getNumberAttribute(input, 'max', Number.POSITIVE_INFINITY);
+    const step = Math.abs(getNumberAttribute(input, 'step', 1)) || 1;
+    const precision = getStepPrecision(step);
+    const clamped = clampNumber(nextValue, min, max);
+    input.value = Number.isFinite(clamped) ? clamped.toFixed(precision).replace(/\.?0+$/, '') : String(nextValue);
+    syncStepperDisabled(stepper);
+    if (emit) {
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      stepper.dispatchEvent(new CustomEvent('uzu-stepper-change', {
+        bubbles: true,
+        detail: { value: input.value, number: getInputNumber(input), stepper, input }
+      }));
+    }
+  }
+
+  function stepStepper(stepper, direction) {
+    const input = getStepperInput(stepper);
+    if (!input || input.disabled || input.readOnly) return;
+    const step = Math.abs(getNumberAttribute(input, 'step', 1)) || 1;
+    setStepperValue(stepper, getInputNumber(input) + step * direction);
+    input.focus();
+  }
+
+  function initSteppers(root = document) {
+    queryAll(root, '[data-uzu-stepper]').forEach((stepper) => {
+      const input = getStepperInput(stepper);
+      if (!input) return;
+      syncStepperDisabled(stepper);
+      if (!markInitialized(stepper, 'Stepper')) return;
+      queryAll(stepper, '[data-uzu-stepper-decrement]').forEach((button) => {
+        button.addEventListener('click', () => stepStepper(stepper, -1));
+      });
+      queryAll(stepper, '[data-uzu-stepper-increment]').forEach((button) => {
+        button.addEventListener('click', () => stepStepper(stepper, 1));
+      });
+      input.addEventListener('input', () => syncStepperDisabled(stepper));
+      input.addEventListener('change', () => setStepperValue(stepper, getInputNumber(input), false));
+    });
+  }
+
+  function syncSliderValue(slider) {
+    if (!slider || !('value' in slider)) return;
+    const min = Number.parseFloat(slider.min || '0');
+    const max = Number.parseFloat(slider.max || '100');
+    const value = Number.parseFloat(slider.value || '0');
+    const range = max - min;
+    const percent = range ? ((value - min) / range) * 100 : 0;
+    slider.style.setProperty('--uzu-slider-value', `${Math.min(100, Math.max(0, percent))}%`);
+  }
+
+  function initSliders(root = document) {
+    queryAll(root, '[data-uzu-slider], .uzu-slider').forEach((slider) => {
+      if (!(slider instanceof HTMLInputElement) || slider.type !== 'range') return;
+      syncSliderValue(slider);
+      if (!markInitialized(slider, 'Slider')) return;
+      slider.addEventListener('input', () => syncSliderValue(slider));
+      slider.addEventListener('change', () => syncSliderValue(slider));
+    });
+  }
+
+  function getMenuTrigger(menu) {
+    return menu.querySelector('[data-uzu-menu-trigger], .uzu-menu-trigger');
+  }
+
+  function getMenuContent(menu) {
+    return menu.querySelector('[data-uzu-menu-content], .uzu-menu-content');
+  }
+
+  function getMenuItems(menu) {
+    return getScopedControls(menu, '.uzu-menu-item', '[data-uzu-menu], [data-uzu-context-menu]');
+  }
+
+  function emitMenuEvent(menu, name, trigger = getMenuTrigger(menu), extra = {}) {
+    menu.dispatchEvent(new CustomEvent(name, {
+      bubbles: true,
+      detail: {
+        menu,
+        trigger,
+        content: getMenuContent(menu),
+        ...extra
+      }
+    }));
+  }
+
+  function emitMenuSelectEvent(menu, item) {
+    emitMenuEvent(menu, 'uzu-menu-select', menuActiveTriggers.get(menu) || getMenuTrigger(menu), {
+      item,
+      value: getControlValue(item, 'uzuMenuValue')
+    });
+  }
+
+  function setContextMenuPoint(menu, content, x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    const rect = content.getBoundingClientRect();
+    const inlineMargin = 8;
+    const blockMargin = 8;
+    const nextX = Math.max(inlineMargin, Math.min(x, window.innerWidth - rect.width - inlineMargin));
+    const nextY = Math.max(blockMargin, Math.min(y, window.innerHeight - rect.height - blockMargin));
+    menu.style.setProperty('--uzu-menu-x', `${nextX}px`);
+    menu.style.setProperty('--uzu-menu-y', `${nextY}px`);
+  }
+
+  function focusMenuItem(menu, index) {
+    const items = getEnabledControls(getMenuItems(menu));
+    if (!items.length) return null;
+    const nextIndex = (index + items.length) % items.length;
+    items.forEach((item, itemIndex) => {
+      item.classList.toggle('is-active', itemIndex === nextIndex);
+      item.setAttribute('tabindex', itemIndex === nextIndex ? '0' : '-1');
+    });
+    items[nextIndex].focus();
+    return items[nextIndex];
+  }
+
+  function openMenu(menu, options = {}) {
+    const trigger = options.trigger || getMenuTrigger(menu);
+    const content = getMenuContent(menu);
+    if (!content) return;
+    if (menu.classList.contains('is-open')) {
+      if (Number.isFinite(options.x) && Number.isFinite(options.y)) {
+        menu.classList.add('is-context');
+        setContextMenuPoint(menu, content, options.x, options.y);
+      }
+      return;
+    }
+    const existingTimer = menuCloseTimers.get(menu);
+    if (existingTimer) {
+      window.clearTimeout(existingTimer);
+      menuCloseTimers.delete(menu);
+    }
+    const isContextMenu = Number.isFinite(options.x) && Number.isFinite(options.y);
+    if (isContextMenu) menu.classList.add('is-context');
+    content.hidden = false;
+    menu.classList.remove('is-closing');
+    menu.classList.add('is-open');
+    if (isContextMenu) setContextMenuPoint(menu, content, options.x, options.y);
+    if (trigger) {
+      trigger.setAttribute('aria-haspopup', trigger.getAttribute('aria-haspopup') || 'menu');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+    menuActiveTriggers.set(menu, trigger || null);
+    content.setAttribute('role', content.getAttribute('role') || 'menu');
+    getMenuItems(menu).forEach((item) => {
+      item.setAttribute('role', item.getAttribute('role') || 'menuitem');
+      item.setAttribute('tabindex', '-1');
+    });
+    emitMenuEvent(menu, 'uzu-menu-open', trigger);
+    if (options.focus !== false) focusMenuItem(menu, 0);
+  }
+
+  function closeMenu(menu, options = {}) {
+    const content = getMenuContent(menu);
+    if (!content || menu.classList.contains('is-closing') || (!menu.classList.contains('is-open') && content.hidden)) return;
+    const trigger = options.trigger || menuActiveTriggers.get(menu) || getMenuTrigger(menu);
+    const existingTimer = menuCloseTimers.get(menu);
+    if (existingTimer) window.clearTimeout(existingTimer);
+    menu.classList.remove('is-open');
+    menu.classList.add('is-closing');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    getMenuItems(menu).forEach((item) => {
+      item.classList.remove('is-active');
+      item.setAttribute('tabindex', '-1');
+    });
+    const finish = () => {
+      menu.classList.remove('is-closing', 'is-context');
+      content.hidden = true;
+      menuCloseTimers.delete(menu);
+      menuActiveTriggers.delete(menu);
+      emitMenuEvent(menu, 'uzu-menu-close', trigger);
+      if (options.restoreFocus && trigger && typeof trigger.focus === 'function') trigger.focus();
+    };
+    const timer = scheduleAfterAnimation([content], finish);
+    if (timer) menuCloseTimers.set(menu, timer);
+  }
+
+  function closeOpenMenus(except = null) {
+    let count = 0;
+    queryAll(document, '[data-uzu-menu].is-open, [data-uzu-context-menu].is-open').forEach((menu) => {
+      if (menu !== except) {
+        count += 1;
+        closeMenu(menu);
+      }
+    });
+    return count;
+  }
+
+  function handleMenuItemKeydown(event, menu, item) {
+    const enabled = getEnabledControls(getMenuItems(menu));
+    const index = Math.max(0, enabled.indexOf(item));
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      focusMenuItem(menu, index + 1);
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      focusMenuItem(menu, index - 1);
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      focusMenuItem(menu, 0);
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      focusMenuItem(menu, enabled.length - 1);
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      closeMenu(menu, { restoreFocus: true });
+    } else if (event.key === 'Tab') {
+      closeMenu(menu);
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      item.click();
+    }
+  }
+
+  function initMenus(root = document) {
+    queryAll(root, '[data-uzu-menu]').forEach((menu) => {
+      const trigger = getMenuTrigger(menu);
+      const content = getMenuContent(menu);
+      if (!trigger || !content) return;
+      const contentId = ensureId(content, 'uzu-menu-content');
+      trigger.setAttribute('aria-haspopup', 'menu');
+      trigger.setAttribute('aria-expanded', menu.classList.contains('is-open') ? 'true' : 'false');
+      trigger.setAttribute('aria-controls', contentId);
+      if (!menu.classList.contains('is-open')) content.hidden = true;
+      getMenuItems(menu).forEach((item) => {
+        item.setAttribute('role', item.getAttribute('role') || 'menuitem');
+        item.setAttribute('tabindex', '-1');
+      });
+      if (!markInitialized(menu, 'Menu')) return;
+      trigger.addEventListener('click', (event) => {
+        if (isControlDisabled(trigger)) return;
+        event.preventDefault();
+        if (menu.classList.contains('is-open')) {
+          closeMenu(menu, { restoreFocus: true });
+        } else {
+          closeOpenMenus(menu);
+          openMenu(menu, { trigger });
+        }
+      });
+      trigger.addEventListener('keydown', (event) => {
+        if (isControlDisabled(trigger)) return;
+        if (['ArrowDown', 'Enter', ' '].includes(event.key)) {
+          event.preventDefault();
+          closeOpenMenus(menu);
+          openMenu(menu, { trigger });
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          closeOpenMenus(menu);
+          openMenu(menu, { trigger, focus: false });
+          focusMenuItem(menu, getEnabledControls(getMenuItems(menu)).length - 1);
+        }
+      });
+      menu.addEventListener('click', (event) => {
+        const item = getScopedEventControl(event, '.uzu-menu-item', menu, '[data-uzu-menu], [data-uzu-context-menu]');
+        if (!item || isControlDisabled(item)) return;
+        emitMenuSelectEvent(menu, item);
+        if (item.dataset.uzuMenuKeepOpen === 'true') return;
+        closeMenu(menu, { restoreFocus: false });
+      });
+      menu.addEventListener('keydown', (event) => {
+        const item = getScopedEventControl(event, '.uzu-menu-item', menu, '[data-uzu-menu], [data-uzu-context-menu]');
+        if (!item) return;
+        handleMenuItemKeydown(event, menu, item);
+      });
+      getMenuItems(menu).forEach((item) => {
+        item.addEventListener('mouseenter', () => {
+          const enabled = getEnabledControls(getMenuItems(menu));
+          const index = enabled.indexOf(item);
+          if (index >= 0) focusMenuItem(menu, index);
+        });
+      });
+    });
+  }
+
+  function getContextMenuTrigger(contextMenu) {
+    const selector = contextMenu.dataset.uzuContextMenuTrigger || '';
+    if (!selector) return contextMenu;
+    try {
+      return document.querySelector(selector) || contextMenu;
+    } catch (_) {
+      return contextMenu;
+    }
+  }
+
+  function getContextPoint(event, target) {
+    if ('clientX' in event && event.clientX) {
+      return { x: event.clientX, y: event.clientY };
+    }
+    const rect = target.getBoundingClientRect();
+    return { x: rect.left, y: rect.bottom + 4 };
+  }
+
+  function initContextMenus(root = document) {
+    queryAll(root, '[data-uzu-context-menu]').forEach((menu) => {
+      const content = getMenuContent(menu);
+      const trigger = getContextMenuTrigger(menu);
+      if (!content || !trigger) return;
+      const contentId = ensureId(content, 'uzu-context-menu-content');
+      content.hidden = true;
+      content.setAttribute('role', content.getAttribute('role') || 'menu');
+      if (trigger !== menu) {
+        trigger.setAttribute('aria-haspopup', 'menu');
+        trigger.setAttribute('aria-controls', contentId);
+        trigger.setAttribute('aria-expanded', 'false');
+      }
+      getMenuItems(menu).forEach((item) => {
+        item.setAttribute('role', item.getAttribute('role') || 'menuitem');
+        item.setAttribute('tabindex', '-1');
+      });
+      if (!markInitialized(menu, 'ContextMenu')) return;
+      trigger.addEventListener('contextmenu', (event) => {
+        if (isControlDisabled(trigger)) return;
+        event.preventDefault();
+        closeOpenMenus(menu);
+        const point = getContextPoint(event, trigger);
+        openMenu(menu, { trigger, x: point.x, y: point.y });
+      });
+      trigger.addEventListener('keydown', (event) => {
+        if (isControlDisabled(trigger)) return;
+        if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10')) {
+          event.preventDefault();
+          closeOpenMenus(menu);
+          const point = getContextPoint(event, trigger);
+          openMenu(menu, { trigger, x: point.x, y: point.y });
+        }
+      });
+      menu.addEventListener('click', (event) => {
+        const item = getScopedEventControl(event, '.uzu-menu-item', menu, '[data-uzu-menu], [data-uzu-context-menu]');
+        if (!item || isControlDisabled(item)) return;
+        emitMenuSelectEvent(menu, item);
+        if (item.dataset.uzuMenuKeepOpen === 'true') return;
+        closeMenu(menu);
+      });
+      menu.addEventListener('keydown', (event) => {
+        const item = getScopedEventControl(event, '.uzu-menu-item', menu, '[data-uzu-menu], [data-uzu-context-menu]');
+        if (!item) return;
+        handleMenuItemKeydown(event, menu, item);
+      });
+    });
+  }
+
+  function initMenubars(root = document) {
+    queryAll(root, '[data-uzu-menubar]').forEach((menubar) => {
+      const items = getScopedControls(menubar, '.uzu-menubar-item', '[data-uzu-menubar]');
+      if (!items.length) return;
+      menubar.setAttribute('role', menubar.getAttribute('role') || 'menubar');
+      items.forEach((item, index) => {
+        item.setAttribute('role', item.getAttribute('role') || 'menuitem');
+        item.setAttribute('tabindex', index === 0 ? '0' : '-1');
+      });
+      if (!markInitialized(menubar, 'Menubar')) return;
+      menubar.addEventListener('click', (event) => {
+        const item = getScopedEventControl(event, '.uzu-menubar-item', menubar, '[data-uzu-menubar]');
+        if (!item || isControlDisabled(item)) return;
+        items.forEach((control) => {
+          const active = control === item;
+          control.classList.toggle('is-active', active);
+          control.setAttribute('tabindex', active ? '0' : '-1');
+        });
+        menubar.dispatchEvent(new CustomEvent('uzu-menubar-change', {
+          bubbles: true,
+          detail: { value: getControlValue(item, 'uzuMenubarValue'), item, menubar, index: items.indexOf(item) }
+        }));
+      });
+      menubar.addEventListener('keydown', (event) => {
+        const item = getScopedEventControl(event, '.uzu-menubar-item', menubar, '[data-uzu-menubar]');
+        if (!item || isControlDisabled(item)) return;
+        let next = null;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = moveActiveControl(items, item, 1);
+        else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = moveActiveControl(items, item, -1);
+        else if (event.key === 'Home') next = getEnabledControls(items)[0];
+        else if (event.key === 'End') next = getEnabledControls(items).at(-1);
+        if (next) {
+          event.preventDefault();
+          items.forEach((control) => control.setAttribute('tabindex', control === next ? '0' : '-1'));
+          next.focus();
+        }
+      });
+    });
+  }
+
+  function getCommandItems(command) {
+    return getScopedControls(command, '.uzu-command-item', '[data-uzu-command]');
+  }
+
+  function getCommandInput(command) {
+    return command.querySelector('.uzu-command-input, [data-uzu-command-input]');
+  }
+
+  function getCommandList(command) {
+    return command.querySelector('.uzu-command-list, [data-uzu-command-list]');
+  }
+
+  function getCommandItemText(item) {
+    return (item.dataset.uzuCommandText || item.textContent || '').trim().toLowerCase();
+  }
+
+  function getVisibleCommandItems(command) {
+    return getEnabledControls(getCommandItems(command).filter((item) => !item.hidden));
+  }
+
+  function focusCommandItem(command, index, focus = true) {
+    const items = getVisibleCommandItems(command);
+    if (!items.length) return null;
+    const nextIndex = (index + items.length) % items.length;
+    items.forEach((item, itemIndex) => {
+      item.classList.toggle('is-active', itemIndex === nextIndex);
+      item.setAttribute('tabindex', itemIndex === nextIndex ? '0' : '-1');
+    });
+    const input = getCommandInput(command);
+    if (input && items[nextIndex].id) input.setAttribute('aria-activedescendant', items[nextIndex].id);
+    if (focus) items[nextIndex].focus();
+    return items[nextIndex];
+  }
+
+  function filterCommand(command, focus = false) {
+    const input = getCommandInput(command);
+    const list = getCommandList(command);
+    const query = (input?.value || '').trim().toLowerCase();
+    let visibleCount = 0;
+    getCommandItems(command).forEach((item, index) => {
+      ensureId(item, `uzu-command-item-${index + 1}`);
+      const visible = !query || getCommandItemText(item).includes(query);
+      item.hidden = !visible;
+      item.setAttribute('tabindex', '-1');
+      item.classList.remove('is-active');
+      if (visible) visibleCount += 1;
+    });
+    queryAll(command, '.uzu-command-empty').forEach((empty) => {
+      empty.hidden = visibleCount > 0;
+    });
+    if (list) list.setAttribute('aria-busy', 'false');
+    if (visibleCount) {
+      const items = getVisibleCommandItems(command);
+      items[0].classList.add('is-active');
+      items[0].setAttribute('tabindex', '0');
+      if (input && items[0].id) input.setAttribute('aria-activedescendant', items[0].id);
+      if (focus) items[0].focus();
+    } else if (input) {
+      input.removeAttribute('aria-activedescendant');
+    }
+    command.dispatchEvent(new CustomEvent('uzu-command-filter', {
+      bubbles: true,
+      detail: { value: input?.value || '', command, visibleCount }
+    }));
+  }
+
+  function initCommands(root = document) {
+    queryAll(root, '[data-uzu-command]').forEach((command) => {
+      const input = getCommandInput(command);
+      const list = getCommandList(command);
+      const items = getCommandItems(command);
+      if (!input || !list || !items.length) return;
+      list.setAttribute('role', list.getAttribute('role') || 'listbox');
+      input.setAttribute('role', input.getAttribute('role') || 'combobox');
+      input.setAttribute('aria-expanded', 'true');
+      input.setAttribute('aria-controls', ensureId(list, 'uzu-command-list'));
+      items.forEach((item, index) => {
+        ensureId(item, `uzu-command-item-${index + 1}`);
+        item.setAttribute('role', item.getAttribute('role') || 'option');
+        item.setAttribute('tabindex', '-1');
+      });
+      filterCommand(command);
+      if (!markInitialized(command, 'Command')) return;
+      input.addEventListener('input', () => filterCommand(command));
+      input.addEventListener('keydown', (event) => {
+        const visible = getVisibleCommandItems(command);
+        const active = visible.find((item) => item.classList.contains('is-active')) || visible[0];
+        const index = Math.max(0, visible.indexOf(active));
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          focusCommandItem(command, index + 1, false);
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          focusCommandItem(command, index - 1, false);
+        } else if (event.key === 'Enter' && active) {
+          event.preventDefault();
+          active.click();
+        }
+      });
+      command.addEventListener('click', (event) => {
+        const item = getScopedEventControl(event, '.uzu-command-item', command, '[data-uzu-command]');
+        if (!item || isControlDisabled(item)) return;
+        command.dispatchEvent(new CustomEvent('uzu-command-select', {
+          bubbles: true,
+          detail: { value: getControlValue(item, 'uzuCommandValue'), item, command }
+        }));
+      });
+    });
+  }
+
   function parseLengthValue(value) {
     return Number.parseFloat(value) || 0;
   }
@@ -955,6 +1555,929 @@
         setDisclosureState(disclosure, !disclosure.classList.contains('is-open'));
       });
     });
+  }
+
+  function getComboboxInput(combobox) {
+    return combobox.querySelector('[data-uzu-combobox-input], .uzu-combobox-input');
+  }
+
+  function getComboboxList(combobox) {
+    return combobox.querySelector('[data-uzu-combobox-list], .uzu-combobox-list');
+  }
+
+  function getComboboxOptions(combobox) {
+    return getScopedControls(combobox, '[data-uzu-combobox-option], .uzu-combobox-option', '[data-uzu-combobox]');
+  }
+
+  function getComboboxOptionText(option) {
+    return (option.dataset.uzuComboboxText || option.textContent || '').trim();
+  }
+
+  function ensureComboboxHiddenInput(combobox) {
+    const name = combobox.dataset.uzuComboboxName;
+    if (!name) return null;
+    let input = combobox.querySelector('input[type="hidden"][data-uzu-combobox-hidden]');
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.dataset.uzuComboboxHidden = '';
+      combobox.append(input);
+    }
+    input.name = name;
+    return input;
+  }
+
+  function getVisibleComboboxOptions(combobox) {
+    return getEnabledControls(getComboboxOptions(combobox).filter((option) => !option.hidden));
+  }
+
+  function openCombobox(combobox) {
+    const input = getComboboxInput(combobox);
+    const list = getComboboxList(combobox);
+    if (!input || !list) return;
+    list.hidden = false;
+    combobox.classList.add('is-open');
+    input.setAttribute('aria-expanded', 'true');
+    combobox.dispatchEvent(new CustomEvent('uzu-combobox-open', {
+      bubbles: true,
+      detail: { combobox, input, list }
+    }));
+  }
+
+  function closeCombobox(combobox) {
+    const input = getComboboxInput(combobox);
+    const list = getComboboxList(combobox);
+    if (!input || !list || list.hidden) return;
+    combobox.classList.remove('is-open');
+    input.setAttribute('aria-expanded', 'false');
+    list.hidden = true;
+    getComboboxOptions(combobox).forEach((option) => option.classList.remove('is-active'));
+    input.removeAttribute('aria-activedescendant');
+    combobox.dispatchEvent(new CustomEvent('uzu-combobox-close', {
+      bubbles: true,
+      detail: { combobox, input, list }
+    }));
+  }
+
+  function focusComboboxOption(combobox, index) {
+    const input = getComboboxInput(combobox);
+    const options = getVisibleComboboxOptions(combobox);
+    if (!options.length) return null;
+    const nextIndex = (index + options.length) % options.length;
+    options.forEach((option, optionIndex) => {
+      option.classList.toggle('is-active', optionIndex === nextIndex);
+    });
+    if (input) input.setAttribute('aria-activedescendant', ensureId(options[nextIndex], 'uzu-combobox-option'));
+    return options[nextIndex];
+  }
+
+  function filterCombobox(combobox) {
+    const input = getComboboxInput(combobox);
+    const query = (input?.value || '').trim().toLowerCase();
+    let visibleCount = 0;
+    getComboboxOptions(combobox).forEach((option, index) => {
+      ensureId(option, `uzu-combobox-option-${index + 1}`);
+      const visible = !query || getComboboxOptionText(option).toLowerCase().includes(query);
+      option.hidden = !visible;
+      option.classList.remove('is-active');
+      if (visible) visibleCount += 1;
+    });
+    queryAll(combobox, '.uzu-combobox-empty').forEach((empty) => {
+      empty.hidden = visibleCount > 0;
+    });
+    focusComboboxOption(combobox, 0);
+    combobox.dispatchEvent(new CustomEvent('uzu-combobox-filter', {
+      bubbles: true,
+      detail: { value: input?.value || '', combobox, visibleCount }
+    }));
+  }
+
+  function setComboboxValue(combobox, optionOrValue, emit = true) {
+    const input = getComboboxInput(combobox);
+    const hidden = ensureComboboxHiddenInput(combobox);
+    const options = getComboboxOptions(combobox);
+    const option = optionOrValue instanceof Element
+      ? optionOrValue
+      : options.find((item) => getControlValue(item, 'uzuComboboxValue') === String(optionOrValue));
+    if (!input || !option || isControlDisabled(option)) return;
+    const value = getControlValue(option, 'uzuComboboxValue');
+    const label = getComboboxOptionText(option);
+    input.value = label;
+    if (hidden) hidden.value = value;
+    combobox.dataset.uzuComboboxValue = value;
+    options.forEach((item) => {
+      const selected = item === option;
+      item.classList.toggle('is-selected', selected);
+      item.setAttribute('aria-selected', selected ? 'true' : 'false');
+    });
+    closeCombobox(combobox);
+    if (emit) {
+      comboboxSelectionInputs.add(input);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      comboboxSelectionInputs.delete(input);
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      combobox.dispatchEvent(new CustomEvent('uzu-combobox-change', {
+        bubbles: true,
+        detail: { value, label, option, combobox, input }
+      }));
+      combobox.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  function initComboboxes(root = document) {
+    queryAll(root, '[data-uzu-combobox]').forEach((combobox) => {
+      const input = getComboboxInput(combobox);
+      const list = getComboboxList(combobox);
+      const options = getComboboxOptions(combobox);
+      if (!input || !list || !options.length) return;
+      const listId = ensureId(list, 'uzu-combobox-list');
+      input.setAttribute('role', 'combobox');
+      input.setAttribute('aria-autocomplete', input.getAttribute('aria-autocomplete') || 'list');
+      input.setAttribute('aria-expanded', 'false');
+      input.setAttribute('aria-controls', listId);
+      list.setAttribute('role', list.getAttribute('role') || 'listbox');
+      ensureComboboxHiddenInput(combobox);
+      options.forEach((option, index) => {
+        ensureId(option, `uzu-combobox-option-${index + 1}`);
+        option.setAttribute('role', option.getAttribute('role') || 'option');
+        option.setAttribute('aria-selected', option.classList.contains('is-selected') ? 'true' : 'false');
+      });
+      const selected = options.find((option) => option.classList.contains('is-selected') || option.getAttribute('aria-selected') === 'true');
+      if (selected) setComboboxValue(combobox, selected, false);
+      else if (!input.value) {
+        const hidden = ensureComboboxHiddenInput(combobox);
+        if (hidden) hidden.value = '';
+      }
+      list.hidden = true;
+      if (!markInitialized(combobox, 'Combobox')) return;
+      input.addEventListener('focus', () => {
+        filterCombobox(combobox);
+        openCombobox(combobox);
+      });
+      input.addEventListener('input', () => {
+        if (comboboxSelectionInputs.has(input)) return;
+        filterCombobox(combobox);
+        openCombobox(combobox);
+      });
+      input.addEventListener('keydown', (event) => {
+        const visible = getVisibleComboboxOptions(combobox);
+        const active = visible.find((option) => option.classList.contains('is-active'));
+        const index = Math.max(0, visible.indexOf(active));
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          openCombobox(combobox);
+          focusComboboxOption(combobox, index + 1);
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          openCombobox(combobox);
+          focusComboboxOption(combobox, index - 1);
+        } else if (event.key === 'Enter' && active) {
+          event.preventDefault();
+          setComboboxValue(combobox, active);
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          closeCombobox(combobox);
+        }
+      });
+      combobox.addEventListener('click', (event) => {
+        const option = getScopedEventControl(event, '[data-uzu-combobox-option], .uzu-combobox-option', combobox, '[data-uzu-combobox]');
+        if (option) {
+          event.preventDefault();
+          setComboboxValue(combobox, option);
+        } else if (event.target === input) {
+          openCombobox(combobox);
+        }
+      });
+    });
+  }
+
+  function getDataGridRows(table) {
+    return queryAll(table, 'tbody tr, [data-uzu-grid-row]').filter((row) => row.closest('table') === table);
+  }
+
+  function initDataGrids(root = document) {
+    queryAll(root, '[data-uzu-data-grid]').forEach((grid) => {
+      const table = grid.matches('table') ? grid : grid.querySelector('table');
+      if (!table) return;
+      const rows = () => getDataGridRows(table);
+      rows().forEach((row, index) => {
+        row.dataset.uzuGridRow = row.dataset.uzuGridRow || String(index + 1);
+        row.setAttribute('tabindex', row.getAttribute('tabindex') || '0');
+      });
+      if (!markInitialized(grid, 'DataGrid')) return;
+      queryAll(table, '[data-uzu-grid-sort]').forEach((header) => {
+        header.setAttribute('tabindex', header.getAttribute('tabindex') || '0');
+        header.setAttribute('aria-sort', header.getAttribute('aria-sort') || 'none');
+        const sort = () => {
+          const body = table.tBodies[0];
+          if (!body) return;
+          const headers = [...header.parentElement.children];
+          const columnIndex = headers.indexOf(header);
+          const current = header.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+          queryAll(table, '[data-uzu-grid-sort]').forEach((item) => item.setAttribute('aria-sort', item === header ? current : 'none'));
+          const direction = current === 'ascending' ? 1 : -1;
+          const sorted = [...body.rows].sort((a, b) => {
+            const aText = (a.cells[columnIndex]?.textContent || '').trim();
+            const bText = (b.cells[columnIndex]?.textContent || '').trim();
+            const aNumber = Number(aText.replace(/[^\d.-]/g, ''));
+            const bNumber = Number(bText.replace(/[^\d.-]/g, ''));
+            if (Number.isFinite(aNumber) && Number.isFinite(bNumber) && /\d/.test(aText + bText)) {
+              return (aNumber - bNumber) * direction;
+            }
+            return aText.localeCompare(bText, undefined, { numeric: true }) * direction;
+          });
+          sorted.forEach((row) => body.append(row));
+          grid.dispatchEvent(new CustomEvent('uzu-data-grid-sort', {
+            bubbles: true,
+            detail: { grid, table, header, columnIndex, direction: current }
+          }));
+        };
+        header.addEventListener('click', sort);
+        header.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            sort();
+          }
+        });
+      });
+      grid.addEventListener('click', (event) => {
+        const row = event.target instanceof Element ? event.target.closest('[data-uzu-grid-row], tbody tr') : null;
+        if (!row || !table.contains(row) || event.target.closest('a, button, input, select, textarea')) return;
+        const multi = grid.dataset.uzuDataGridMulti === 'true';
+        if (!multi) rows().forEach((item) => {
+          if (item !== row) {
+            item.classList.remove('is-selected');
+            item.setAttribute('aria-selected', 'false');
+          }
+        });
+        const selected = !(row.classList.contains('is-selected') || row.getAttribute('aria-selected') === 'true');
+        row.classList.toggle('is-selected', selected);
+        row.setAttribute('aria-selected', selected ? 'true' : 'false');
+        grid.dispatchEvent(new CustomEvent('uzu-data-grid-select', {
+          bubbles: true,
+          detail: { grid, table, row, selected, value: row.dataset.uzuGridRow || '' }
+        }));
+      });
+      grid.addEventListener('keydown', (event) => {
+        const row = event.target instanceof Element ? event.target.closest('[data-uzu-grid-row], tbody tr') : null;
+        const list = rows();
+        if (!row || !list.length) return;
+        const index = list.indexOf(row);
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          list[(index + (event.key === 'ArrowDown' ? 1 : -1) + list.length) % list.length].focus();
+        } else if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          row.click();
+        }
+      });
+    });
+  }
+
+  function getTreeItems(tree) {
+    return getScopedControls(tree, '[data-uzu-tree-item], .uzu-tree-item', '[data-uzu-tree]');
+  }
+
+  function getTreeItemControl(item) {
+    return item.querySelector('[data-uzu-tree-label], .uzu-tree-label') || item;
+  }
+
+  function getTreeItemGroup(item) {
+    return item.querySelector(':scope > [role="group"], :scope > .uzu-tree-group');
+  }
+
+  function isTreeItemExpanded(item) {
+    const group = getTreeItemGroup(item);
+    return Boolean(group && !group.hidden);
+  }
+
+  function setTreeItemExpanded(item, expanded, emit = true) {
+    const tree = item.closest('[data-uzu-tree]');
+    const group = getTreeItemGroup(item);
+    const toggle = item.querySelector('[data-uzu-tree-toggle], .uzu-tree-toggle');
+    if (!group) return;
+    group.hidden = !expanded;
+    item.classList.toggle('is-open', expanded);
+    item.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    if (toggle) toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    if (emit && tree) {
+      tree.dispatchEvent(new CustomEvent('uzu-tree-toggle', {
+        bubbles: true,
+        detail: { tree, item, expanded, value: getControlValue(item, 'uzuTreeValue') }
+      }));
+    }
+  }
+
+  function getVisibleTreeItems(tree) {
+    return getTreeItems(tree).filter((item) => {
+      let parent = item.parentElement?.closest('[data-uzu-tree-item], .uzu-tree-item');
+      while (parent && tree.contains(parent)) {
+        if (!isTreeItemExpanded(parent)) return false;
+        parent = parent.parentElement?.closest('[data-uzu-tree-item], .uzu-tree-item');
+      }
+      return true;
+    });
+  }
+
+  function selectTreeItem(tree, item, emit = true) {
+    getTreeItems(tree).forEach((control) => {
+      const selected = control === item;
+      control.classList.toggle('is-selected', selected);
+      control.setAttribute('aria-selected', selected ? 'true' : 'false');
+    });
+    tree.dataset.uzuTreeValue = getControlValue(item, 'uzuTreeValue');
+    if (emit) {
+      tree.dispatchEvent(new CustomEvent('uzu-tree-select', {
+        bubbles: true,
+        detail: { tree, item, value: tree.dataset.uzuTreeValue }
+      }));
+      tree.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  function initTrees(root = document) {
+    queryAll(root, '[data-uzu-tree]').forEach((tree) => {
+      const items = getTreeItems(tree);
+      if (!items.length) return;
+      tree.setAttribute('role', tree.getAttribute('role') || 'tree');
+      items.forEach((item) => {
+        item.setAttribute('role', item.getAttribute('role') || 'treeitem');
+        item.setAttribute('tabindex', item.classList.contains('is-selected') ? '0' : '-1');
+        const group = getTreeItemGroup(item);
+        if (group) {
+          group.setAttribute('role', group.getAttribute('role') || 'group');
+          if (!item.classList.contains('is-open') && item.getAttribute('aria-expanded') !== 'true') group.hidden = true;
+          setTreeItemExpanded(item, !group.hidden, false);
+        }
+      });
+      const selected = items.find((item) => item.classList.contains('is-selected')) || items[0];
+      if (selected) {
+        selected.setAttribute('tabindex', '0');
+        selectTreeItem(tree, selected, false);
+      }
+      if (!markInitialized(tree, 'Tree')) return;
+      tree.addEventListener('click', (event) => {
+        const toggle = getScopedEventControl(event, '[data-uzu-tree-toggle], .uzu-tree-toggle', tree, '[data-uzu-tree]');
+        const item = toggle ? toggle.closest('[data-uzu-tree-item], .uzu-tree-item') : getScopedEventControl(event, '[data-uzu-tree-item], .uzu-tree-item', tree, '[data-uzu-tree]');
+        if (!item) return;
+        if (toggle) {
+          event.preventDefault();
+          setTreeItemExpanded(item, !isTreeItemExpanded(item));
+        } else {
+          selectTreeItem(tree, item);
+        }
+      });
+      tree.addEventListener('keydown', (event) => {
+        const item = event.target instanceof Element ? event.target.closest('[data-uzu-tree-item], .uzu-tree-item') : null;
+        if (!item || !tree.contains(item)) return;
+        const visible = getVisibleTreeItems(tree);
+        const index = visible.indexOf(item);
+        let next = null;
+        if (event.key === 'ArrowDown') next = visible[index + 1] || visible[0];
+        else if (event.key === 'ArrowUp') next = visible[index - 1] || visible.at(-1);
+        else if (event.key === 'ArrowRight') {
+          if (getTreeItemGroup(item) && !isTreeItemExpanded(item)) setTreeItemExpanded(item, true);
+          else next = getVisibleTreeItems(tree)[index + 1] || null;
+        } else if (event.key === 'ArrowLeft') {
+          if (getTreeItemGroup(item) && isTreeItemExpanded(item)) setTreeItemExpanded(item, false);
+          else next = item.parentElement?.closest('[data-uzu-tree-item], .uzu-tree-item');
+        } else if (event.key === 'Home') next = visible[0];
+        else if (event.key === 'End') next = visible.at(-1);
+        else if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          selectTreeItem(tree, item);
+        }
+        if (next) {
+          event.preventDefault();
+          getTreeItems(tree).forEach((control) => control.setAttribute('tabindex', control === next ? '0' : '-1'));
+          next.focus();
+        }
+      });
+    });
+  }
+
+  function initAccordions(root = document) {
+    queryAll(root, '[data-uzu-accordion]').forEach((accordion) => {
+      const disclosures = getScopedControls(accordion, '[data-uzu-disclosure]', '[data-uzu-accordion]');
+      if (!disclosures.length) return;
+      const allowMultiple = accordion.dataset.uzuAccordionMultiple === 'true';
+      if (!allowMultiple) {
+        let hasOpenDisclosure = false;
+        disclosures.forEach((disclosure) => {
+          if (!disclosure.classList.contains('is-open')) return;
+          if (hasOpenDisclosure) setDisclosureState(disclosure, false, false);
+          else hasOpenDisclosure = true;
+        });
+      }
+      if (!markInitialized(accordion, 'Accordion')) return;
+      disclosures.forEach((disclosure) => {
+        disclosure.addEventListener('uzu-disclosure-change', (event) => {
+          if (event.target !== disclosure) return;
+          if (event.detail.open && !allowMultiple) {
+            disclosures.forEach((item) => {
+              if (item !== disclosure) setDisclosureState(item, false, false);
+            });
+          }
+          accordion.dispatchEvent(new CustomEvent('uzu-accordion-change', {
+            bubbles: true,
+            detail: { accordion, disclosure, open: Boolean(event.detail.open) }
+          }));
+        });
+      });
+    });
+  }
+
+  function getHoverCardTrigger(card) {
+    return card.querySelector('[data-uzu-hover-card-trigger], .uzu-hover-card-trigger');
+  }
+
+  function getHoverCardContent(card) {
+    return card.querySelector('[data-uzu-hover-card-content], .uzu-hover-card-content');
+  }
+
+  function clearHoverCardTimer(card, store) {
+    const timer = store.get(card);
+    if (!timer) return;
+    window.clearTimeout(timer);
+    store.delete(card);
+  }
+
+  function setHoverCardState(card, open, emit = true) {
+    const trigger = getHoverCardTrigger(card);
+    const content = getHoverCardContent(card);
+    if (!content) return;
+    clearHoverCardTimer(card, hoverCardOpenTimers);
+    clearHoverCardTimer(card, hoverCardCloseTimers);
+    if (trigger) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) {
+      content.hidden = false;
+      card.classList.remove('is-closing');
+      card.classList.add('is-open');
+    } else if (card.classList.contains('is-open')) {
+      card.classList.remove('is-open');
+      card.classList.add('is-closing');
+      const finish = () => {
+        card.classList.remove('is-closing');
+        content.hidden = true;
+        hoverCardCloseTimers.delete(card);
+      };
+      const timer = scheduleAfterAnimation([content], finish);
+      if (timer) hoverCardCloseTimers.set(card, timer);
+    } else {
+      card.classList.remove('is-closing');
+      content.hidden = true;
+    }
+    if (emit) {
+      card.dispatchEvent(new CustomEvent(open ? 'uzu-hover-card-open' : 'uzu-hover-card-close', {
+        bubbles: true,
+        detail: { hoverCard: card, trigger, content }
+      }));
+    }
+  }
+
+  function initHoverCards(root = document) {
+    queryAll(root, '[data-uzu-hover-card]').forEach((card) => {
+      const trigger = getHoverCardTrigger(card);
+      const content = getHoverCardContent(card);
+      if (!trigger || !content) return;
+      const contentId = ensureId(content, 'uzu-hover-card-content');
+      trigger.setAttribute('aria-haspopup', 'dialog');
+      trigger.setAttribute('aria-expanded', card.classList.contains('is-open') ? 'true' : 'false');
+      trigger.setAttribute('aria-controls', contentId);
+      if (!card.classList.contains('is-open')) content.hidden = true;
+      if (!markInitialized(card, 'HoverCard')) return;
+      const openDelay = Number.isFinite(Number(card.dataset.uzuHoverCardDelay)) ? Number(card.dataset.uzuHoverCardDelay) : 120;
+      const closeDelay = Number.isFinite(Number(card.dataset.uzuHoverCardCloseDelay)) ? Number(card.dataset.uzuHoverCardCloseDelay) : 120;
+      const open = () => {
+        clearHoverCardTimer(card, hoverCardCloseTimers);
+        clearHoverCardTimer(card, hoverCardOpenTimers);
+        const timer = window.setTimeout(() => setHoverCardState(card, true), openDelay);
+        hoverCardOpenTimers.set(card, timer);
+      };
+      const close = () => {
+        clearHoverCardTimer(card, hoverCardOpenTimers);
+        clearHoverCardTimer(card, hoverCardCloseTimers);
+        const timer = window.setTimeout(() => setHoverCardState(card, false), closeDelay);
+        hoverCardCloseTimers.set(card, timer);
+      };
+      [trigger, content].forEach((element) => {
+        element.addEventListener('mouseenter', open);
+        element.addEventListener('mouseleave', close);
+        element.addEventListener('focusin', open);
+        element.addEventListener('focusout', close);
+      });
+      trigger.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          setHoverCardState(card, false);
+          trigger.focus();
+        }
+      });
+    });
+  }
+
+  function setTagSelected(tag, selected, emit = true) {
+    const nextSelected = Boolean(selected);
+    const previousSelected = tag.classList.contains('is-selected') || tag.getAttribute('aria-pressed') === 'true';
+    tag.classList.toggle('is-selected', nextSelected);
+    tag.setAttribute('aria-pressed', nextSelected ? 'true' : 'false');
+    if (emit && nextSelected !== previousSelected) {
+      tag.dispatchEvent(new CustomEvent('uzu-tag-change', {
+        bubbles: true,
+        detail: { selected: nextSelected, tag, value: getControlValue(tag, 'uzuTagValue') }
+      }));
+      tag.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  function closeTag(tag, closeButton = null) {
+    const event = new CustomEvent('uzu-tag-close', {
+      bubbles: true,
+      cancelable: true,
+      detail: { tag, closeButton, value: getControlValue(tag, 'uzuTagValue') }
+    });
+    tag.dispatchEvent(event);
+    if (!event.defaultPrevented) tag.hidden = true;
+  }
+
+  function isSelectableTag(tag) {
+    return tag.dataset.uzuTagSelectable === 'true' || tag.hasAttribute('aria-pressed');
+  }
+
+  function initTags(root = document) {
+    queryAll(root, '[data-uzu-tag]').forEach((tag) => {
+      const selectable = isSelectableTag(tag);
+      if (selectable) {
+        if (!/^(A|BUTTON)$/i.test(tag.tagName)) {
+          tag.setAttribute('role', tag.getAttribute('role') || 'button');
+          tag.setAttribute('tabindex', tag.getAttribute('tabindex') || '0');
+        }
+        setTagSelected(tag, tag.classList.contains('is-selected') || tag.getAttribute('aria-pressed') === 'true', false);
+      }
+      queryAll(tag, '[data-uzu-tag-close], .uzu-tag-close').forEach((button) => {
+        button.setAttribute('aria-label', button.getAttribute('aria-label') || 'Remove tag');
+      });
+      if (!markInitialized(tag, 'Tag')) return;
+      tag.addEventListener('click', (event) => {
+        const closeButton = getScopedEventControl(event, '[data-uzu-tag-close], .uzu-tag-close', tag, '[data-uzu-tag]');
+        if (closeButton) {
+          event.preventDefault();
+          closeTag(tag, closeButton);
+          return;
+        }
+        if (selectable && !isControlDisabled(tag)) {
+          setTagSelected(tag, !(tag.classList.contains('is-selected') || tag.getAttribute('aria-pressed') === 'true'));
+        }
+      });
+      tag.addEventListener('keydown', (event) => {
+        if (!selectable || isControlDisabled(tag) || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        setTagSelected(tag, !(tag.classList.contains('is-selected') || tag.getAttribute('aria-pressed') === 'true'));
+      });
+    });
+  }
+
+  function clampNumber(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function setSplitPaneSize(splitPane, size, emit = true) {
+    const min = Number(splitPane.dataset.uzuSplitMin || 20);
+    const max = Number(splitPane.dataset.uzuSplitMax || 80);
+    const next = clampNumber(size, min, max);
+    splitPane.style.setProperty('--uzu-split-primary-size', `${next}%`);
+    splitPane.dataset.uzuSplitSize = String(next);
+    const key = splitPane.dataset.uzuSplitKey;
+    if (key) storage.set(`uzu-split:${key}`, String(next));
+    queryAll(splitPane, '[data-uzu-split-resizer], .uzu-split-resizer').forEach((resizer) => {
+      resizer.setAttribute('aria-valuenow', String(Math.round(next)));
+    });
+    if (emit) {
+      splitPane.dispatchEvent(new CustomEvent('uzu-split-resize', {
+        bubbles: true,
+        detail: { splitPane, size: next }
+      }));
+    }
+  }
+
+  function initSplitPanes(root = document) {
+    queryAll(root, '[data-uzu-split-pane]').forEach((splitPane) => {
+      const resizer = splitPane.querySelector('[data-uzu-split-resizer], .uzu-split-resizer');
+      if (!resizer) return;
+      const orientation = splitPane.dataset.uzuSplitOrientation === 'vertical' ? 'vertical' : 'horizontal';
+      splitPane.dataset.uzuSplitOrientation = orientation;
+      resizer.setAttribute('role', 'separator');
+      resizer.setAttribute('tabindex', resizer.getAttribute('tabindex') || '0');
+      resizer.setAttribute('aria-orientation', orientation);
+      const saved = splitPane.dataset.uzuSplitKey ? Number(storage.get(`uzu-split:${splitPane.dataset.uzuSplitKey}`)) : NaN;
+      setSplitPaneSize(splitPane, Number.isFinite(saved) ? saved : Number(splitPane.dataset.uzuSplitSize || 50), false);
+      if (!markInitialized(splitPane, 'SplitPane')) return;
+      const getPointSize = (event) => {
+        const rect = splitPane.getBoundingClientRect();
+        const raw = orientation === 'vertical'
+          ? ((event.clientY - rect.top) / rect.height) * 100
+          : ((event.clientX - rect.left) / rect.width) * 100;
+        return Number.isFinite(raw) ? raw : Number(splitPane.dataset.uzuSplitSize || 50);
+      };
+      const stopDrag = () => {
+        splitPane.classList.remove('is-resizing');
+        document.removeEventListener('pointermove', moveDrag);
+        document.removeEventListener('pointerup', stopDrag);
+      };
+      const moveDrag = (event) => {
+        event.preventDefault();
+        setSplitPaneSize(splitPane, getPointSize(event));
+      };
+      resizer.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        splitPane.classList.add('is-resizing');
+        document.addEventListener('pointermove', moveDrag);
+        document.addEventListener('pointerup', stopDrag, { once: true });
+      });
+      resizer.addEventListener('keydown', (event) => {
+        const keyMap = orientation === 'vertical'
+          ? { ArrowUp: -2, ArrowDown: 2, Home: -100, End: 100 }
+          : { ArrowLeft: -2, ArrowRight: 2, Home: -100, End: 100 };
+        if (!(event.key in keyMap)) return;
+        event.preventDefault();
+        const current = Number(splitPane.dataset.uzuSplitSize || 50);
+        const next = event.key === 'Home' ? Number(splitPane.dataset.uzuSplitMin || 20)
+          : event.key === 'End' ? Number(splitPane.dataset.uzuSplitMax || 80)
+            : current + keyMap[event.key];
+        setSplitPaneSize(splitPane, next);
+      });
+    });
+  }
+
+  function setResizableSize(panel, width, height, emit = true) {
+    const axis = panel.dataset.uzuResizableAxis || 'both';
+    const minWidth = Number(panel.dataset.uzuResizableMinWidth || 160);
+    const maxWidth = Number(panel.dataset.uzuResizableMaxWidth || 960);
+    const minHeight = Number(panel.dataset.uzuResizableMinHeight || 100);
+    const maxHeight = Number(panel.dataset.uzuResizableMaxHeight || 720);
+    const nextWidth = clampNumber(width, minWidth, maxWidth);
+    const nextHeight = clampNumber(height, minHeight, maxHeight);
+    if (axis !== 'vertical') panel.style.setProperty('--uzu-resizable-width', `${nextWidth}px`);
+    if (axis !== 'horizontal') panel.style.setProperty('--uzu-resizable-height', `${nextHeight}px`);
+    panel.dataset.uzuResizableWidth = String(Math.round(nextWidth));
+    panel.dataset.uzuResizableHeight = String(Math.round(nextHeight));
+    const key = panel.dataset.uzuResizableKey;
+    if (key) storage.set(`uzu-resizable:${key}`, `${Math.round(nextWidth)}:${Math.round(nextHeight)}`);
+    if (emit) {
+      panel.dispatchEvent(new CustomEvent('uzu-resizable-resize', {
+        bubbles: true,
+        detail: { resizable: panel, width: nextWidth, height: nextHeight }
+      }));
+    }
+  }
+
+  function initResizables(root = document) {
+    queryAll(root, '[data-uzu-resizable]').forEach((panel) => {
+      const handle = panel.querySelector('[data-uzu-resizable-handle], .uzu-resizable-handle');
+      if (!handle) return;
+      const rect = panel.getBoundingClientRect();
+      const saved = panel.dataset.uzuResizableKey ? storage.get(`uzu-resizable:${panel.dataset.uzuResizableKey}`) : '';
+      const [savedWidth, savedHeight] = String(saved || '').split(':').map(Number);
+      setResizableSize(panel, Number.isFinite(savedWidth) ? savedWidth : Number(panel.dataset.uzuResizableWidth || rect.width || 320), Number.isFinite(savedHeight) ? savedHeight : Number(panel.dataset.uzuResizableHeight || rect.height || 180), false);
+      handle.setAttribute('role', 'separator');
+      handle.setAttribute('tabindex', handle.getAttribute('tabindex') || '0');
+      if (!markInitialized(panel, 'Resizable')) return;
+      let start = null;
+      const move = (event) => {
+        if (!start) return;
+        event.preventDefault();
+        setResizableSize(panel, start.width + event.clientX - start.x, start.height + event.clientY - start.y);
+      };
+      const stop = () => {
+        panel.classList.remove('is-resizing');
+        start = null;
+        document.removeEventListener('pointermove', move);
+      };
+      handle.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        const bounds = panel.getBoundingClientRect();
+        start = { x: event.clientX, y: event.clientY, width: bounds.width, height: bounds.height };
+        panel.classList.add('is-resizing');
+        document.addEventListener('pointermove', move);
+        document.addEventListener('pointerup', stop, { once: true });
+      });
+      handle.addEventListener('keydown', (event) => {
+        const currentWidth = Number(panel.dataset.uzuResizableWidth || panel.getBoundingClientRect().width);
+        const currentHeight = Number(panel.dataset.uzuResizableHeight || panel.getBoundingClientRect().height);
+        let width = currentWidth;
+        let height = currentHeight;
+        if (event.key === 'ArrowRight') width += 12;
+        else if (event.key === 'ArrowLeft') width -= 12;
+        else if (event.key === 'ArrowDown') height += 12;
+        else if (event.key === 'ArrowUp') height -= 12;
+        else return;
+        event.preventDefault();
+        setResizableSize(panel, width, height);
+      });
+    });
+  }
+
+  function createJsonNode(value, key = '') {
+    const row = document.createElement('div');
+    row.className = 'uzu-json-node';
+    if (key) {
+      const keyNode = document.createElement('span');
+      keyNode.className = 'uzu-json-key';
+      keyNode.textContent = `"${key}"`;
+      row.append(keyNode, document.createTextNode(': '));
+    }
+    if (value && typeof value === 'object') {
+      const isArray = Array.isArray(value);
+      const entries = Object.entries(value);
+      const toggle = document.createElement('button');
+      toggle.className = 'uzu-json-toggle';
+      toggle.type = 'button';
+      toggle.textContent = isArray ? `[${entries.length}]` : `{${entries.length}}`;
+      const children = document.createElement('div');
+      children.className = 'uzu-json-children';
+      children.dataset.uzuJsonChildren = '';
+      entries.forEach(([childKey, childValue]) => children.append(createJsonNode(childValue, isArray ? '' : childKey)));
+      toggle.addEventListener('click', () => {
+        const collapsed = !children.hidden;
+        children.hidden = collapsed;
+        toggle.classList.toggle('is-collapsed', collapsed);
+      });
+      row.append(toggle, children);
+      return row;
+    }
+    const valueNode = document.createElement('span');
+    valueNode.className = `uzu-json-value uzu-json-${value === null ? 'null' : typeof value}`;
+    valueNode.textContent = typeof value === 'string' ? `"${value}"` : String(value);
+    row.append(valueNode);
+    return row;
+  }
+
+  function renderJson(value) {
+    const fragment = document.createDocumentFragment();
+    fragment.append(createJsonNode(value));
+    return fragment;
+  }
+
+  function initJsonViewers(root = document) {
+    queryAll(root, '[data-uzu-json-viewer]').forEach((viewer) => {
+      if (!markInitialized(viewer, 'JsonViewer')) return;
+      const source = (viewer.querySelector('script[type="application/json"]')?.textContent || viewer.dataset.uzuJsonSource || viewer.textContent || '').trim();
+      viewer.dataset.uzuJsonSource = source;
+      try {
+        const value = JSON.parse(source);
+        viewer.replaceChildren(renderJson(value));
+      } catch (_) {
+        viewer.classList.add('is-invalid');
+      }
+    });
+  }
+
+  function initDiffViewers(root = document) {
+    queryAll(root, '[data-uzu-diff-viewer]').forEach((viewer) => {
+      if (!markInitialized(viewer, 'DiffViewer') || viewer.querySelector('.uzu-diff-line')) return;
+      const source = String(viewer.textContent || '').replace(/\r\n?/g, '\n').trim();
+      const lines = source.split('\n');
+      viewer.replaceChildren();
+      lines.forEach((line, index) => {
+        const row = document.createElement('div');
+        const type = line.startsWith('+') ? 'add' : line.startsWith('-') ? 'remove' : line.startsWith('@') ? 'meta' : 'context';
+        row.className = `uzu-diff-line uzu-diff-line-${type}`;
+        const gutter = document.createElement('span');
+        gutter.className = 'uzu-diff-gutter';
+        gutter.textContent = String(index + 1);
+        const code = document.createElement('code');
+        code.className = 'uzu-diff-code';
+        code.textContent = line;
+        row.append(gutter, code);
+        viewer.append(row);
+      });
+    });
+  }
+
+  function initRichEditors(root = document) {
+    queryAll(root, '[data-uzu-rich-editor]').forEach((editor) => {
+      const surface = editor.querySelector('[data-uzu-editor-surface], .uzu-editor-surface');
+      if (!surface) return;
+      surface.setAttribute('contenteditable', surface.getAttribute('contenteditable') || 'true');
+      surface.setAttribute('role', surface.getAttribute('role') || 'textbox');
+      surface.setAttribute('aria-multiline', surface.getAttribute('aria-multiline') || 'true');
+      if (!markInitialized(editor, 'RichEditor')) return;
+      const syncToolbar = () => {
+        const selection = document.getSelection();
+        const selectedNode = selection?.anchorNode;
+        const selectedElement = selectedNode instanceof Element ? selectedNode : selectedNode?.parentElement;
+        if (!selectedElement || !surface.contains(selectedElement)) return;
+        queryAll(editor, '[data-uzu-editor-command]').forEach((button) => {
+          const command = button.dataset.uzuEditorCommand || '';
+          const value = button.dataset.uzuEditorValue || '';
+          let pressed = null;
+          try {
+            if (['bold', 'italic', 'underline', 'strikeThrough', 'insertUnorderedList', 'insertOrderedList'].includes(command)) {
+              pressed = document.queryCommandState(command);
+            } else if (command === 'formatBlock' && value) {
+              pressed = String(document.queryCommandValue(command) || '').toLowerCase() === value.toLowerCase();
+            }
+          } catch (_) {
+            pressed = null;
+          }
+          if (pressed === null) return;
+          button.classList.toggle('is-active', pressed);
+          button.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+        });
+      };
+      richEditorSyncers.set(editor, syncToolbar);
+      queryAll(editor, '[data-uzu-editor-command]').forEach((button) => {
+        const command = button.dataset.uzuEditorCommand || '';
+        if (['bold', 'italic', 'underline', 'strikeThrough', 'insertUnorderedList', 'insertOrderedList', 'formatBlock'].includes(command)) {
+          button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') || 'false');
+        }
+        button.addEventListener('mousedown', (event) => event.preventDefault());
+        button.addEventListener('click', () => {
+          surface.focus();
+          document.execCommand(command, false, button.dataset.uzuEditorValue || null);
+          syncToolbar();
+          editor.dispatchEvent(new CustomEvent('uzu-editor-change', {
+            bubbles: true,
+            detail: { editor, surface, value: surface.innerHTML }
+          }));
+          editor.dispatchEvent(new CustomEvent('uzu-editor-command', {
+            bubbles: true,
+            detail: { editor, surface, command, value: button.dataset.uzuEditorValue || '' }
+          }));
+        });
+      });
+      surface.addEventListener('input', () => {
+        syncToolbar();
+        editor.dispatchEvent(new CustomEvent('uzu-editor-change', {
+          bubbles: true,
+          detail: { editor, surface, value: surface.innerHTML }
+        }));
+      });
+      surface.addEventListener('keyup', syncToolbar);
+      surface.addEventListener('mouseup', syncToolbar);
+      syncToolbar();
+    });
+  }
+
+  function syncSelectedRichEditor() {
+    const selection = document.getSelection();
+    const selectedNode = selection?.anchorNode;
+    const selectedElement = selectedNode instanceof Element ? selectedNode : selectedNode?.parentElement;
+    const editor = selectedElement?.closest?.('[data-uzu-rich-editor]');
+    const syncToolbar = editor ? richEditorSyncers.get(editor) : null;
+    if (syncToolbar) syncToolbar();
+  }
+
+  function initRichEditorSelectionListener() {
+    if (richEditorSelectionListenerInitialized) return;
+    document.addEventListener('selectionchange', syncSelectedRichEditor);
+    richEditorSelectionListenerInitialized = true;
+  }
+
+  function initMarkdownEditors(root = document) {
+    queryAll(root, '[data-uzu-markdown-editor]').forEach((editor) => {
+      const source = editor.querySelector('[data-uzu-markdown-source]');
+      const preview = editor.querySelector('[data-uzu-markdown-preview]');
+      if (!source || !preview) return;
+      const render = () => {
+        const sourceValue = 'value' in source ? source.value : source.textContent;
+        preview.replaceChildren(renderMarkdown(sourceValue || ''));
+        initCodeCopy(preview);
+        editor.dispatchEvent(new CustomEvent('uzu-markdown-editor-render', {
+          bubbles: true,
+          detail: { editor, source, preview }
+        }));
+      };
+      render();
+      if (!markInitialized(editor, 'MarkdownEditor')) return;
+      source.addEventListener('input', render);
+    });
+  }
+
+  function initInlineEditors(root = document) {
+    queryAll(root, '[data-uzu-inline-editor]').forEach((editor) => {
+      editor.setAttribute('contenteditable', editor.getAttribute('contenteditable') || 'true');
+      editor.setAttribute('role', editor.getAttribute('role') || 'textbox');
+      const sync = (emit = true) => {
+        editor.classList.toggle('is-empty', !editor.textContent.trim());
+        if (emit) {
+          editor.dispatchEvent(new CustomEvent('uzu-inline-editor-change', {
+            bubbles: true,
+            detail: { editor, value: editor.textContent }
+          }));
+        }
+      };
+      sync(false);
+      if (!markInitialized(editor, 'InlineEditor')) return;
+      editor.addEventListener('input', sync);
+    });
+  }
+
+  function initEditors(root = document) {
+    initRichEditors(root);
+    initMarkdownEditors(root);
+    initInlineEditors(root);
+    initRichEditorSelectionListener();
   }
 
   function getDialog(selector) {
@@ -1107,8 +2630,8 @@
       .map((item) => getPanelNavPanel(getPanelNavTarget(item)))
       .filter(Boolean);
     if (panels.length) return [...new Set(panels)];
-    const selector = root.dataset.uzuPanelSelector || '.uzu-doc-panel';
-    const scope = root.closest(root.dataset.uzuPanelScope || '.uzu-doc-layout, .uzu-scope, main, body') || root.parentElement || document;
+    const selector = root.dataset.uzuPanelSelector || '.uzu-panel';
+    const scope = root.closest(root.dataset.uzuPanelScope || '.uzu-scope, main, body') || root.parentElement || document;
     return queryAll(scope, selector).filter((item) => item === panel || item.parentElement === panel.parentElement);
   }
 
@@ -1139,6 +2662,61 @@
     }));
     queueIndicatorRefresh(panel, true);
     return panel;
+  }
+
+  function syncStepNavState(stepNav, activeButton, emit = true) {
+    const buttons = getScopedControls(stepNav, '.uzu-step-nav-button', '[data-uzu-step-nav]');
+    const enabled = getEnabledControls(buttons);
+    const nextButton = activeButton && !isControlDisabled(activeButton) ? activeButton : enabled[0];
+    if (!nextButton) return;
+    const previousValue = stepNav.dataset.uzuStepNavValue || '';
+    const value = getControlValue(nextButton, 'uzuStepValue');
+    let reachedActive = false;
+    buttons.forEach((button) => {
+      const isActive = button === nextButton;
+      if (isActive) reachedActive = true;
+      button.classList.toggle('is-active', isActive);
+      button.classList.toggle('is-complete', !reachedActive && !isControlDisabled(button));
+      if (isActive) button.setAttribute('aria-current', 'step');
+      else button.removeAttribute('aria-current');
+    });
+    stepNav.dataset.uzuStepNavValue = value;
+    if (emit && value !== previousValue) {
+      stepNav.dispatchEvent(new CustomEvent('uzu-step-nav-change', {
+        bubbles: true,
+        detail: { value, step: nextButton, stepNav, index: buttons.indexOf(nextButton) }
+      }));
+      stepNav.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  function initStepNavs(root = document) {
+    queryAll(root, '[data-uzu-step-nav]').forEach((stepNav) => {
+      const buttons = getScopedControls(stepNav, '.uzu-step-nav-button', '[data-uzu-step-nav]');
+      if (!buttons.length) return;
+      const active = buttons.find((button) => button.classList.contains('is-active') || button.getAttribute('aria-current') === 'step');
+      syncStepNavState(stepNav, active, false);
+      if (!markInitialized(stepNav, 'StepNav')) return;
+      stepNav.addEventListener('click', (event) => {
+        const button = getScopedEventControl(event, '.uzu-step-nav-button', stepNav, '[data-uzu-step-nav]');
+        if (!button || isControlDisabled(button)) return;
+        syncStepNavState(stepNav, button);
+      });
+      stepNav.addEventListener('keydown', (event) => {
+        const button = getScopedEventControl(event, '.uzu-step-nav-button', stepNav, '[data-uzu-step-nav]');
+        if (!button || isControlDisabled(button)) return;
+        let next = null;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = moveActiveControl(buttons, button, 1);
+        else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = moveActiveControl(buttons, button, -1);
+        else if (event.key === 'Home') next = getEnabledControls(buttons)[0];
+        else if (event.key === 'End') next = getEnabledControls(buttons).at(-1);
+        if (next) {
+          event.preventDefault();
+          syncStepNavState(stepNav, next);
+          next.focus();
+        }
+      });
+    });
   }
 
   function showPanelNavFromHash(root) {
@@ -1256,7 +2834,7 @@
     };
 
     lines.forEach((line) => {
-      const fence = line.match(/^```([\w-]*)\s*$/);
+      const fence = line.match(/^\s{0,3}```([\w-]*)\s*$/);
       if (fence) {
         if (inFence) {
           fragment.append(createCodeBlock(fenceLines.join('\n'), fenceLanguage));
@@ -1391,11 +2969,20 @@
     queryAll(document, '[data-uzu-select].is-open').forEach((select) => {
       if (!select.contains(event.target)) closeSelect(select);
     });
+    queryAll(document, '[data-uzu-combobox].is-open').forEach((combobox) => {
+      if (!combobox.contains(event.target)) closeCombobox(combobox);
+    });
+    queryAll(document, '[data-uzu-menu].is-open, [data-uzu-context-menu].is-open').forEach((menu) => {
+      const trigger = getContextMenuTrigger(menu);
+      if (!menu.contains(event.target) && !(trigger instanceof Element && trigger.contains(event.target))) closeMenu(menu);
+    });
   }
 
   function handleDocumentKeydown(event) {
     if (event.key !== 'Escape') return;
-    if (activeDialog) {
+    if (closeOpenMenus()) {
+      event.preventDefault();
+    } else if (activeDialog) {
       event.preventDefault();
       closeDialog(activeDialog);
     }
@@ -1428,7 +3015,7 @@
   function init(root = document) {
     syncRootClass();
     initGlobalListeners();
-    for (const fn of [initThemeToggles, initLanguageToggles, initSelects, initTabs, initSegmented, initPaginations, initSwitches, initDisclosures, initDialogs, initToasts, initPanelNavs, initMarkdown, initCodeCopy]) {
+    for (const fn of [initThemeToggles, initLanguageToggles, initSelects, initTabs, initSegmented, initPaginations, initSwitches, initSearches, initPasswords, initSteppers, initSliders, initMenus, initContextMenus, initMenubars, initCommands, initComboboxes, initDataGrids, initTrees, initDisclosures, initAccordions, initHoverCards, initTags, initSplitPanes, initResizables, initJsonViewers, initDiffViewers, initEditors, initDialogs, initToasts, initStepNavs, initPanelNavs, initMarkdown, initCodeCopy]) {
       try { fn(root); } catch (error) { console.error('[usuzumi]', error); }
     }
     queueIndicatorRefresh(root);
@@ -1439,7 +3026,18 @@
     applyTheme,
     applyLanguage,
     setSwitchState,
+    setPasswordVisible,
+    setStepperValue,
+    setComboboxValue,
+    setTagSelected,
+    setSplitPaneSize,
+    setResizableSize,
+    setTreeItemExpanded,
+    renderJson,
+    openMenu,
+    closeMenu,
     setPaginationPage: syncPaginationState,
+    setStepNavStep: syncStepNavState,
     renderMarkdown,
     initCodeCopy,
     openDialog,
