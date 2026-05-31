@@ -33,20 +33,50 @@ function report(filePath, message) {
 }
 
 function isExternalReference(value) {
-  return /^(https?:|mailto:|tel:|data:|#)/i.test(value);
+  return /^(https?:|mailto:|tel:|data:)/i.test(value);
 }
 
-function cleanReference(value) {
-  return value.split('#')[0].split('?')[0].trim();
+function splitReference(value) {
+  const trimmed = value.trim();
+  const noQuery = trimmed.split('?')[0];
+  const hashIndex = noQuery.indexOf('#');
+  return {
+    pathPart: hashIndex >= 0 ? noQuery.slice(0, hashIndex) : noQuery,
+    hash: hashIndex >= 0 ? noQuery.slice(hashIndex + 1) : ''
+  };
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function decodeHash(value) {
+  try {
+    return decodeURIComponent(value);
+  } catch (_) {
+    return value;
+  }
+}
+
+function hasHtmlHashTarget(filePath, hash) {
+  if (!hash || hash.startsWith(':~:text=')) return true;
+  const target = decodeHash(hash);
+  const pattern = new RegExp(`\\b(?:id|name)=["']${escapeRegExp(target)}["']`, 'i');
+  return pattern.test(readText(filePath));
 }
 
 function checkExistingReference(filePath, rawValue, label) {
   if (!rawValue || isExternalReference(rawValue)) return;
-  const cleaned = cleanReference(rawValue);
-  if (!cleaned || cleaned.startsWith('{') || cleaned.startsWith('var(') || cleaned.includes('${')) return;
-  const resolved = path.resolve(path.dirname(filePath), cleaned);
+  const { pathPart, hash } = splitReference(rawValue);
+  if (pathPart.startsWith('{') || pathPart.startsWith('var(') || pathPart.includes('${')) return;
+  if (!pathPart && !hash) return;
+  const resolved = pathPart ? path.resolve(path.dirname(filePath), pathPart) : filePath;
   if (!existsSync(resolved)) {
     report(filePath, `${label} reference does not exist: ${rawValue}`);
+    return;
+  }
+  if (hash && path.extname(resolved).toLowerCase() === '.html' && !hasHtmlHashTarget(resolved, hash)) {
+    report(filePath, `${label} hash target does not exist: ${rawValue}`);
   }
 }
 
@@ -89,6 +119,9 @@ function checkGuardrails(filePath, text) {
   }
   if (filePath.startsWith(path.join(root, 'ui')) && /catalog-body/i.test(text)) {
     report(filePath, 'site-only catalog selectors must not live in ui/ styles');
+  }
+  if (filePath.startsWith(path.join(root, 'ui')) && /\.(?:uzu-doc|uzu-guide)-[A-Za-z0-9_-]+/.test(text)) {
+    report(filePath, 'component-page documentation selectors must not live in ui/ files');
   }
 }
 
@@ -137,10 +170,25 @@ function validateTextFiles() {
 }
 
 function validateJavaScript() {
-  execFileSync(process.execPath, ['--check', path.join(root, 'ui/usuzumi.js')], {
-    cwd: root,
-    stdio: 'inherit'
+  const scriptFiles = walk(root).filter((filePath) => {
+    const extension = path.extname(filePath);
+    return extension === '.js' || extension === '.mjs';
   });
+  for (const filePath of scriptFiles) {
+    try {
+      if (filePath.startsWith(path.join(root, 'ui/js'))) {
+        new Function(readText(filePath));
+      } else {
+        execFileSync(process.execPath, ['--check', filePath], {
+          cwd: root,
+          stdio: 'pipe'
+        });
+      }
+    } catch (error) {
+      const output = [error.stdout, error.stderr, error.message].filter(Boolean).join('\n').trim();
+      report(filePath, `JavaScript syntax check failed${output ? `: ${output}` : ''}`);
+    }
+  }
 }
 
 validateJavaScript();
