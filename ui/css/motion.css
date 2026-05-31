@@ -1,0 +1,248 @@
+@keyframes uzu-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes uzu-skeleton {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@keyframes uzu-progress-indeterminate {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(280%);
+  }
+}
+
+@keyframes uzu-activity-dot {
+  0%,
+  80%,
+  100% {
+    opacity: .28;
+    transform: translateY(0);
+  }
+
+  40% {
+    opacity: .86;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes uzu-process-pulse {
+  0%,
+  100% {
+    opacity: .42;
+    transform: scale(.82);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes uzu-menu-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes uzu-menu-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes uzu-disclosure-in {
+  from {
+    opacity: 0;
+    max-height: 0;
+    padding-bottom: 0;
+  }
+
+  to {
+    opacity: 1;
+    max-height: var(--uzu-disclosure-panel-height, 240px);
+    padding-bottom: var(--uzu-disclosure-panel-block-end-padding);
+  }
+}
+
+@keyframes uzu-disclosure-out {
+  from {
+    opacity: 1;
+    max-height: var(--uzu-disclosure-panel-height, 240px);
+    padding-bottom: var(--uzu-disclosure-panel-block-end-padding);
+  }
+
+  to {
+    opacity: 0;
+    max-height: 0;
+    padding-bottom: 0;
+  }
+}
+
+@keyframes uzu-dialog-overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes uzu-dialog-overlay-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes uzu-dialog-surface-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes uzu-dialog-surface-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes uzu-toast-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes uzu-toast-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes uzu-page-panel-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .uzu-floating-controls {
+    top: 16px;
+    right: 16px;
+  }
+
+  .uzu-icon-button {
+    width: 34px;
+    height: 34px;
+  }
+
+  .uzu-toolbar .uzu-button,
+  .uzu-pagination .uzu-page-button {
+    width: auto;
+  }
+
+  .uzu-dialog-overlay {
+    padding: 16px;
+  }
+
+  .uzu-dialog-actions {
+    display: grid;
+  }
+
+  .uzu-toast-stack {
+    right: 16px;
+    bottom: 16px;
+    width: calc(100vw - 32px);
+  }
+
+  .uzu-markdown-editor,
+  .uzu-split-pane {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .uzu-markdown-source {
+    border-right: 0;
+    border-bottom: 1px solid var(--uzu-border-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uzu-button.is-loading::before,
+  .uzu-skeleton,
+  .uzu-progress-indeterminate .uzu-progress-bar,
+  .uzu-progress-bar.is-indeterminate,
+  .uzu-activity-dot,
+  .uzu-spinner,
+  .uzu-process-step.is-active::before,
+  .uzu-menu.is-open .uzu-menu-content,
+  .uzu-menu.is-closing .uzu-menu-content,
+  .uzu-combobox.is-open .uzu-combobox-list,
+  .uzu-select.is-open .uzu-select-menu,
+  .uzu-select.is-closing .uzu-select-menu,
+  .uzu-hover-card.is-open .uzu-hover-card-content,
+  .uzu-hover-card.is-closing .uzu-hover-card-content,
+  .uzu-disclosure.is-open .uzu-disclosure-panel,
+  .uzu-disclosure.is-closing .uzu-disclosure-panel,
+  .uzu-dialog-overlay.is-open,
+  .uzu-dialog-overlay.is-closing,
+  .uzu-modal[data-uzu-dialog].is-open,
+  .uzu-modal[data-uzu-dialog].is-closing,
+  .uzu-drawer[data-uzu-dialog].is-open,
+  .uzu-drawer[data-uzu-dialog].is-closing,
+  .uzu-sheet[data-uzu-dialog].is-open,
+  .uzu-sheet[data-uzu-dialog].is-closing,
+  .uzu-toast[data-uzu-toast],
+  .uzu-toast[data-uzu-toast].is-dismissed {
+    animation: none;
+  }
+
+  .uzu-progress-indeterminate .uzu-progress-bar,
+  .uzu-progress-bar.is-indeterminate {
+    transform: none;
+  }
+
+  .uzu-tabs[data-uzu-tabs-indicator="true"]::after,
+  .uzu-segmented[data-uzu-segmented-indicator="true"]::before {
+    transition: none;
+  }
+}

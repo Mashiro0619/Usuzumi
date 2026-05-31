@@ -1,0 +1,98 @@
+.uzu-alert {
+  --uzu-alert-max-width: 520px;
+  --uzu-alert-border-color: var(--uzu-border);
+  --uzu-alert-accent-color: var(--uzu-border-strong);
+  --uzu-alert-bg: var(--uzu-surface);
+  --uzu-alert-title-color: var(--uzu-fg-strong);
+  --uzu-alert-text-color: var(--uzu-muted);
+  width: 100%;
+  max-width: var(--uzu-alert-max-width);
+  padding: 16px 18px;
+  border: 1px solid var(--uzu-alert-border-color);
+  border-left-color: var(--uzu-alert-accent-color);
+  border-left-width: 8px;
+  border-radius: var(--uzu-radius-micro);
+  background: var(--uzu-alert-bg);
+  color: var(--uzu-alert-text-color);
+}
+
+.uzu-alert .uzu-title-pair h3 {
+  color: var(--uzu-alert-title-color);
+}
+
+.uzu-alert .uzu-title-pair p {
+  color: var(--uzu-alert-text-color);
+}
+
+.uzu-alert-info {
+  --uzu-alert-accent-color: var(--uzu-info);
+  --uzu-alert-bg: color-mix(in srgb, var(--uzu-info-bg) 55%, var(--uzu-surface));
+}
+
+.uzu-alert-success {
+  --uzu-alert-accent-color: var(--uzu-success);
+  --uzu-alert-bg: color-mix(in srgb, var(--uzu-success-bg) 55%, var(--uzu-surface));
+}
+
+.uzu-alert-warning {
+  --uzu-alert-accent-color: var(--uzu-warning);
+  --uzu-alert-bg: color-mix(in srgb, var(--uzu-warning-bg) 55%, var(--uzu-surface));
+}
+
+.uzu-alert-danger {
+  --uzu-alert-accent-color: var(--uzu-danger);
+  --uzu-alert-bg: color-mix(in srgb, var(--uzu-danger-bg) 55%, var(--uzu-surface));
+}
+
+.uzu-callout {
+  --uzu-callout-border-color: var(--uzu-border);
+  --uzu-callout-bg: color-mix(in srgb, var(--uzu-surface-soft) 56%, var(--uzu-surface));
+  --uzu-callout-title-color: var(--uzu-fg-strong);
+  --uzu-callout-text-color: var(--uzu-muted);
+  padding: 16px 18px;
+  border: 1px solid var(--uzu-callout-border-color);
+  border-radius: var(--uzu-radius-micro);
+  background: var(--uzu-callout-bg);
+  color: var(--uzu-callout-text-color);
+  display: grid;
+  gap: 8px;
+}
+
+.uzu-callout-title {
+  margin: 0;
+  color: var(--uzu-callout-title-color);
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 400;
+}
+
+.uzu-callout > :last-child {
+  margin-bottom: 0;
+}
+
+.uzu-callout p {
+  margin: 0;
+  color: var(--uzu-callout-text-color);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.uzu-callout-compact {
+  padding: 12px 14px;
+  gap: 6px;
+}
+
+.uzu-callout-note {
+  --uzu-callout-border-color: color-mix(in srgb, var(--uzu-info) 24%, var(--uzu-border));
+  --uzu-callout-bg: color-mix(in srgb, var(--uzu-info-bg) 42%, var(--uzu-surface));
+}
+
+.uzu-callout-info {
+  --uzu-callout-border-color: color-mix(in srgb, var(--uzu-fg-strong) 16%, var(--uzu-border));
+  --uzu-callout-bg: color-mix(in srgb, var(--uzu-surface-muted) 68%, var(--uzu-surface));
+}
+
+.uzu-callout-warning {
+  --uzu-callout-border-color: color-mix(in srgb, var(--uzu-warning) 30%, var(--uzu-border));
+  --uzu-callout-bg: color-mix(in srgb, var(--uzu-warning-bg) 50%, var(--uzu-surface));
+}

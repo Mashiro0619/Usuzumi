@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ignoredDirs = new Set(['.git', 'node_modules', 'dist', 'build', 'coverage', '.cache', '.tmp']);
+const ignoredFiles = new Set(['AGENTS.md', 'REVIEW.md']);
 const textExtensions = new Set(['.css', '.html', '.js', '.md', '.json']);
 const issues = [];
 
@@ -91,13 +92,44 @@ function checkGuardrails(filePath, text) {
   }
 }
 
+function uniqueValues(values) {
+  return [...new Set(values)];
+}
+
+function checkComponentPageStructure(filePath, text) {
+  if (toPosix(filePath) !== 'example/components.html') return;
+  if (!/<aside class="uzu-doc-sidebar[\s\S]*data-uzu-component-nav[\s\S]*?<\/aside>/.test(text)) {
+    report(filePath, 'component page is missing the main component sidebar');
+  }
+
+  const panelIds = uniqueValues(
+    [...text.matchAll(/<section class="uzu-doc-panel" id="([^"]+)"/g)].map((match) => match[1])
+  );
+  if (panelIds.length < 60) {
+    report(filePath, `component page exposes too few component panels: ${panelIds.length}`);
+  }
+  if (text.includes('id="component-tab-') || text.includes('data-uzu-panel-target="#component-')) {
+    report(filePath, 'component page should generate the main sidebar from panels instead of hand-writing component nav buttons');
+  }
+  const panelMatches = [...text.matchAll(/<section class="uzu-doc-panel" id="([^"]+)"[\s\S]*?(?=<section class="uzu-doc-panel"|<footer class="uzu-footer")/g)];
+  for (const [panelText, id] of panelMatches) {
+    const hasCategory = /<p class="uzu-section-label">[\s\S]*?<\/p>/.test(panelText);
+    const hasLocalizedTitle = /<h2 class="uzu-section-title">[\s\S]*?<span data-lang="zh">[\s\S]*?<span data-lang="en">/.test(panelText);
+    if (!hasCategory || !hasLocalizedTitle) {
+      report(filePath, `component panel is missing generated navigation metadata: ${id}`);
+    }
+  }
+}
+
 function validateTextFiles() {
   for (const filePath of walk(root)) {
     const extension = path.extname(filePath);
+    if (ignoredFiles.has(path.basename(filePath))) continue;
     if (!textExtensions.has(extension)) continue;
     if (extension === '.html' && !filePath.startsWith(path.join(root, 'example'))) continue;
     const text = readText(filePath);
     checkGuardrails(filePath, text);
+    checkComponentPageStructure(filePath, text);
     if (extension === '.html') checkHtmlReferences(filePath, text);
     if (extension === '.css') checkCssReferences(filePath, text);
     if (extension === '.md') checkMarkdownReferences(filePath, text);

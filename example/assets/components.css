@@ -1,0 +1,363 @@
+.uzu-doc-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 36px;
+  align-items: start;
+}
+
+.uzu-doc-topbar {
+  margin-bottom: 46px;
+  padding-right: 108px;
+}
+
+.uzu-doc-sidebar {
+  min-width: 0;
+  max-height: calc(100vh - 72px);
+  position: sticky;
+  top: 32px;
+  overflow: auto;
+  padding-right: 12px;
+}
+
+.uzu-doc-layout > * {
+  min-width: 0;
+}
+
+.uzu-doc-main {
+  min-width: 0;
+}
+
+.uzu-doc-main > .uzu-footer {
+  margin-top: 56px;
+}
+
+.uzu-doc-brand {
+  color: var(--uzu-fg-strong);
+  font-family: var(--uzu-font-signature);
+  font-size: var(--uzu-doc-brand-size, 34px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.uzu-doc-panel {
+  min-width: 0;
+  animation: uzu-page-panel-in var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-doc-panel[hidden],
+.uzu-doc-preview[hidden],
+.uzu-doc-code-panel[hidden] {
+  display: none;
+}
+
+.uzu-doc-panel .uzu-section-head {
+  margin-bottom: 18px;
+}
+
+.uzu-doc-note {
+  max-width: 720px;
+  overflow-wrap: anywhere;
+}
+
+.uzu-doc-guidance-block {
+  margin-top: 22px;
+  margin-bottom: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.uzu-doc-guidance,
+.uzu-doc-interface {
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-micro);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 48%, var(--uzu-surface));
+}
+
+.uzu-doc-guidance h3 {
+  margin: 0 0 8px;
+  color: var(--uzu-fg-strong);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.uzu-doc-tutorial {
+  display: grid;
+  gap: 14px;
+}
+
+.uzu-doc-tutorial h3 {
+  margin-bottom: 0;
+}
+
+.uzu-doc-tutorial-section {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.uzu-doc-tutorial-section h4 {
+  margin: 0;
+  color: var(--uzu-fg-strong);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.uzu-doc-tutorial-section .uzu-text {
+  margin: 0;
+}
+
+.uzu-doc-tutorial-list {
+  margin: 0;
+  padding-left: 1.15em;
+  color: var(--uzu-muted);
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.uzu-doc-tutorial-list li,
+.uzu-doc-tutorial-note {
+  overflow-wrap: anywhere;
+}
+
+.uzu-doc-inline-code {
+  margin: 0 1px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.uzu-doc-tutorial-note {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--uzu-border-strong);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 52%, transparent);
+  color: var(--uzu-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.uzu-doc-guidance ul {
+  margin: 0;
+  padding-left: 1.15em;
+  color: var(--uzu-muted);
+  display: grid;
+  gap: 7px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.uzu-doc-interface {
+  display: grid;
+  gap: 12px;
+}
+
+.uzu-doc-interface h3 {
+  margin: 0;
+  color: var(--uzu-fg-strong);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.uzu-doc-interface-group {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+  align-items: start;
+}
+
+.uzu-doc-interface-group-head {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.uzu-doc-interface-label {
+  margin: 0;
+  color: var(--uzu-fg-strong);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.uzu-doc-interface-description {
+  margin: 0;
+  color: var(--uzu-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.uzu-doc-interface-table-wrap {
+  max-width: 100%;
+  border-color: var(--uzu-border-soft);
+  background: color-mix(in srgb, var(--uzu-surface) 62%, transparent);
+}
+
+.uzu-doc-interface-table {
+  min-width: 720px;
+  table-layout: fixed;
+}
+
+.uzu-doc-interface-table th,
+.uzu-doc-interface-table td {
+  vertical-align: top;
+}
+
+.uzu-doc-interface-table th:nth-child(1),
+.uzu-doc-interface-table td:nth-child(1) {
+  width: 26%;
+}
+
+.uzu-doc-interface-table th:nth-child(2),
+.uzu-doc-interface-table td:nth-child(2) {
+  width: 38%;
+}
+
+.uzu-doc-interface-table th:nth-child(3),
+.uzu-doc-interface-table td:nth-child(3) {
+  width: 36%;
+}
+
+.uzu-doc-interface-name,
+.uzu-doc-interface-example {
+  max-width: 100%;
+  display: inline-block;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
+.uzu-doc-interface-name {
+  width: auto;
+  white-space: normal;
+}
+
+.uzu-doc-interface-item-text {
+  margin: 0;
+  color: var(--uzu-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.uzu-doc-interface-example {
+  color: var(--uzu-subtle);
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.uzu-doc-tutorial-code {
+  --uzu-code-block-max-height: 180px;
+  --uzu-code-block-padding: 10px 42px 10px 12px;
+  margin-top: 2px;
+}
+
+.uzu-doc-tutorial-code pre,
+.uzu-doc-tutorial-code pre.uzu-code-block-body {
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.uzu-doc-classes,
+.uzu-doc-interface-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.uzu-doc-interface-values {
+  min-width: 0;
+}
+
+.uzu-doc-demo {
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.uzu-doc-demo-tabs {
+  gap: 18px;
+}
+
+.uzu-doc-example {
+  min-width: 0;
+  max-width: 100%;
+  padding: 18px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-micro);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 54%, var(--uzu-surface));
+  display: grid;
+  gap: 16px;
+}
+
+.uzu-doc-example-inline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.uzu-doc-preview,
+.uzu-doc-code-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 920px) {
+  .uzu-doc-topbar {
+    margin-bottom: 24px;
+    padding-right: 0;
+  }
+
+  .uzu-doc-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .uzu-doc-sidebar {
+    max-height: none;
+    margin: -4px 0 0;
+    padding: 8px 0 10px;
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-block: 1px solid var(--uzu-border-soft);
+    background: color-mix(in srgb, var(--uzu-bg) 94%, transparent);
+    backdrop-filter: blur(10px);
+  }
+
+  .uzu-doc-sidebar .uzu-panel-nav {
+    width: max-content;
+    min-width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .uzu-doc-sidebar .uzu-panel-nav-section {
+    display: contents;
+  }
+
+  .uzu-doc-sidebar .uzu-panel-nav-title,
+  .uzu-doc-sidebar .uzu-panel-nav-meta {
+    display: none;
+  }
+
+  .uzu-doc-sidebar .uzu-panel-nav-button {
+    width: auto;
+    min-height: 34px;
+    flex: 0 0 auto;
+    padding: 7px 11px;
+    white-space: nowrap;
+  }
+
+}

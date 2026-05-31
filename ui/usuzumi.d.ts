@@ -198,8 +198,10 @@ declare global {
 
   interface UsuzumiEditorCommandDetail {
     editor: HTMLElement;
-    surface: HTMLElement;
+    surface: HTMLElement | null;
+    button: HTMLElement;
     command: string;
+    value: string;
   }
 
   interface UsuzumiEditorChangeDetail {
@@ -208,10 +210,18 @@ declare global {
     value: string;
   }
 
+  interface UsuzumiMarkdownEditorChangeDetail {
+    editor: HTMLElement;
+    source: HTMLTextAreaElement | HTMLElement;
+    preview: HTMLElement | null;
+    value: string;
+  }
+
   interface UsuzumiMarkdownEditorRenderDetail {
     editor: HTMLElement;
     source: HTMLTextAreaElement | HTMLElement;
     preview: HTMLElement;
+    value: string;
   }
 
   interface UsuzumiInlineEditorChangeDetail {
@@ -221,6 +231,7 @@ declare global {
 
   interface UsuzumiApi {
     init(root?: ParentNode): void;
+    destroy(root?: ParentNode): void;
     applyTheme(root: HTMLElement, mode: UsuzumiThemeMode, key?: string, persist?: boolean): void;
     applyLanguage(root: HTMLElement, language: UsuzumiLanguage, key?: string): void;
     setSwitchState(control: HTMLElement, checked: boolean, emit?: boolean): void;
@@ -282,6 +293,7 @@ declare global {
     "uzu-step-nav-change": CustomEvent<UsuzumiStepNavChangeDetail>;
     "uzu-editor-command": CustomEvent<UsuzumiEditorCommandDetail>;
     "uzu-editor-change": CustomEvent<UsuzumiEditorChangeDetail>;
+    "uzu-markdown-editor-change": CustomEvent<UsuzumiMarkdownEditorChangeDetail>;
     "uzu-markdown-editor-render": CustomEvent<UsuzumiMarkdownEditorRenderDetail>;
     "uzu-inline-editor-change": CustomEvent<UsuzumiInlineEditorChangeDetail>;
     "uzu-panel-nav-change": CustomEvent<UsuzumiPanelNavDetail>;

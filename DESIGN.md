@@ -16,23 +16,34 @@ Use the single entry files in normal pages:
 <script src="ui/usuzumi.js" defer></script>
 ```
 
-Package consumers can import the stylesheet as `usuzumi/usuzumi.css` and the behavior script as `usuzumi/usuzumi.js`.
+Package consumers can import the stylesheet as `usuzumi/usuzumi.css` and the behavior script as `usuzumi/usuzumi.js`. CDN consumers can use `ui/usuzumi.min.css` and `ui/usuzumi.min.js`.
 
 Maintenance validation includes a consumer smoke test: `npm run validate` packs the library, installs it into a temporary external project, verifies package exports and type/CSS/runtime files from `node_modules/usuzumi`, and opens a browser page that loads `node_modules/usuzumi/ui/usuzumi.css` plus `node_modules/usuzumi/ui/usuzumi.js`.
 
-The published `ui/usuzumi.css` file is generated from the maintainable source files. Edit source files in `ui/css/`, then run `npm run build:css`.
+The published `ui/usuzumi.css`, `ui/usuzumi.js`, `ui/usuzumi.min.css`, and `ui/usuzumi.min.js` files are generated from the maintainable source files. Edit source files in `ui/css/` and `ui/js/`, then run `npm run build`. The CSS bundle is wrapped in `@layer usuzumi` so project styles can override it cleanly. Do not hand-edit the generated entry files unless you are intentionally updating build output and have rebuilt from source.
 
 - `ui/css/tokens.css`: design tokens and dark mode tokens.
 - `ui/css/fonts.css`: optional Meddon signature font face.
 - `ui/css/base.css`: root behavior, focus, selection, scrollbar, forms, links.
 - `ui/css/typography.css`: signature, titles, section labels, title pairs.
-- `ui/css/components.css`: buttons, cards, fields, menus, command surfaces, select, tabs, feedback, callouts, tables, overlays, progress, skeletons, toasts, dialogs, disclosures, and tooltips.
+- `ui/css/components.css`: shared buttons, cards, fields, badges, tables, toolbars, and small component foundations.
+- `ui/css/forms.css`: input groups, search, password, file upload, sliders, steppers, and form states.
+- `ui/css/menus.css`: menus, menubars, command surfaces, custom select, and combobox surfaces.
+- `ui/css/indicators.css`: progress, spinners, skeletons, and lightweight state indicators.
+- `ui/css/code-editors.css`: code blocks, JSON/diff viewers, editor shells, and Markdown surfaces.
+- `ui/css/feedback.css`: alerts, callouts, toasts, and validation feedback.
+- `ui/css/navigation.css`: tabs, segmented controls, breadcrumbs, pagination, sidebars, and step navigation.
+- `ui/css/data-layout.css`: lists, data grids, tree views, split panes, resizable panels, scroll areas, and ratio/layout helpers.
+- `ui/css/overlays.css`: dialogs, drawers, sheets, popovers, hover cards, tooltips, and overlay animation.
+- `ui/css/status.css`: empty, error, and loading states.
+- `ui/css/motion.css`: shared process animation primitives.
 - `ui/css/layout.css`: page containers, sections, top bars, grids, sidebars, hero split, footer.
 - `ui/css/patterns.css`: reusable product sections, panel navigation, prose/code helpers, token specimens, type specimens, and small page patterns.
 - `ui/css/utilities.css`: small utilities and language visibility helpers.
 - `ui/css/forced-colors.css`: high-contrast mode visibility rules.
 - `ui/usuzumi-signature.css`: optional signature font entry for `.uzu-signature` and signature specimens.
-- `ui/usuzumi.js`: theme toggles, language toggles, custom selects, tabs, segmented controls, switches, search, password, steppers, menus, command filtering, tags, disclosures, accordions, hover cards, dialogs, step navigation, and toast dismissal.
+- `ui/js/*.js`: maintainable runtime source modules. They are concatenated into `ui/usuzumi.js` and minified into `ui/usuzumi.min.js`.
+- `ui/usuzumi.js`: generated runtime entry for theme toggles, language toggles, custom selects, tabs, segmented controls, pagination, switches, search, password, steppers, menus, comboboxes, data grids, trees, split/resizable panels, JSON/diff viewers, editor shells, tags, disclosures, accordions, hover cards, dialogs, step navigation, panel navigation, toast dismissal, code copying, and limited Markdown rendering.
 - `ui/usuzumi.d.ts`: TypeScript declarations for the browser API and custom events.
 
 ## Adoption Modes
@@ -126,7 +137,7 @@ Stable global variables include:
 
 - Color roles: `--uzu-bg`, `--uzu-surface`, `--uzu-surface-soft`, `--uzu-surface-muted`, `--uzu-surface-inset`, `--uzu-fg`, `--uzu-fg-strong`, `--uzu-muted`, `--uzu-subtle`, `--uzu-soft`, `--uzu-disabled`, `--uzu-border`, `--uzu-border-soft`, `--uzu-border-strong`, `--uzu-action-bg`, `--uzu-action-fg`
 - Semantic roles: `--uzu-success`, `--uzu-success-bg`, `--uzu-warning`, `--uzu-warning-bg`, `--uzu-danger`, `--uzu-danger-bg`, `--uzu-info`, `--uzu-info-bg`
-- Surface support: `--uzu-control-bg`, `--uzu-shadow-soft`, `--uzu-shadow-popover`, `--uzu-focus-ring`
+- Surface support: `--uzu-control-bg`, `--uzu-shadow-popover`, `--uzu-focus-ring`
 - Font stacks: `--uzu-font-serif`, `--uzu-font-signature`, `--uzu-font-mono`
 - Motion: `--uzu-motion-quick`, `--uzu-motion-base`, `--uzu-motion-slow`, `--uzu-ease-standard`
 - Radius: `--uzu-radius-micro`, `--uzu-radius-standard`, `--uzu-radius-medium`, `--uzu-radius-large`, `--uzu-radius-pill`
@@ -145,6 +156,8 @@ Stable component variables include:
 - Identity and navigation sizing: `--uzu-avatar-size`, `--uzu-sidebar-width`, `--uzu-step-nav-gap`
 - Overlay sizing: `--uzu-hover-card-width`, `--uzu-alert-dialog-accent-color`, `--uzu-drawer-width`, `--uzu-sheet-width`
 - Loading sizing: `--uzu-spinner-size`, `--uzu-spinner-stroke`
+
+Use `--uzu-space-*` for layout primitives and project-level spacing. Component internals use component-specific rhythm variables when customization is part of the public API.
 
 | Variable | Default | Applies to | Suggested scope |
 | --- | --- | --- | --- |
@@ -222,7 +235,7 @@ The native runtime includes lightweight versions of the complex component famili
 - Tree view manages hierarchical focus, selection, expand/collapse state, and matching ARIA attributes.
 - Split pane and resizable panel support pointer and keyboard resizing. Optional persistence keys use local storage.
 - JSON viewer parses JSON into a collapsible tree. Diff viewer renders unified-diff style text into readable rows.
-- Editor surfaces provide shells, toolbar buttons, Markdown preview, plain/code text surfaces, and inline editing. They are not full editor engines; projects that need syntax services, collaboration, history, or large-file handling should attach a dedicated editor inside these shells.
+- Editor surfaces provide shells, toolbar buttons, source/preview regions, plain/code text surfaces, inline editing, and event hooks. They are not full editor engines. Rich text projects should mount Tiptap, ProseMirror, or another document engine inside the surface. Markdown projects should pair the shell with CodeMirror 6 for source editing and markdown-it, remark, or marked for complete parsing. Add `data-uzu-markdown-render` only for Usuzumi's small built-in preview helper.
 
 ## Visual Principles
 
@@ -386,7 +399,7 @@ Tabs and segmented controls are static visual primitives by default. Add `data-u
 
 ### Feedback
 
-Badges, alerts, callouts, toasts, and validation use the muted semantic families. Do not use bright red or color alone to communicate state. Alerts provide `.uzu-alert-info`, `.uzu-alert-success`, `.uzu-alert-warning`, and `.uzu-alert-danger` presets. Alerts and callouts also expose color custom properties for project-specific tones; prefer those variables over selector overrides. Toasts use `.uzu-toast-stack` and `.uzu-toast`; close buttons use `data-uzu-toast-close`.
+Badges, alerts, callouts, toasts, and validation use the muted semantic families. State should be carried by text, ARIA, and layout as well as color. Alerts provide `.uzu-alert-info`, `.uzu-alert-success`, `.uzu-alert-warning`, and `.uzu-alert-danger` presets. Alerts and callouts also expose color custom properties for project-specific tones; prefer those variables over selector overrides. Toasts use `.uzu-toast-stack` and `.uzu-toast`; close buttons use `data-uzu-toast-close`. The runtime fills default `role="status"`, `aria-live="polite"`, and `aria-atomic="true"` when authors have not set them.
 
 Use `.uzu-callout` for editorial notes, constraints, and secondary context that belongs in the reading flow. Callouts are not alerts: they should not announce urgent errors, destructive states, or time-sensitive feedback. Use `.uzu-callout-note`, `.uzu-callout-info`, or `.uzu-callout-warning` to adjust the tone while keeping the message text-led.
 
@@ -466,9 +479,9 @@ Tables use `.uzu-table-wrap` and `.uzu-table`. Horizontal scrolling is acceptabl
 
 ### Overlays
 
-Use `.uzu-popover` and `.uzu-modal` for overlay surfaces. Overlay shadows are allowed, but standard cards should remain flat. Dialog behavior uses `data-uzu-dialog-target`, `data-uzu-dialog-overlay`, `data-uzu-dialog`, and `data-uzu-dialog-close`. The runtime handles Escape, backdrop clicks, focus return, a small focus trap, and open/close animation timing.
+Use `.uzu-popover` and `.uzu-modal` for overlay surfaces. Overlay shadows are allowed, but standard cards should remain flat. Dialog behavior uses `data-uzu-dialog-target`, `data-uzu-dialog-overlay`, `data-uzu-dialog`, and `data-uzu-dialog-close`. The runtime handles Escape, backdrop clicks, focus return, a small focus trap, background `inert` isolation, page scroll locking, and open/close animation timing.
 
-Tooltips use `data-uzu-tooltip` for short supplemental labels. Do not put essential instructions only in tooltips.
+Tooltips use `data-uzu-tooltip` for short supplemental labels. During initialization the runtime adds an off-screen description and connects it through `aria-describedby` when the trigger does not already provide one. Essential instructions should also appear in visible copy or accessible labels.
 
 ### Progress
 
@@ -507,6 +520,7 @@ window.Usuzumi.init(container);
 ```
 
 Repeated `init()` calls do not rebind already-initialized controls.
+For containers that receive components after page load, add `data-uzu-auto-init` to observe inserted elements and initialize them through the same idempotent path.
 
 ### Theme Toggle
 
@@ -567,9 +581,35 @@ Pagination uses `data-uzu-pagination` and page buttons with `data-uzu-page`. Pre
 - `uzu-switch-change`: `{ checked, switch }`
 - `uzu-password-toggle`: `{ visible, password, input, toggle }`
 - `uzu-stepper-change`: `{ value, number, stepper, input }`
+- `uzu-menu-open` / `uzu-menu-close`: `{ menu, trigger, content }`
+- `uzu-menu-select`: `{ menu, trigger, content, item, value }`
+- `uzu-menubar-change`: `{ value, item, menubar, index }`
+- `uzu-command-filter`: `{ value, command, visibleCount }`
+- `uzu-command-select`: `{ value, item, command }`
+- `uzu-combobox-open` / `uzu-combobox-close`: `{ combobox, input, list }`
+- `uzu-combobox-filter`: `{ value, combobox, visibleCount }`
+- `uzu-combobox-change`: `{ value, label, option, combobox, input }`
+- `uzu-data-grid-sort`: `{ grid, table, header, columnIndex, direction }`
+- `uzu-data-grid-select`: `{ grid, table, row, selected, value }`
+- `uzu-tree-toggle`: `{ tree, item, expanded, value }`
+- `uzu-tree-select`: `{ tree, item, value }`
+- `uzu-split-resize`: `{ splitPane, size }`
+- `uzu-resizable-resize`: `{ resizable, width, height }`
 - `uzu-disclosure-change`: `{ open, disclosure }`
+- `uzu-accordion-change`: `{ open, accordion, disclosure }`
+- `uzu-hover-card-open` / `uzu-hover-card-close`: `{ hoverCard, trigger, content }`
+- `uzu-tag-change`: `{ selected, tag, value }`
+- `uzu-tag-close`: `{ tag, closeButton, value }`
 - `uzu-toast-close`: `{ toast }`
 - `uzu-dialog-open` / `uzu-dialog-close`: `{ dialog, overlay, trigger }`
+- `uzu-step-nav-change`: `{ value, step, stepNav, index }`
+- `uzu-editor-command`: `{ editor, surface, button, command, value }`
+- `uzu-editor-change`: `{ editor, surface, value }`
+- `uzu-markdown-editor-change`: `{ editor, source, preview, value }`
+- `uzu-markdown-editor-render`: `{ editor, source, preview, value }`
+- `uzu-inline-editor-change`: `{ editor, value }`
+- `uzu-panel-nav-change`: `{ target, control, panel, nav }`
+- `uzu-panel-show`: `{ target, control, panel, nav }`
 
 ## Page Patterns
 

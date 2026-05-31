@@ -1,0 +1,108 @@
+.uzu-tabs {
+  border-bottom: 1px solid var(--uzu-border);
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+.uzu-tabs[data-uzu-tabs-indicator="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: var(--uzu-tabs-indicator-y, calc(100% - 1px));
+  width: var(--uzu-tabs-indicator-width, 0px);
+  height: 1px;
+  border-radius: var(--uzu-radius-pill);
+  background: var(--uzu-fg-strong);
+  pointer-events: none;
+  opacity: var(--uzu-tabs-indicator-opacity, 0);
+  transform: translateX(var(--uzu-tabs-indicator-x, 0px));
+  transition: transform var(--uzu-motion-slow) var(--uzu-ease-standard), width var(--uzu-motion-slow) var(--uzu-ease-standard), opacity var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-tab {
+  padding: 0 0 10px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  color: var(--uzu-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: color var(--uzu-motion-base) var(--uzu-ease-standard), border-color var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-tab:hover {
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-tab.is-active,
+.uzu-tab[aria-selected="true"] {
+  border-bottom-color: var(--uzu-fg-strong);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-tabs[data-uzu-tabs-indicator="true"] .uzu-tab.is-active,
+.uzu-tabs[data-uzu-tabs-indicator="true"] .uzu-tab[aria-selected="true"] {
+  border-bottom-color: transparent;
+}
+
+.uzu-segmented {
+  padding: 3px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-medium);
+  background: var(--uzu-surface-soft);
+  position: relative;
+  display: inline-flex;
+  gap: 3px;
+}
+
+.uzu-segmented[data-uzu-segmented-indicator="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: var(--uzu-segmented-indicator-width, 0px);
+  height: var(--uzu-segmented-indicator-height, 0px);
+  border-radius: var(--uzu-radius-standard);
+  background: var(--uzu-surface);
+  pointer-events: none;
+  opacity: var(--uzu-segmented-indicator-opacity, 0);
+  transform: translate(var(--uzu-segmented-indicator-x, 0px), var(--uzu-segmented-indicator-y, 0px));
+  transition: transform var(--uzu-motion-slow) var(--uzu-ease-standard), width var(--uzu-motion-slow) var(--uzu-ease-standard), height var(--uzu-motion-slow) var(--uzu-ease-standard), opacity var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-tabs[data-uzu-indicator-instant="true"]::after,
+.uzu-segmented[data-uzu-indicator-instant="true"]::before {
+  transition: none;
+}
+
+.uzu-segment {
+  min-height: 32px;
+  padding: 7px 11px;
+  border: 0;
+  border-radius: var(--uzu-radius-standard);
+  background: transparent;
+  color: var(--uzu-muted);
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--uzu-motion-base) var(--uzu-ease-standard), color var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-segment:hover {
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-segment.is-active,
+.uzu-segment[aria-pressed="true"] {
+  background: var(--uzu-surface);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-segmented[data-uzu-segmented-indicator="true"] .uzu-segment.is-active,
+.uzu-segmented[data-uzu-segmented-indicator="true"] .uzu-segment[aria-pressed="true"] {
+  background: transparent;
+}

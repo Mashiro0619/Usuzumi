@@ -1,0 +1,369 @@
+.uzu-menu {
+  --uzu-menu-min-width: 180px;
+  --uzu-menu-offset: 4px;
+  --uzu-menu-content-width: max-content;
+  position: relative;
+  display: inline-block;
+}
+
+.uzu-menu-trigger {
+  cursor: pointer;
+}
+
+.uzu-menu-content {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + var(--uzu-menu-offset));
+  left: 0;
+  min-width: var(--uzu-menu-min-width);
+  width: var(--uzu-menu-content-width);
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 6px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-standard);
+  background: var(--uzu-surface);
+  color: var(--uzu-fg);
+  box-shadow: var(--uzu-shadow-popover);
+  display: grid;
+  gap: 2px;
+}
+
+.uzu-menu[data-uzu-menu-align="end"] .uzu-menu-content {
+  right: 0;
+  left: auto;
+}
+
+.uzu-menu.is-context .uzu-menu-content,
+.uzu-menu[data-uzu-context-menu].is-open .uzu-menu-content,
+.uzu-menu[data-uzu-context-menu].is-closing .uzu-menu-content {
+  position: fixed;
+  top: var(--uzu-menu-y, 0px);
+  left: var(--uzu-menu-x, 0px);
+  right: auto;
+}
+
+.uzu-menu-content[hidden],
+.uzu-menu:not(.is-open):not(.is-closing) .uzu-menu-content {
+  display: none;
+}
+
+.uzu-menu.is-open .uzu-menu-content {
+  animation: uzu-menu-in var(--uzu-motion-quick) var(--uzu-ease-standard);
+}
+
+.uzu-menu.is-closing .uzu-menu-content {
+  pointer-events: none;
+  animation: uzu-menu-out var(--uzu-motion-quick) var(--uzu-ease-standard) forwards;
+}
+
+.uzu-menu-item {
+  min-height: 34px;
+  width: 100%;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: var(--uzu-radius-micro);
+  background: transparent;
+  color: var(--uzu-fg);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.uzu-menu-item:hover,
+.uzu-menu-item.is-active,
+.uzu-menu-item:focus-visible {
+  background: var(--uzu-surface-soft);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-menu-item.is-danger {
+  color: var(--uzu-danger);
+}
+
+.uzu-menu-item:disabled,
+.uzu-menu-item[aria-disabled="true"] {
+  color: var(--uzu-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.uzu-menu-separator {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--uzu-border-soft);
+}
+
+.uzu-menubar {
+  padding: 3px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-standard);
+  background: var(--uzu-surface-soft);
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.uzu-menubar-item {
+  min-height: 32px;
+  padding: 7px 11px;
+  border: 0;
+  border-radius: var(--uzu-radius-micro);
+  background: transparent;
+  color: var(--uzu-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+}
+
+.uzu-menubar-item:hover,
+.uzu-menubar-item:focus-visible,
+.uzu-menubar-item.is-active,
+.uzu-menubar-item[aria-current="true"] {
+  background: var(--uzu-surface);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-menubar-item:disabled,
+.uzu-menubar-item[aria-disabled="true"] {
+  color: var(--uzu-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.uzu-command {
+  --uzu-command-max-height: 260px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-standard);
+  background: var(--uzu-surface);
+  color: var(--uzu-fg);
+  overflow: hidden;
+  display: grid;
+}
+
+.uzu-command-input {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 0;
+  border-bottom: 1px solid var(--uzu-border-soft);
+  background: transparent;
+  color: var(--uzu-fg);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.uzu-command-list {
+  max-height: var(--uzu-command-max-height);
+  padding: 6px;
+  overflow: auto;
+  display: grid;
+  gap: 2px;
+}
+
+.uzu-command-item {
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: var(--uzu-radius-micro);
+  background: transparent;
+  color: var(--uzu-fg);
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+}
+
+.uzu-command-item:hover,
+.uzu-command-item.is-active,
+.uzu-command-item:focus-visible {
+  background: var(--uzu-surface-soft);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-command-item[hidden] {
+  display: none;
+}
+
+.uzu-command-empty {
+  margin: 0;
+  padding: 12px;
+  color: var(--uzu-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.uzu-command-empty[hidden] {
+  display: none;
+}
+
+.uzu-combobox {
+  --uzu-combobox-list-max-height: 240px;
+  position: relative;
+  display: grid;
+  gap: 6px;
+}
+
+.uzu-combobox-input {
+  width: 100%;
+}
+
+.uzu-combobox-list {
+  position: absolute;
+  z-index: 38;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: var(--uzu-combobox-list-max-height);
+  padding: 6px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-standard);
+  background: var(--uzu-surface);
+  box-shadow: var(--uzu-shadow-popover);
+  overflow: auto;
+  display: grid;
+  gap: 2px;
+  transform-origin: top center;
+}
+
+.uzu-combobox-list[hidden],
+.uzu-combobox-option[hidden],
+.uzu-combobox-empty[hidden] {
+  display: none;
+}
+
+.uzu-combobox.is-open .uzu-combobox-list {
+  animation: uzu-menu-in var(--uzu-motion-quick) var(--uzu-ease-standard);
+}
+
+.uzu-combobox-option {
+  min-height: 34px;
+  width: 100%;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: var(--uzu-radius-micro);
+  background: transparent;
+  color: var(--uzu-fg);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font: inherit;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+}
+
+.uzu-combobox-option:hover,
+.uzu-combobox-option.is-active,
+.uzu-combobox-option.is-selected,
+.uzu-combobox-option[aria-selected="true"] {
+  background: var(--uzu-surface-soft);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-combobox-empty {
+  margin: 0;
+  padding: 10px;
+  color: var(--uzu-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.uzu-select {
+  position: relative;
+}
+
+.uzu-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.uzu-select-trigger::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  flex: 0 0 auto;
+  opacity: .62;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--uzu-motion-base) var(--uzu-ease-standard), opacity var(--uzu-motion-base) var(--uzu-ease-standard);
+}
+
+.uzu-select.is-open .uzu-select-trigger::after {
+  opacity: .9;
+  transform: translateY(2px) rotate(225deg);
+}
+
+.uzu-select-menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  display: none;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-standard);
+  background: var(--uzu-surface);
+  box-shadow: var(--uzu-shadow-popover);
+  transform-origin: top center;
+}
+
+.uzu-select.is-open .uzu-select-menu,
+.uzu-select.is-closing .uzu-select-menu {
+  display: grid;
+}
+
+.uzu-select.is-open .uzu-select-menu {
+  animation: uzu-menu-in var(--uzu-motion-quick) var(--uzu-ease-standard);
+}
+
+.uzu-select.is-closing .uzu-select-menu {
+  pointer-events: none;
+  animation: uzu-menu-out var(--uzu-motion-quick) var(--uzu-ease-standard) forwards;
+}
+
+.uzu-select-option {
+  min-height: 34px;
+  padding: 7px 9px;
+  border-radius: var(--uzu-radius-micro);
+  color: var(--uzu-fg);
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.uzu-select-option:hover {
+  background: var(--uzu-surface-soft);
+  color: var(--uzu-fg-strong);
+}
+
+.uzu-select-option.is-selected {
+  background: var(--uzu-fg-strong);
+  color: var(--uzu-action-fg);
+}
+
+.uzu-select-option.is-active:not(.is-selected) {
+  background: var(--uzu-surface-soft);
+  color: var(--uzu-fg-strong);
+}

@@ -1,5 +1,7 @@
+/* Usuzumi generated runtime. Edit ui/js/*.js, then run npm run build. */
 (function () {
-  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+/* ui/js/core.js */
+if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
   let selectCounter = 0;
   let activeDialog = null;
@@ -15,8 +17,14 @@
   const indicatorInstantTimers = new WeakMap();
   const codeCopyDefaultContent = new WeakMap();
   const comboboxSelectionInputs = new WeakSet();
-  const richEditorSyncers = new WeakMap();
-  let richEditorSelectionListenerInitialized = false;
+  const autoInitObservers = new WeakMap();
+  const panelNavHashListeners = new WeakMap();
+  const tooltipNodes = new WeakMap();
+  const activePointerDrags = new Map();
+  let themeMediaQuery = null;
+  let resizeListener = null;
+  let dialogIsolationState = null;
+  let dialogScrollLockState = null;
 
   const storage = {
     get(key) {
@@ -156,6 +164,7 @@
   function initThemePreferenceListener() {
     const media = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
     if (!media || document.documentElement.dataset.uzuThemeMediaListener === 'true') return;
+    themeMediaQuery = media;
     if (media.addEventListener) {
       media.addEventListener('change', handleThemePreferenceChange);
     } else if (media.addListener) {
@@ -222,7 +231,120 @@
     });
   }
 
-  function closeSelect(select) {
+/* ui/js/control-utils.js */
+function isControlDisabled(control) {
+    return control.disabled || control.getAttribute('aria-disabled') === 'true' || control.classList.contains('is-disabled');
+  }
+
+  function getControlValue(control, datasetKey) {
+    return control.dataset[datasetKey] ?? control.dataset.value ?? control.textContent.trim();
+  }
+
+  function getTabPanel(tab) {
+    const target = tab.dataset.uzuTabTarget;
+    if (target) {
+      try {
+        return document.querySelector(target);
+      } catch (_) {
+        return null;
+      }
+    }
+    const panelId = tab.getAttribute('aria-controls');
+    return panelId ? document.getElementById(panelId) : null;
+  }
+
+  function getEnabledControls(controls) {
+    return controls.filter((control) => !isControlDisabled(control));
+  }
+
+  function getScopedControls(root, controlSelector, rootSelector) {
+    return [...root.querySelectorAll(controlSelector)].filter((control) => control.closest(rootSelector) === root);
+  }
+
+  function getScopedEventControl(event, controlSelector, root, rootSelector) {
+    if (!(event.target instanceof Element)) return null;
+    const control = event.target.closest(controlSelector);
+    return control && control.closest(rootSelector) === root ? control : null;
+  }
+
+  function moveActiveControl(controls, current, direction) {
+    const enabled = getEnabledControls(controls);
+    if (!enabled.length) return null;
+    const currentIndex = Math.max(0, enabled.indexOf(current));
+    return enabled[(currentIndex + direction + enabled.length) % enabled.length];
+  }
+
+  function parseTimeValue(value) {
+    const item = String(value || '').trim();
+    if (!item || item === '0s') return 0;
+    return item.endsWith('ms') ? Number.parseFloat(item) : Number.parseFloat(item) * 1000;
+  }
+
+  function getAnimationDuration(element) {
+    if (!element) return 0;
+    const style = window.getComputedStyle(element);
+    const durations = style.animationDuration.split(',').map(parseTimeValue);
+    const delays = style.animationDelay.split(',').map(parseTimeValue);
+    return Math.max(0, ...durations.map((duration, index) => duration + (delays[index] || 0)));
+  }
+
+  function scheduleAfterAnimation(elements, callback) {
+    const duration = Math.max(0, ...elements.map(getAnimationDuration));
+    if (!duration) {
+      callback();
+      return null;
+    }
+    return window.setTimeout(callback, duration + 30);
+  }
+
+  function holdIndicatorInstant(root) {
+    root.dataset.uzuIndicatorInstant = 'true';
+    if (indicatorInstantTimers.has(root)) window.clearTimeout(indicatorInstantTimers.get(root));
+    indicatorInstantTimers.set(root, window.setTimeout(() => {
+      delete root.dataset.uzuIndicatorInstant;
+      indicatorInstantTimers.delete(root);
+    }, 120));
+  }
+
+  function setControlIndicator(root, control, prefix, instant = false) {
+    if (!control || !root.isConnected || control.offsetWidth <= 0 || control.offsetHeight <= 0) {
+      root.dataset[prefix === 'tabs' ? 'uzuTabsIndicator' : 'uzuSegmentedIndicator'] = 'false';
+      return;
+    }
+    if (instant) holdIndicatorInstant(root);
+    const cssPrefix = prefix === 'tabs' ? 'uzu-tabs' : 'uzu-segmented';
+    root.style.setProperty(`--${cssPrefix}-indicator-x`, `${control.offsetLeft}px`);
+    root.style.setProperty(`--${cssPrefix}-indicator-width`, `${control.offsetWidth}px`);
+    root.style.setProperty(`--${cssPrefix}-indicator-opacity`, '1');
+    if (prefix === 'tabs') {
+      root.style.setProperty('--uzu-tabs-indicator-y', `${control.offsetTop + control.offsetHeight - 1}px`);
+      root.dataset.uzuTabsIndicator = 'true';
+    } else {
+      root.style.setProperty('--uzu-segmented-indicator-y', `${control.offsetTop}px`);
+      root.style.setProperty('--uzu-segmented-indicator-height', `${control.offsetHeight}px`);
+      root.dataset.uzuSegmentedIndicator = 'true';
+    }
+  }
+
+  function refreshStateIndicators(root = document, instant = false) {
+    queryAll(root, '[data-uzu-tabs]').forEach((tabsRoot) => {
+      const activeTab = getScopedControls(tabsRoot, '.uzu-tab', '[data-uzu-tabs]')
+        .find((tab) => tab.classList.contains('is-active') || tab.getAttribute('aria-selected') === 'true');
+      if (activeTab) setControlIndicator(tabsRoot, activeTab, 'tabs', instant);
+    });
+    queryAll(root, '[data-uzu-segmented]').forEach((segmented) => {
+      const activeSegment = getScopedControls(segmented, '.uzu-segment', '[data-uzu-segmented]')
+        .find((segment) => segment.classList.contains('is-active') || segment.getAttribute('aria-pressed') === 'true');
+      if (activeSegment) setControlIndicator(segmented, activeSegment, 'segmented', instant);
+    });
+  }
+
+  function queueIndicatorRefresh(root = document, instant = false) {
+    window.requestAnimationFrame(() => refreshStateIndicators(root, instant));
+  }
+
+/* ui/js/select-tabs.js */
+function closeSelect(select) {
     if (select.classList.contains('is-closing') || !select.classList.contains('is-open')) return;
     select.classList.remove('is-open');
     select.classList.add('is-closing');
@@ -452,118 +574,8 @@
     });
   }
 
-  function isControlDisabled(control) {
-    return control.disabled || control.getAttribute('aria-disabled') === 'true' || control.classList.contains('is-disabled');
-  }
-
-  function getControlValue(control, datasetKey) {
-    return control.dataset[datasetKey] ?? control.dataset.value ?? control.textContent.trim();
-  }
-
-  function getTabPanel(tab) {
-    const target = tab.dataset.uzuTabTarget;
-    if (target) {
-      try {
-        return document.querySelector(target);
-      } catch (_) {
-        return null;
-      }
-    }
-    const panelId = tab.getAttribute('aria-controls');
-    return panelId ? document.getElementById(panelId) : null;
-  }
-
-  function getEnabledControls(controls) {
-    return controls.filter((control) => !isControlDisabled(control));
-  }
-
-  function getScopedControls(root, controlSelector, rootSelector) {
-    return [...root.querySelectorAll(controlSelector)].filter((control) => control.closest(rootSelector) === root);
-  }
-
-  function getScopedEventControl(event, controlSelector, root, rootSelector) {
-    if (!(event.target instanceof Element)) return null;
-    const control = event.target.closest(controlSelector);
-    return control && control.closest(rootSelector) === root ? control : null;
-  }
-
-  function moveActiveControl(controls, current, direction) {
-    const enabled = getEnabledControls(controls);
-    if (!enabled.length) return null;
-    const currentIndex = Math.max(0, enabled.indexOf(current));
-    return enabled[(currentIndex + direction + enabled.length) % enabled.length];
-  }
-
-  function parseTimeValue(value) {
-    const item = String(value || '').trim();
-    if (!item || item === '0s') return 0;
-    return item.endsWith('ms') ? Number.parseFloat(item) : Number.parseFloat(item) * 1000;
-  }
-
-  function getAnimationDuration(element) {
-    if (!element) return 0;
-    const style = window.getComputedStyle(element);
-    const durations = style.animationDuration.split(',').map(parseTimeValue);
-    const delays = style.animationDelay.split(',').map(parseTimeValue);
-    return Math.max(0, ...durations.map((duration, index) => duration + (delays[index] || 0)));
-  }
-
-  function scheduleAfterAnimation(elements, callback) {
-    const duration = Math.max(0, ...elements.map(getAnimationDuration));
-    if (!duration) {
-      callback();
-      return null;
-    }
-    return window.setTimeout(callback, duration + 30);
-  }
-
-  function holdIndicatorInstant(root) {
-    root.dataset.uzuIndicatorInstant = 'true';
-    if (indicatorInstantTimers.has(root)) window.clearTimeout(indicatorInstantTimers.get(root));
-    indicatorInstantTimers.set(root, window.setTimeout(() => {
-      delete root.dataset.uzuIndicatorInstant;
-      indicatorInstantTimers.delete(root);
-    }, 120));
-  }
-
-  function setControlIndicator(root, control, prefix, instant = false) {
-    if (!control || !root.isConnected || control.offsetWidth <= 0 || control.offsetHeight <= 0) {
-      root.dataset[prefix === 'tabs' ? 'uzuTabsIndicator' : 'uzuSegmentedIndicator'] = 'false';
-      return;
-    }
-    if (instant) holdIndicatorInstant(root);
-    const cssPrefix = prefix === 'tabs' ? 'uzu-tabs' : 'uzu-segmented';
-    root.style.setProperty(`--${cssPrefix}-indicator-x`, `${control.offsetLeft}px`);
-    root.style.setProperty(`--${cssPrefix}-indicator-width`, `${control.offsetWidth}px`);
-    root.style.setProperty(`--${cssPrefix}-indicator-opacity`, '1');
-    if (prefix === 'tabs') {
-      root.style.setProperty('--uzu-tabs-indicator-y', `${control.offsetTop + control.offsetHeight - 1}px`);
-      root.dataset.uzuTabsIndicator = 'true';
-    } else {
-      root.style.setProperty('--uzu-segmented-indicator-y', `${control.offsetTop}px`);
-      root.style.setProperty('--uzu-segmented-indicator-height', `${control.offsetHeight}px`);
-      root.dataset.uzuSegmentedIndicator = 'true';
-    }
-  }
-
-  function refreshStateIndicators(root = document, instant = false) {
-    queryAll(root, '[data-uzu-tabs]').forEach((tabsRoot) => {
-      const activeTab = getScopedControls(tabsRoot, '.uzu-tab', '[data-uzu-tabs]')
-        .find((tab) => tab.classList.contains('is-active') || tab.getAttribute('aria-selected') === 'true');
-      if (activeTab) setControlIndicator(tabsRoot, activeTab, 'tabs', instant);
-    });
-    queryAll(root, '[data-uzu-segmented]').forEach((segmented) => {
-      const activeSegment = getScopedControls(segmented, '.uzu-segment', '[data-uzu-segmented]')
-        .find((segment) => segment.classList.contains('is-active') || segment.getAttribute('aria-pressed') === 'true');
-      if (activeSegment) setControlIndicator(segmented, activeSegment, 'segmented', instant);
-    });
-  }
-
-  function queueIndicatorRefresh(root = document, instant = false) {
-    window.requestAnimationFrame(() => refreshStateIndicators(root, instant));
-  }
-
-  function syncTabsState(tabsRoot, activeTab, emit = true) {
+/* ui/js/tabs-segmented.js */
+function syncTabsState(tabsRoot, activeTab, emit = true) {
     const tabs = getScopedControls(tabsRoot, '.uzu-tab', '[data-uzu-tabs]');
     const enabled = getEnabledControls(tabs);
     const nextTab = activeTab && !isControlDisabled(activeTab) ? activeTab : enabled[0];
@@ -573,9 +585,16 @@
     let panel = null;
 
     if (!tabsRoot.hasAttribute('role')) tabsRoot.setAttribute('role', 'tablist');
-    tabs.forEach((tab) => {
+    tabs.forEach((tab, index) => {
       const isActive = tab === nextTab;
       const tabPanel = getTabPanel(tab);
+      if (tabPanel) {
+        const panelId = tabPanel.id || ensureId(tabPanel, `${tabsRoot.id || 'uzu-tabs'}-panel-${index + 1}`);
+        const tabId = tab.id || ensureId(tab, `${tabsRoot.id || 'uzu-tabs'}-tab-${index + 1}`);
+        tab.setAttribute('aria-controls', panelId);
+        tabPanel.setAttribute('role', 'tabpanel');
+        tabPanel.setAttribute('aria-labelledby', tabId);
+      }
       tab.classList.toggle('is-active', isActive);
       tab.setAttribute('role', 'tab');
       tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
@@ -711,7 +730,8 @@
     });
   }
 
-  function getPaginationPageValue(control) {
+/* ui/js/pagination.js */
+function getPaginationPageValue(control) {
     return control.dataset.uzuPage ?? control.dataset.page ?? '';
   }
 
@@ -861,7 +881,8 @@
     });
   }
 
-  function setSwitchState(control, checked, emit = true) {
+/* ui/js/switches.js */
+function setSwitchState(control, checked, emit = true) {
     control.classList.toggle('is-on', checked);
     control.setAttribute('role', 'switch');
     control.setAttribute('aria-checked', checked ? 'true' : 'false');
@@ -882,7 +903,8 @@
     setSwitchState(control, control.getAttribute('aria-checked') !== 'true');
   }
 
-  function initSwitches(root = document) {
+/* ui/js/forms.js */
+function initSwitches(root = document) {
     queryAll(root, '[data-uzu-switch]').forEach((control) => {
       const checked = control.getAttribute('aria-checked') === 'true' || control.classList.contains('is-on');
       setSwitchState(control, checked, false);
@@ -1061,7 +1083,8 @@
     });
   }
 
-  function getMenuTrigger(menu) {
+/* ui/js/menus-core.js */
+function getMenuTrigger(menu) {
     return menu.querySelector('[data-uzu-menu-trigger], .uzu-menu-trigger');
   }
 
@@ -1340,7 +1363,8 @@
     });
   }
 
-  function initMenubars(root = document) {
+/* ui/js/menubars.js */
+function initMenubars(root = document) {
     queryAll(root, '[data-uzu-menubar]').forEach((menubar) => {
       const items = getScopedControls(menubar, '.uzu-menubar-item', '[data-uzu-menubar]');
       if (!items.length) return;
@@ -1380,7 +1404,8 @@
     });
   }
 
-  function getCommandItems(command) {
+/* ui/js/commands.js */
+function getCommandItems(command) {
     return getScopedControls(command, '.uzu-command-item', '[data-uzu-command]');
   }
 
@@ -1490,7 +1515,8 @@
     });
   }
 
-  function parseLengthValue(value) {
+/* ui/js/disclosures.js */
+function parseLengthValue(value) {
     return Number.parseFloat(value) || 0;
   }
 
@@ -1557,7 +1583,8 @@
     });
   }
 
-  function getComboboxInput(combobox) {
+/* ui/js/comboboxes.js */
+function getComboboxInput(combobox) {
     return combobox.querySelector('[data-uzu-combobox-input], .uzu-combobox-input');
   }
 
@@ -1751,7 +1778,8 @@
     });
   }
 
-  function getDataGridRows(table) {
+/* ui/js/data-grids.js */
+function getDataGridRows(table) {
     return queryAll(table, 'tbody tr, [data-uzu-grid-row]').filter((row) => row.closest('table') === table);
   }
 
@@ -1834,7 +1862,8 @@
     });
   }
 
-  function getTreeItems(tree) {
+/* ui/js/trees.js */
+function getTreeItems(tree) {
     return getScopedControls(tree, '[data-uzu-tree-item], .uzu-tree-item', '[data-uzu-tree]');
   }
 
@@ -1956,7 +1985,8 @@
     });
   }
 
-  function initAccordions(root = document) {
+/* ui/js/accordions-hover-cards.js */
+function initAccordions(root = document) {
     queryAll(root, '[data-uzu-accordion]').forEach((accordion) => {
       const disclosures = getScopedControls(accordion, '[data-uzu-disclosure]', '[data-uzu-accordion]');
       if (!disclosures.length) return;
@@ -2076,7 +2106,8 @@
     });
   }
 
-  function setTagSelected(tag, selected, emit = true) {
+/* ui/js/tags.js */
+function setTagSelected(tag, selected, emit = true) {
     const nextSelected = Boolean(selected);
     const previousSelected = tag.classList.contains('is-selected') || tag.getAttribute('aria-pressed') === 'true';
     tag.classList.toggle('is-selected', nextSelected);
@@ -2137,11 +2168,8 @@
     });
   }
 
-  function clampNumber(value, min, max) {
-    return Math.min(max, Math.max(min, value));
-  }
-
-  function setSplitPaneSize(splitPane, size, emit = true) {
+/* ui/js/resizable.js */
+function setSplitPaneSize(splitPane, size, emit = true) {
     const min = Number(splitPane.dataset.uzuSplitMin || 20);
     const max = Number(splitPane.dataset.uzuSplitMax || 80);
     const next = clampNumber(size, min, max);
@@ -2181,8 +2209,10 @@
       };
       const stopDrag = () => {
         splitPane.classList.remove('is-resizing');
+        activePointerDrags.delete(resizer);
         document.removeEventListener('pointermove', moveDrag);
         document.removeEventListener('pointerup', stopDrag);
+        document.removeEventListener('pointercancel', stopDrag);
       };
       const moveDrag = (event) => {
         event.preventDefault();
@@ -2190,10 +2220,17 @@
       };
       resizer.addEventListener('pointerdown', (event) => {
         event.preventDefault();
+        if (activePointerDrags.has(resizer)) activePointerDrags.get(resizer)();
         splitPane.classList.add('is-resizing');
+        activePointerDrags.set(resizer, stopDrag);
+        if (resizer.setPointerCapture) {
+          try { resizer.setPointerCapture(event.pointerId); } catch (_) {}
+        }
         document.addEventListener('pointermove', moveDrag);
         document.addEventListener('pointerup', stopDrag, { once: true });
+        document.addEventListener('pointercancel', stopDrag, { once: true });
       });
+      resizer.addEventListener('lostpointercapture', stopDrag);
       resizer.addEventListener('keydown', (event) => {
         const keyMap = orientation === 'vertical'
           ? { ArrowUp: -2, ArrowDown: 2, Home: -100, End: 100 }
@@ -2251,16 +2288,26 @@
       const stop = () => {
         panel.classList.remove('is-resizing');
         start = null;
+        activePointerDrags.delete(handle);
         document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', stop);
+        document.removeEventListener('pointercancel', stop);
       };
       handle.addEventListener('pointerdown', (event) => {
         event.preventDefault();
+        if (activePointerDrags.has(handle)) activePointerDrags.get(handle)();
         const bounds = panel.getBoundingClientRect();
         start = { x: event.clientX, y: event.clientY, width: bounds.width, height: bounds.height };
         panel.classList.add('is-resizing');
+        activePointerDrags.set(handle, stop);
+        if (handle.setPointerCapture) {
+          try { handle.setPointerCapture(event.pointerId); } catch (_) {}
+        }
         document.addEventListener('pointermove', move);
         document.addEventListener('pointerup', stop, { once: true });
+        document.addEventListener('pointercancel', stop, { once: true });
       });
+      handle.addEventListener('lostpointercapture', stop);
       handle.addEventListener('keydown', (event) => {
         const currentWidth = Number(panel.dataset.uzuResizableWidth || panel.getBoundingClientRect().width);
         const currentHeight = Number(panel.dataset.uzuResizableHeight || panel.getBoundingClientRect().height);
@@ -2277,7 +2324,8 @@
     });
   }
 
-  function createJsonNode(value, key = '') {
+/* ui/js/editors.js */
+function createJsonNode(value, key = '') {
     const row = document.createElement('div');
     row.className = 'uzu-json-node';
     if (key) {
@@ -2357,100 +2405,68 @@
   function initRichEditors(root = document) {
     queryAll(root, '[data-uzu-rich-editor]').forEach((editor) => {
       const surface = editor.querySelector('[data-uzu-editor-surface], .uzu-editor-surface');
-      if (!surface) return;
-      surface.setAttribute('contenteditable', surface.getAttribute('contenteditable') || 'true');
-      surface.setAttribute('role', surface.getAttribute('role') || 'textbox');
-      surface.setAttribute('aria-multiline', surface.getAttribute('aria-multiline') || 'true');
       if (!markInitialized(editor, 'RichEditor')) return;
-      const syncToolbar = () => {
-        const selection = document.getSelection();
-        const selectedNode = selection?.anchorNode;
-        const selectedElement = selectedNode instanceof Element ? selectedNode : selectedNode?.parentElement;
-        if (!selectedElement || !surface.contains(selectedElement)) return;
-        queryAll(editor, '[data-uzu-editor-command]').forEach((button) => {
-          const command = button.dataset.uzuEditorCommand || '';
-          const value = button.dataset.uzuEditorValue || '';
-          let pressed = null;
-          try {
-            if (['bold', 'italic', 'underline', 'strikeThrough', 'insertUnorderedList', 'insertOrderedList'].includes(command)) {
-              pressed = document.queryCommandState(command);
-            } else if (command === 'formatBlock' && value) {
-              pressed = String(document.queryCommandValue(command) || '').toLowerCase() === value.toLowerCase();
-            }
-          } catch (_) {
-            pressed = null;
-          }
-          if (pressed === null) return;
-          button.classList.toggle('is-active', pressed);
-          button.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-        });
-      };
-      richEditorSyncers.set(editor, syncToolbar);
       queryAll(editor, '[data-uzu-editor-command]').forEach((button) => {
         const command = button.dataset.uzuEditorCommand || '';
-        if (['bold', 'italic', 'underline', 'strikeThrough', 'insertUnorderedList', 'insertOrderedList', 'formatBlock'].includes(command)) {
+        const value = button.dataset.uzuEditorValue || '';
+        if (button.hasAttribute('data-uzu-editor-toggle') && !button.hasAttribute('aria-pressed')) {
           button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') || 'false');
         }
-        button.addEventListener('mousedown', (event) => event.preventDefault());
         button.addEventListener('click', () => {
-          surface.focus();
-          document.execCommand(command, false, button.dataset.uzuEditorValue || null);
-          syncToolbar();
-          editor.dispatchEvent(new CustomEvent('uzu-editor-change', {
-            bubbles: true,
-            detail: { editor, surface, value: surface.innerHTML }
-          }));
+          if (surface && typeof surface.focus === 'function') surface.focus({ preventScroll: true });
           editor.dispatchEvent(new CustomEvent('uzu-editor-command', {
             bubbles: true,
-            detail: { editor, surface, command, value: button.dataset.uzuEditorValue || '' }
+            detail: { editor, surface, button, command, value }
           }));
         });
       });
-      surface.addEventListener('input', () => {
-        syncToolbar();
-        editor.dispatchEvent(new CustomEvent('uzu-editor-change', {
-          bubbles: true,
-          detail: { editor, surface, value: surface.innerHTML }
-        }));
-      });
-      surface.addEventListener('keyup', syncToolbar);
-      surface.addEventListener('mouseup', syncToolbar);
-      syncToolbar();
+      if (surface) {
+        surface.addEventListener('input', () => {
+          const value = 'value' in surface ? surface.value : surface.innerHTML;
+          editor.dispatchEvent(new CustomEvent('uzu-editor-change', {
+            bubbles: true,
+            detail: { editor, surface, value }
+          }));
+        });
+      }
     });
   }
 
-  function syncSelectedRichEditor() {
-    const selection = document.getSelection();
-    const selectedNode = selection?.anchorNode;
-    const selectedElement = selectedNode instanceof Element ? selectedNode : selectedNode?.parentElement;
-    const editor = selectedElement?.closest?.('[data-uzu-rich-editor]');
-    const syncToolbar = editor ? richEditorSyncers.get(editor) : null;
-    if (syncToolbar) syncToolbar();
-  }
-
-  function initRichEditorSelectionListener() {
-    if (richEditorSelectionListenerInitialized) return;
-    document.addEventListener('selectionchange', syncSelectedRichEditor);
-    richEditorSelectionListenerInitialized = true;
+  function shouldRenderMarkdownEditor(editor) {
+    const value = editor.getAttribute('data-uzu-markdown-render');
+    return value !== null && value !== 'false';
   }
 
   function initMarkdownEditors(root = document) {
     queryAll(root, '[data-uzu-markdown-editor]').forEach((editor) => {
       const source = editor.querySelector('[data-uzu-markdown-source]');
       const preview = editor.querySelector('[data-uzu-markdown-preview]');
-      if (!source || !preview) return;
-      const render = () => {
-        const sourceValue = 'value' in source ? source.value : source.textContent;
-        preview.replaceChildren(renderMarkdown(sourceValue || ''));
+      if (!source) return;
+      const getSourceValue = () => {
+        return 'value' in source ? source.value : source.textContent;
+      };
+      const render = (sourceValue = getSourceValue()) => {
+        if (!preview) return;
+        const value = sourceValue || '';
+        editor.dataset.uzuMarkdownValue = value;
+        preview.replaceChildren(renderMarkdown(value));
         initCodeCopy(preview);
         editor.dispatchEvent(new CustomEvent('uzu-markdown-editor-render', {
           bubbles: true,
-          detail: { editor, source, preview }
+          detail: { editor, source, preview, value }
         }));
       };
-      render();
+      if (shouldRenderMarkdownEditor(editor)) render();
       if (!markInitialized(editor, 'MarkdownEditor')) return;
-      source.addEventListener('input', render);
+      source.addEventListener('input', () => {
+        const value = getSourceValue() || '';
+        editor.dataset.uzuMarkdownValue = value;
+        editor.dispatchEvent(new CustomEvent('uzu-markdown-editor-change', {
+          bubbles: true,
+          detail: { editor, source, preview, value }
+        }));
+        if (shouldRenderMarkdownEditor(editor)) render(value);
+      });
     });
   }
 
@@ -2477,10 +2493,10 @@
     initRichEditors(root);
     initMarkdownEditors(root);
     initInlineEditors(root);
-    initRichEditorSelectionListener();
   }
 
-  function getDialog(selector) {
+/* ui/js/dialogs.js */
+function getDialog(selector) {
     try {
       return selector ? document.querySelector(selector) : null;
     } catch (_) {
@@ -2504,8 +2520,85 @@
     }));
   }
 
+  function getDialogIsolationRoot(dialog) {
+    return dialog.closest('[data-uzu-dialog-overlay]') || dialog;
+  }
+
+  function getDialogInertSiblings(root) {
+    const siblings = new Set();
+    let node = root;
+    while (node && node !== document.body && node.parentElement) {
+      [...node.parentElement.children].forEach((child) => {
+        if (child !== node && !child.contains(root)) siblings.add(child);
+      });
+      node = node.parentElement;
+    }
+    return [...siblings];
+  }
+
+  function lockDialogScroll() {
+    if (dialogScrollLockState || !document.body) return;
+    const body = document.body;
+    const root = document.documentElement;
+    const scrollbarWidth = Math.max(0, window.innerWidth - root.clientWidth);
+    const bodyPaddingRight = window.getComputedStyle(body).paddingRight;
+    const bodyPaddingValue = Number.parseFloat(bodyPaddingRight) || 0;
+    dialogScrollLockState = {
+      bodyOverflow: body.style.overflow,
+      bodyPaddingRight: body.style.paddingRight,
+      rootOverflow: root.style.overflow
+    };
+    root.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) body.style.paddingRight = `${bodyPaddingValue + scrollbarWidth}px`;
+  }
+
+  function unlockDialogScroll() {
+    if (!dialogScrollLockState || !document.body) return;
+    const body = document.body;
+    const root = document.documentElement;
+    body.style.overflow = dialogScrollLockState.bodyOverflow;
+    body.style.paddingRight = dialogScrollLockState.bodyPaddingRight;
+    root.style.overflow = dialogScrollLockState.rootOverflow;
+    dialogScrollLockState = null;
+  }
+
+  function applyDialogIsolation(dialog) {
+    if (dialogIsolationState && dialogIsolationState.dialog === dialog) return;
+    restoreDialogIsolation();
+    const root = getDialogIsolationRoot(dialog);
+    const entries = getDialogInertSiblings(root).map((element) => ({
+      element,
+      hadInert: element.hasAttribute('inert'),
+      ariaHidden: element.getAttribute('aria-hidden')
+    }));
+    entries.forEach(({ element }) => {
+      element.setAttribute('inert', '');
+      element.setAttribute('aria-hidden', 'true');
+    });
+    dialogIsolationState = { dialog, entries };
+    lockDialogScroll();
+  }
+
+  function restoreDialogIsolation(dialog = null) {
+    if (!dialogIsolationState || (dialog && dialogIsolationState.dialog !== dialog)) return;
+    dialogIsolationState.entries.forEach(({ element, hadInert, ariaHidden }) => {
+      if (!hadInert) element.removeAttribute('inert');
+      if (ariaHidden === null) {
+        element.removeAttribute('aria-hidden');
+      } else {
+        element.setAttribute('aria-hidden', ariaHidden);
+      }
+    });
+    dialogIsolationState = null;
+    unlockDialogScroll();
+  }
+
   function openDialog(dialog, trigger = null) {
     if (!dialog) return;
+    if (activeDialog && activeDialog !== dialog && !activeDialog.hidden) {
+      closeDialog(activeDialog);
+    }
     const existingTimer = dialogCloseTimers.get(dialog);
     if (existingTimer) {
       window.clearTimeout(existingTimer);
@@ -2525,9 +2618,10 @@
     dialog.setAttribute('role', dialog.getAttribute('role') || 'dialog');
     dialog.setAttribute('aria-modal', 'true');
     if (!dialog.hasAttribute('tabindex')) dialog.setAttribute('tabindex', '-1');
-    emitDialogEvent(dialog, 'uzu-dialog-open');
+    applyDialogIsolation(dialog);
     const focusable = getFocusable(dialog);
     (focusable[0] || dialog).focus();
+    emitDialogEvent(dialog, 'uzu-dialog-open');
   }
 
   function closeDialog(dialog) {
@@ -2547,6 +2641,7 @@
         overlay.classList.remove('is-closing');
         overlay.hidden = true;
       }
+      restoreDialogIsolation(dialog);
       emitDialogEvent(dialog, 'uzu-dialog-close', trigger);
       if (activeDialog === dialog) {
         if (trigger && typeof trigger.focus === 'function') trigger.focus();
@@ -2582,7 +2677,8 @@
     });
   }
 
-  function closeToast(toast) {
+/* ui/js/toasts.js */
+function closeToast(toast) {
     if (!toast || toast.classList.contains('is-dismissed')) return;
     toast.classList.add('is-dismissed');
     toast.dispatchEvent(new CustomEvent('uzu-toast-close', {
@@ -2599,6 +2695,11 @@
   function initToasts(root = document) {
     queryAll(root, '[data-uzu-toast]').forEach((toast) => {
       if (!markInitialized(toast, 'Toast')) return;
+      if (!toast.hasAttribute('role')) toast.setAttribute('role', 'status');
+      if (!toast.hasAttribute('aria-live')) {
+        toast.setAttribute('aria-live', toast.getAttribute('role') === 'alert' ? 'assertive' : 'polite');
+      }
+      if (!toast.hasAttribute('aria-atomic')) toast.setAttribute('aria-atomic', 'true');
       const timeout = Number(toast.dataset.uzuToastTimeout || 0);
       queryAll(toast, '[data-uzu-toast-close]').forEach((close) => {
         close.addEventListener('click', () => closeToast(toast));
@@ -2607,7 +2708,8 @@
     });
   }
 
-  function getPanelNavTarget(control) {
+/* ui/js/panel-navigation.js */
+function getPanelNavTarget(control) {
     return control.dataset.uzuPanelTarget || '';
   }
 
@@ -2745,12 +2847,32 @@
         showPanelNavTarget(nav, control, { updateHash: nav.dataset.uzuPanelHash === 'true' });
       });
       if (nav.dataset.uzuPanelHash === 'true') {
-        window.addEventListener('hashchange', () => showPanelNavFromHash(nav));
+        const listener = () => showPanelNavFromHash(nav);
+        panelNavHashListeners.set(nav, listener);
+        window.addEventListener('hashchange', listener);
       }
     });
   }
 
-  function isSafeMarkdownHref(value) {
+/* ui/js/tooltips.js */
+function initTooltips(root = document) {
+    queryAll(root, '[data-uzu-tooltip]').forEach((tooltip) => {
+      if (tooltipNodes.has(tooltip)) return;
+      if (tooltip.getAttribute('aria-describedby')) return;
+      const text = tooltip.getAttribute('data-uzu-tooltip') || '';
+      const id = tooltip.id || ensureId(tooltip, 'uzu-tooltip');
+      const description = document.createElement('span');
+      description.id = `${id}-desc`;
+      description.className = 'uzu-sr-only';
+      description.textContent = text;
+      (document.body || document.documentElement).append(description);
+      tooltip.setAttribute('aria-describedby', description.id);
+      tooltipNodes.set(tooltip, description);
+    });
+  }
+
+/* ui/js/markdown.js */
+function isSafeMarkdownHref(value) {
     const href = String(value || '').trim();
     if (!href) return false;
     if (href.startsWith('#') || href.startsWith('/') || href.startsWith('./') || href.startsWith('../')) return true;
@@ -2897,7 +3019,8 @@
     });
   }
 
-  function getCodeCopyLabelText(button, label, key, fallback) {
+/* ui/js/code-copy.js */
+function getCodeCopyLabelText(button, label, key, fallback) {
     return label?.dataset[key] || button.dataset[key] || fallback;
   }
 
@@ -2965,7 +3088,8 @@
     });
   }
 
-  function handleDocumentClick(event) {
+/* ui/js/boot.js */
+function handleDocumentClick(event) {
     queryAll(document, '[data-uzu-select].is-open').forEach((select) => {
       if (!select.contains(event.target)) closeSelect(select);
     });
@@ -3008,16 +3132,131 @@
     document.addEventListener('click', handleDocumentClick);
     document.addEventListener('keydown', handleDocumentKeydown);
     document.addEventListener('keydown', trapDialogFocus);
-    window.addEventListener('resize', () => queueIndicatorRefresh());
+    resizeListener = () => queueIndicatorRefresh();
+    window.addEventListener('resize', resizeListener);
     document.documentElement.dataset.uzuGlobalListeners = 'true';
+  }
+
+  function initAutoInit(root = document) {
+    if (typeof MutationObserver === 'undefined') return;
+    queryAll(root, '[data-uzu-auto-init]').forEach((container) => {
+      if (autoInitObservers.has(container)) return;
+      const observer = new MutationObserver((records) => {
+        const added = [];
+        records.forEach((record) => {
+          record.addedNodes.forEach((node) => {
+            if (node instanceof Element) added.push(node);
+          });
+        });
+        if (!added.length) return;
+        window.requestAnimationFrame(() => {
+          if (!container.isConnected) return;
+          added.forEach((node) => {
+            if (node.isConnected && container.contains(node)) init(node);
+          });
+        });
+      });
+      observer.observe(container, { childList: true, subtree: true });
+      autoInitObservers.set(container, observer);
+    });
+  }
+
+  function isWholeDocumentRoot(root) {
+    return root === document || root === document.documentElement || root === document.body;
+  }
+
+  function rootContains(root, node) {
+    return root === document || root === node || (root instanceof Element && root.contains(node));
+  }
+
+  function destroy(root = document) {
+    queryAll(root, '[data-uzu-auto-init]').forEach((container) => {
+      const observer = autoInitObservers.get(container);
+      if (observer) {
+        observer.disconnect();
+        autoInitObservers.delete(container);
+      }
+    });
+    queryAll(root, '[data-uzu-panel-nav]').forEach((nav) => {
+      const listener = panelNavHashListeners.get(nav);
+      if (!listener) return;
+      window.removeEventListener('hashchange', listener);
+      panelNavHashListeners.delete(nav);
+    });
+    queryAll(root, '[data-uzu-tooltip]').forEach((tooltip) => {
+      const description = tooltipNodes.get(tooltip);
+      if (description && description.parentNode) {
+        description.remove();
+      }
+      if (description) {
+        const describedBy = (tooltip.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+        const nextDescribedBy = describedBy.filter((id) => id !== description.id).join(' ');
+        if (nextDescribedBy) {
+          tooltip.setAttribute('aria-describedby', nextDescribedBy);
+        } else {
+          tooltip.removeAttribute('aria-describedby');
+        }
+      }
+      tooltipNodes.delete(tooltip);
+    });
+    [...activePointerDrags].forEach(([handle, stop]) => {
+      if (!rootContains(root, handle)) return;
+      try { stop(); } catch (_) {}
+      handle.removeEventListener('lostpointercapture', stop);
+    });
+    if (isWholeDocumentRoot(root) || (dialogIsolationState && rootContains(root, dialogIsolationState.dialog))) {
+      restoreDialogIsolation();
+    }
+    if (activeDialog && rootContains(root, activeDialog)) {
+      const timer = dialogCloseTimers.get(activeDialog);
+      if (timer) {
+        window.clearTimeout(timer);
+        dialogCloseTimers.delete(activeDialog);
+      }
+      activeDialog = null;
+      activeDialogTrigger = null;
+    }
+    const dialogNodes = new Set(queryAll(root, '[data-uzu-dialog-overlay], [data-uzu-dialog]'));
+    queryAll(root, '[data-uzu-dialog]').forEach((dialog) => {
+      const overlay = dialog.closest('[data-uzu-dialog-overlay]');
+      if (overlay) dialogNodes.add(overlay);
+    });
+    dialogNodes.forEach((node) => {
+      const timer = dialogCloseTimers.get(node);
+      if (timer) {
+        window.clearTimeout(timer);
+        dialogCloseTimers.delete(node);
+      }
+      node.classList.remove('is-open');
+      node.classList.remove('is-closing');
+      node.hidden = true;
+    });
+    if (!isWholeDocumentRoot(root)) return;
+    if (themeMediaQuery) {
+      if (themeMediaQuery.removeEventListener) {
+        themeMediaQuery.removeEventListener('change', handleThemePreferenceChange);
+      } else if (themeMediaQuery.removeListener) {
+        themeMediaQuery.removeListener(handleThemePreferenceChange);
+      }
+      themeMediaQuery = null;
+    }
+    if (resizeListener) {
+      window.removeEventListener('resize', resizeListener);
+      resizeListener = null;
+    }
+    document.removeEventListener('click', handleDocumentClick);
+    document.removeEventListener('keydown', handleDocumentKeydown);
+    document.removeEventListener('keydown', trapDialogFocus);
+    delete document.documentElement.dataset.uzuGlobalListeners;
   }
 
   function init(root = document) {
     syncRootClass();
     initGlobalListeners();
-    for (const fn of [initThemeToggles, initLanguageToggles, initSelects, initTabs, initSegmented, initPaginations, initSwitches, initSearches, initPasswords, initSteppers, initSliders, initMenus, initContextMenus, initMenubars, initCommands, initComboboxes, initDataGrids, initTrees, initDisclosures, initAccordions, initHoverCards, initTags, initSplitPanes, initResizables, initJsonViewers, initDiffViewers, initEditors, initDialogs, initToasts, initStepNavs, initPanelNavs, initMarkdown, initCodeCopy]) {
+    for (const fn of [initThemeToggles, initLanguageToggles, initSelects, initTabs, initSegmented, initPaginations, initSwitches, initSearches, initPasswords, initSteppers, initSliders, initMenus, initContextMenus, initMenubars, initCommands, initComboboxes, initDataGrids, initTrees, initDisclosures, initAccordions, initHoverCards, initTags, initSplitPanes, initResizables, initJsonViewers, initDiffViewers, initEditors, initDialogs, initToasts, initTooltips, initStepNavs, initPanelNavs, initMarkdown, initCodeCopy]) {
       try { fn(root); } catch (error) { console.error('[usuzumi]', error); }
     }
+    initAutoInit(root);
     queueIndicatorRefresh(root);
   }
 
@@ -3041,7 +3280,8 @@
     renderMarkdown,
     initCodeCopy,
     openDialog,
-    closeDialog
+    closeDialog,
+    destroy
   };
 
   if (document.readyState === 'loading') {

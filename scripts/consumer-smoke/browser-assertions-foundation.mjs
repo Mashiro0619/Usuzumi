@@ -1,0 +1,35 @@
+export function assertConsumerFoundationResult(value) {
+if (!value.hasApi) throw new Error('Browser consumer page did not expose window.Usuzumi');
+if (!value.rootClass) throw new Error('Browser consumer page did not keep uzu-root');
+if (value.restoredTheme !== 'dark' || !value.themeToggleDark) throw new Error('Browser consumer theme did not restore the saved mode');
+if (!(value.pageWidth > value.pageWidthCustom) || Math.round(value.pageWidthCustom) !== 520) throw new Error('Browser consumer page max-width variable did not apply');
+if (value.tabValue !== 'two' || value.tabSelected !== 'true') throw new Error('Browser consumer tabs did not respond');
+if (value.tabsIndicator !== 'true' || value.tabsIndicatorWidth <= 0) throw new Error('Browser consumer tabs did not expose animated indicator metrics');
+if (value.tabsIndicatorTransform === 'none') throw new Error('Browser consumer tabs indicator did not move');
+if (Math.abs(value.tabsIndicatorWidthAfterLanguage - value.tabsActiveWidthAfterLanguage) > 1) throw new Error('Browser consumer tabs indicator did not refresh after language change');
+if (value.segmentValue !== 'beta' || value.segmentPressed !== 'true') throw new Error('Browser consumer segmented control did not respond');
+if (value.segmentedIndicator !== 'true' || value.segmentedIndicatorWidth <= 0) throw new Error('Browser consumer segmented control did not expose animated indicator metrics');
+if (value.segmentedIndicatorTransform === 'none') throw new Error('Browser consumer segmented indicator did not move');
+if (Math.abs(value.segmentedIndicatorWidthBeforeLanguage - value.segmentedActiveWidthBeforeLanguage) > 1) throw new Error('Browser consumer segmented indicator did not match the active segment before language change');
+if (Math.abs(value.segmentedIndicatorWidthAfterLanguage - value.segmentedActiveWidthAfterLanguage) > 1) throw new Error('Browser consumer segmented indicator did not refresh after language change');
+if (value.selectOpenAnimation !== 'uzu-menu-in' || value.selectCloseAnimation !== 'uzu-menu-out') throw new Error('Browser consumer select did not animate open and close');
+if (value.selectOpenTransform !== 'none') throw new Error('Browser consumer select menu should not shift or scale while opening');
+if (!value.selectClosing || value.selectExpandedAfterClose !== 'false') throw new Error('Browser consumer select did not keep a closing state with collapsed ARIA');
+if (value.comboboxOpenAnimation !== 'uzu-menu-in' || value.comboboxVisibleCount !== 1 || value.comboboxValue !== 'tree' || value.comboboxHiddenValue !== 'tree') throw new Error('Browser consumer combobox did not filter, animate, or sync value');
+if (!value.comboboxClosedAfterSelect) throw new Error('Browser consumer combobox reopened after selecting an option');
+if (value.comboboxListDisplayOpen !== 'grid') throw new Error('Browser consumer combobox list styling is missing');
+if (value.dataGridFirstCellAfterSort !== 'Alpha' || value.dataGridSelectedValue !== 'alpha' || value.dataGridDisplay !== 'table') throw new Error('Browser consumer data grid did not sort/select');
+if (value.plainDataGridFirstValue !== '1' || value.plainDataGridSelectedValue !== '2') throw new Error('Browser consumer data grid did not initialize plain table rows');
+if (!value.treeClosed || !value.treeOpen || value.treeKeyboardFocusValue !== 'docs' || value.treeDisplay !== 'grid') throw new Error('Browser consumer tree did not toggle, focus, or style correctly');
+if (Number(value.splitSize) !== 58 || value.splitAriaValue !== '58' || value.splitPaneDisplay !== 'grid') throw new Error('Browser consumer split pane did not resize');
+if (value.resizableWidth !== 300 || value.resizableHeight !== 150 || value.resizablePosition !== 'relative') throw new Error('Browser consumer resizable panel did not resize');
+if (value.jsonNodeCount < 2 || !value.jsonCollapsed || value.jsonViewerBorderStyle === 'none') throw new Error('Browser consumer JSON viewer did not render collapsible JSON');
+if (value.diffAddRows !== 1 || value.diffRemoveRows !== 1 || value.diffViewerDisplay !== 'block') throw new Error('Browser consumer diff viewer did not classify rows');
+if (value.editorDisplay !== 'grid' || value.markdownEditorDisplay !== 'grid' || value.markdownEditorHeading !== 'Updated' || value.markdownEditorCleared !== '' || !value.markdownEditorCopyInitialized || !value.markdownEditorShellPreviewEmpty || value.inlineEditorValue !== 'Changed inline') throw new Error('Browser consumer editor helpers did not initialize');
+if (Math.round(value.fieldGap) !== 5) throw new Error('Browser consumer form field should use the default field gap variable');
+if (value.fieldLabelToInputGap < 4) throw new Error('Browser consumer form label should not overlap the input');
+if (value.disclosureOpenAnimation !== 'uzu-disclosure-in' || value.disclosureCloseAnimation !== 'uzu-disclosure-out') throw new Error('Browser consumer disclosure did not animate open and close');
+if (!(value.disclosurePanelTargetHeight > 0)) throw new Error('Browser consumer disclosure did not set a measured panel height');
+if (!value.disclosureClosing || value.disclosureHiddenWhileClosing) throw new Error('Browser consumer disclosure did not stay visible while closing');
+if (value.buttonTransform !== 'none') throw new Error('Browser consumer button hover/base transform should not move the button');
+}

@@ -171,9 +171,18 @@
     background: Canvas;
   }
 
+  .uzu-switch::after {
+    background: CanvasText;
+  }
+
   .uzu-switch.is-on {
     background: Highlight;
     border-color: Highlight;
+  }
+
+  .uzu-switch.is-on::after,
+  .uzu-switch[aria-checked="true"]::after {
+    background: HighlightText;
   }
 
   /* Links. */

@@ -1,6 +1,7 @@
 :root,
 .uzu-app,
 .uzu-scope {
+  color-scheme: light;
   --uzu-bg: #f4f3f0;
   --uzu-surface: #fbfaf7;
   --uzu-surface-soft: #efeee9;
@@ -26,9 +27,8 @@
   --uzu-info: #56606a;
   --uzu-info-bg: #e5e7e8;
   --uzu-control-bg: rgba(244, 243, 240, 0.78);
-  --uzu-shadow-soft: 0 18px 50px rgba(25, 25, 22, 0.045);
   --uzu-shadow-popover: 0 20px 70px rgba(25, 25, 22, 0.11);
-  --uzu-focus-ring: 0 0 0 3px color-mix(in srgb, var(--uzu-fg-strong) 14%, transparent);
+  --uzu-focus-ring: 0 0 0 2px var(--uzu-surface), 0 0 0 4px var(--uzu-fg-strong);
   --uzu-font-serif: Georgia, "Times New Roman", "Noto Serif SC", "Source Han Serif CN", serif;
   --uzu-font-signature: "Meddon Custom", cursive;
   --uzu-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -66,6 +66,7 @@
 [data-theme="dark"] .uzu-scope,
 [data-uzu-theme="dark"] .uzu-app,
 [data-uzu-theme="dark"] .uzu-scope {
+  color-scheme: dark;
   --uzu-bg: #181817;
   --uzu-surface: #20201e;
   --uzu-surface-soft: #242421;
@@ -91,6 +92,5 @@
   --uzu-info: #c0c8d0;
   --uzu-info-bg: #252a30;
   --uzu-control-bg: rgba(24, 24, 23, 0.78);
-  --uzu-shadow-soft: none;
   --uzu-shadow-popover: 0 24px 80px rgba(0, 0, 0, 0.36);
 }

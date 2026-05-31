@@ -1,0 +1,358 @@
+.uzu-field {
+  display: grid;
+  gap: var(--uzu-field-gap);
+}
+
+.uzu-form {
+  --uzu-form-gap: var(--uzu-space-5);
+  display: grid;
+  gap: var(--uzu-form-gap);
+}
+
+.uzu-fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: var(--uzu-space-3);
+}
+
+.uzu-fieldset legend {
+  margin: 0 0 var(--uzu-space-1);
+  padding: 0;
+  color: var(--uzu-fg-strong);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.uzu-label {
+  align-self: start;
+  margin: 0;
+  color: var(--uzu-fg-strong);
+  font-size: 13px;
+  line-height: 1.15;
+}
+
+.uzu-input,
+.uzu-textarea,
+.uzu-select-trigger {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-standard);
+  background: var(--uzu-surface);
+  color: var(--uzu-fg);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.uzu-input:hover,
+.uzu-textarea:hover,
+.uzu-select-trigger:hover {
+  border-color: var(--uzu-border-strong);
+}
+
+.uzu-input:disabled,
+.uzu-textarea:disabled,
+.uzu-select-trigger:disabled,
+.uzu-input[aria-disabled="true"],
+.uzu-textarea[aria-disabled="true"],
+.uzu-select-trigger[aria-disabled="true"] {
+  background: var(--uzu-surface-soft);
+  color: var(--uzu-disabled);
+  cursor: not-allowed;
+}
+
+.uzu-input:read-only,
+.uzu-textarea:read-only {
+  background: color-mix(in srgb, var(--uzu-surface-soft) 70%, var(--uzu-surface));
+}
+
+.uzu-field.is-invalid .uzu-label,
+.uzu-field.is-invalid .uzu-help,
+.uzu-input.is-invalid,
+.uzu-textarea.is-invalid,
+.uzu-select.is-invalid .uzu-select-trigger,
+.uzu-input[aria-invalid="true"],
+.uzu-textarea[aria-invalid="true"],
+.uzu-select-trigger[aria-invalid="true"] {
+  color: var(--uzu-danger);
+}
+
+.uzu-field.is-invalid .uzu-input,
+.uzu-field.is-invalid .uzu-textarea,
+.uzu-field.is-invalid .uzu-select-trigger,
+.uzu-input.is-invalid,
+.uzu-textarea.is-invalid,
+.uzu-select.is-invalid .uzu-select-trigger,
+.uzu-input[aria-invalid="true"],
+.uzu-textarea[aria-invalid="true"],
+.uzu-select-trigger[aria-invalid="true"] {
+  border-color: color-mix(in srgb, var(--uzu-danger) 48%, var(--uzu-border));
+  background: color-mix(in srgb, var(--uzu-danger-bg) 38%, var(--uzu-surface));
+}
+
+.uzu-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.uzu-help {
+  margin: 0;
+  color: var(--uzu-subtle);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.uzu-form-message,
+.uzu-form-error {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.uzu-form-message {
+  color: var(--uzu-muted);
+}
+
+.uzu-form-error {
+  color: var(--uzu-danger);
+}
+
+.uzu-input-group {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+.uzu-input-group > .uzu-input,
+.uzu-input-group > .uzu-button,
+.uzu-input-group > .uzu-icon-button,
+.uzu-input-group > .uzu-input-addon,
+.uzu-input-group > .uzu-input-action {
+  border-radius: var(--uzu-radius-micro);
+}
+
+.uzu-input-group > :first-child {
+  border-top-left-radius: var(--uzu-radius-standard);
+  border-bottom-left-radius: var(--uzu-radius-standard);
+}
+
+.uzu-input-group > :last-child {
+  border-top-right-radius: var(--uzu-radius-standard);
+  border-bottom-right-radius: var(--uzu-radius-standard);
+}
+
+.uzu-input-group > :not(:first-child) {
+  margin-left: -1px;
+}
+
+.uzu-input-group > .uzu-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.uzu-input-addon,
+.uzu-input-action {
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid var(--uzu-border);
+  background: var(--uzu-surface-soft);
+  color: var(--uzu-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  font-size: 13px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.uzu-input-action {
+  background: var(--uzu-surface);
+}
+
+.uzu-search,
+.uzu-password,
+.uzu-stepper {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+.uzu-search-input,
+.uzu-password-input,
+.uzu-stepper-input {
+  padding-right: 42px;
+}
+
+.uzu-search-clear,
+.uzu-password-toggle {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 36px;
+  height: 36px;
+}
+
+.uzu-search-clear[hidden] {
+  display: none;
+}
+
+.uzu-stepper-input {
+  padding-right: 78px;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.uzu-stepper-input::-webkit-outer-spin-button,
+.uzu-stepper-input::-webkit-inner-spin-button {
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.uzu-stepper-controls {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.uzu-stepper-button {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--uzu-radius-micro);
+}
+
+.uzu-stepper-button + .uzu-stepper-button {
+  margin-left: 2px;
+}
+
+.uzu-file-upload {
+  --uzu-file-upload-min-height: 112px;
+  min-height: var(--uzu-file-upload-min-height);
+  padding: var(--uzu-space-4);
+  border: 1px dashed var(--uzu-border-strong);
+  border-radius: var(--uzu-radius-medium);
+  background: color-mix(in srgb, var(--uzu-surface) 82%, var(--uzu-surface-soft));
+  color: var(--uzu-muted);
+  display: grid;
+  gap: var(--uzu-space-2);
+  align-content: center;
+}
+
+.uzu-file-upload:hover {
+  border-color: color-mix(in srgb, var(--uzu-fg-strong) 42%, var(--uzu-border));
+}
+
+.uzu-file-upload.is-dragging {
+  border-color: var(--uzu-action-bg);
+  background: color-mix(in srgb, var(--uzu-surface-soft) 74%, var(--uzu-surface));
+}
+
+.uzu-file-input {
+  width: 100%;
+  color: var(--uzu-muted);
+  font-size: 13px;
+}
+
+.uzu-file-input::file-selector-button {
+  min-height: 34px;
+  margin-right: var(--uzu-space-3);
+  padding: 6px 12px;
+  border: 1px solid var(--uzu-border);
+  border-radius: var(--uzu-radius-standard);
+  background: var(--uzu-surface);
+  color: var(--uzu-fg-strong);
+  font: inherit;
+  cursor: pointer;
+}
+
+.uzu-file-summary {
+  margin: 0;
+  color: var(--uzu-subtle);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.uzu-slider {
+  --uzu-slider-value: 0%;
+  --uzu-slider-track: color-mix(in srgb, var(--uzu-border) 72%, var(--uzu-surface-soft));
+  --uzu-slider-fill: var(--uzu-action-bg);
+  --uzu-slider-thumb: var(--uzu-surface);
+  --uzu-slider-thumb-ring: var(--uzu-bg);
+  width: 100%;
+  height: 34px;
+  margin: 0;
+  accent-color: var(--uzu-action-bg);
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+}
+
+.uzu-slider:disabled {
+  cursor: not-allowed;
+  opacity: .52;
+}
+
+.uzu-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border: 1px solid color-mix(in srgb, var(--uzu-border-strong) 38%, transparent);
+  border-radius: var(--uzu-radius-pill);
+  background: var(--uzu-slider-track);
+}
+
+.uzu-slider[data-uzu-slider-initialized="true"]::-webkit-slider-runnable-track {
+  background: linear-gradient(90deg, var(--uzu-slider-fill) 0 var(--uzu-slider-value), var(--uzu-slider-track) var(--uzu-slider-value) 100%);
+}
+
+.uzu-slider::-webkit-slider-thumb {
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  border: 1px solid var(--uzu-border-strong);
+  border-radius: var(--uzu-radius-pill);
+  background: var(--uzu-slider-thumb);
+  box-shadow: 0 0 0 4px var(--uzu-slider-thumb-ring);
+  appearance: none;
+}
+
+.uzu-slider::-moz-range-track {
+  height: 8px;
+  border: 1px solid color-mix(in srgb, var(--uzu-border-strong) 38%, transparent);
+  border-radius: var(--uzu-radius-pill);
+  background: var(--uzu-slider-track);
+}
+
+.uzu-slider::-moz-range-progress {
+  height: 8px;
+  border-radius: var(--uzu-radius-pill);
+  background: var(--uzu-slider-fill);
+}
+
+.uzu-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--uzu-border-strong);
+  border-radius: var(--uzu-radius-pill);
+  background: var(--uzu-slider-thumb);
+  box-shadow: 0 0 0 4px var(--uzu-slider-thumb-ring);
+}
+
+.uzu-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 4px var(--uzu-slider-thumb-ring),
+    0 0 0 7px color-mix(in srgb, var(--uzu-fg-strong) 18%, transparent);
+}
+
+.uzu-slider:focus-visible::-moz-range-thumb {
+  box-shadow:
+    0 0 0 4px var(--uzu-slider-thumb-ring),
+    0 0 0 7px color-mix(in srgb, var(--uzu-fg-strong) 18%, transparent);
+}

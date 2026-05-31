@@ -274,59 +274,59 @@
 }
 
 .uzu-token-paper {
-  --token-color: #f4f3f0;
+  --token-color: var(--uzu-bg);
 }
 
 .uzu-token-surface {
-  --token-color: #fbfaf7;
+  --token-color: var(--uzu-surface);
 }
 
 .uzu-token-soft-surface {
-  --token-color: #efeee9;
+  --token-color: var(--uzu-surface-soft);
 }
 
 .uzu-token-muted-surface {
-  --token-color: #ebeae6;
+  --token-color: var(--uzu-surface-muted);
 }
 
 .uzu-token-inset {
-  --token-color: #e7e6e1;
+  --token-color: var(--uzu-surface-inset);
 }
 
 .uzu-token-strong {
-  --token-color: #20201e;
+  --token-color: var(--uzu-fg-strong);
 }
 
 .uzu-token-body {
-  --token-color: #333331;
+  --token-color: var(--uzu-fg);
 }
 
 .uzu-token-muted {
-  --token-color: #686866;
+  --token-color: var(--uzu-muted);
 }
 
 .uzu-token-subtle {
-  --token-color: #6d6c68;
+  --token-color: var(--uzu-subtle);
 }
 
 .uzu-token-soft {
-  --token-color: #8a8a85;
+  --token-color: var(--uzu-soft);
 }
 
 .uzu-token-success {
-  --token-color: #e6ede7;
+  --token-color: var(--uzu-success-bg);
 }
 
 .uzu-token-warning {
-  --token-color: #f0eadc;
+  --token-color: var(--uzu-warning-bg);
 }
 
 .uzu-token-danger {
-  --token-color: #efe3e1;
+  --token-color: var(--uzu-danger-bg);
 }
 
 .uzu-token-info {
-  --token-color: #e5e7e8;
+  --token-color: var(--uzu-info-bg);
 }
 
 .uzu-type-list {

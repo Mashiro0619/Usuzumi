@@ -22,13 +22,19 @@
   "license": "MIT",
   "author": "Mashiro0619",
   "type": "module",
+  "engines": {
+    "node": ">=20.6"
+  },
   "main": "./ui/usuzumi.js",
+  "module": "./ui/usuzumi.js",
   "types": "./ui/usuzumi.d.ts",
   "style": "./ui/usuzumi.css",
-  "unpkg": "./ui/usuzumi.css",
-  "jsdelivr": "./ui/usuzumi.css",
+  "unpkg": "./ui/usuzumi.min.css",
+  "jsdelivr": "./ui/usuzumi.min.css",
   "sideEffects": [
     "./ui/usuzumi.css",
+    "./ui/usuzumi.min.css",
+    "./ui/usuzumi.min.js",
     "./ui/usuzumi-signature.css",
     "./ui/css/*.css",
     "./ui/usuzumi.js"
@@ -40,19 +46,27 @@
       "default": "./ui/usuzumi.js"
     },
     "./usuzumi.css": "./ui/usuzumi.css",
+    "./usuzumi.min.css": "./ui/usuzumi.min.css",
     "./usuzumi-signature.css": "./ui/usuzumi-signature.css",
     "./usuzumi.js": {
       "types": "./ui/usuzumi.d.ts",
       "default": "./ui/usuzumi.js"
     },
+    "./usuzumi.min.js": {
+      "default": "./ui/usuzumi.min.js"
+    },
     "./ui/*": "./ui/*"
   },
   "scripts": {
-    "build:css": "node scripts/build-css.mjs",
-    "validate": "node scripts/validate.mjs && node scripts/consumer-smoke.mjs && node scripts/visual-regression.mjs",
+    "build": "node scripts/build.mjs",
+    "check:build": "node scripts/build.mjs --check",
+    "build:css": "npm run build",
+    "check:css": "npm run check:build",
+    "validate": "npm run check:build && node scripts/validate.mjs && node scripts/consumer-smoke.mjs && node scripts/visual-regression.mjs",
     "validate:source": "node scripts/validate.mjs",
     "validate:consumer": "node scripts/consumer-smoke.mjs",
-    "validate:visual": "node scripts/visual-regression.mjs"
+    "validate:visual": "node scripts/visual-regression.mjs",
+    "prepublishOnly": "npm run validate"
   },
   "publishConfig": {
     "access": "public"
@@ -64,5 +78,8 @@
     "README.zh-CN.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md"
-  ]
+  ],
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
 }

@@ -26,8 +26,27 @@ import "usuzumi/usuzumi-signature.css";
 CDN usage:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/usuzumi/ui/usuzumi.css">
-<script src="https://cdn.jsdelivr.net/npm/usuzumi/ui/usuzumi.js" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/usuzumi/ui/usuzumi.min.css">
+<script src="https://cdn.jsdelivr.net/npm/usuzumi/ui/usuzumi.min.js" defer></script>
+```
+
+When a page remembers dark or auto theme, set the theme before loading the stylesheet so the first paint uses the right colors. Add `data-uzu-theme-key` to the root element when the mode should be read from localStorage:
+
+```html
+<script>
+(() => {
+  const root = document.documentElement;
+  const key = root.getAttribute("data-uzu-theme-key") || "";
+  let mode = root.getAttribute("data-theme-mode") || root.getAttribute("data-theme") || "light";
+  try { if (key) mode = localStorage.getItem(key) || mode; } catch (_) {}
+  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const theme = mode === "auto" ? (prefersDark ? "dark" : "light") : (mode === "dark" ? "dark" : "light");
+  root.setAttribute("data-theme-mode", mode === "auto" ? "auto" : theme);
+  root.setAttribute("data-theme", theme);
+  root.setAttribute("data-uzu-theme", theme);
+})();
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/usuzumi/ui/usuzumi.min.css">
 ```
 
 ## Usage
@@ -65,6 +84,8 @@ Use `uzu-scope` when adopting Usuzumi inside an existing page:
 
 Usuzumi is customized through CSS custom properties. Set documented `--uzu-*` variables on `:root`, `.uzu-app`, `.uzu-scope`, or a local wrapper before overriding component internals.
 
+The bundled stylesheet is wrapped in `@layer usuzumi`, so ordinary project CSS that is not placed in a lower-priority layer can override library rules without fighting high selector specificity.
+
 Global adjustments:
 
 ```css
@@ -97,6 +118,7 @@ Single-instance adjustments:
 ```
 
 Documented variables cover color roles, radius, spacing, motion, page width, card title rhythm, form field rhythm, feedback sizing and colors, toast sizing, and disclosure panel spacing.
+Use `--uzu-space-*` for layout primitives and project-level spacing. Component internals expose narrower rhythm variables such as `--uzu-card-block-gap`, `--uzu-field-gap`, and `--uzu-toast-inline-padding` when they are intended to be customized.
 
 | Variable | Default | Applies to | Suggested scope |
 | --- | --- | --- | --- |
@@ -164,6 +186,12 @@ The JavaScript file auto-initializes in browsers, is safe to import in SSR/Node 
 window.Usuzumi.init(container);
 ```
 
+When a view is removed by a client-side router, call `destroy(root)` for the removed subtree. It disconnects Usuzumi auto-init observers, generated tooltip descriptions, active drag state, and dialog isolation owned by that subtree:
+
+```js
+window.Usuzumi.destroy(container);
+```
+
 Optional document helpers:
 
 - Add `data-uzu-panel-nav` to a `.uzu-panel-nav` container and `data-uzu-panel-target="#panel-id"` to its buttons to switch `.uzu-panel` sections. Use `data-uzu-panel-hash="true"` to sync the URL hash.
@@ -174,6 +202,9 @@ Optional document helpers:
 - Add `data-uzu-accordion`, `data-uzu-hover-card`, `data-uzu-tag`, or `data-uzu-step-nav` when those components need runtime state sync.
 - Add `data-uzu-combobox`, `data-uzu-data-grid`, `data-uzu-tree`, `data-uzu-split-pane`, or `data-uzu-resizable` for searchable choices, light data tables, hierarchical lists, and adjustable panels.
 - Add `data-uzu-json-viewer`, `data-uzu-diff-viewer`, `data-uzu-rich-editor`, `data-uzu-markdown-editor`, or `data-uzu-inline-editor` for readable data previews and editor shells.
+- Add `data-uzu-auto-init` to a container when components will be inserted later and should initialize without calling `window.Usuzumi.init(container)` manually.
+
+Editor shells are UI and event bridges, not bundled editor engines. `data-uzu-rich-editor` emits toolbar command and surface change events; mount Tiptap, ProseMirror, or another editor engine inside the surface when you need a document model, history, shortcuts, paste rules, or collaboration. `data-uzu-markdown-editor` emits source changes. Add `data-uzu-markdown-render` only when you want Usuzumi's small preview helper; use CodeMirror 6 for source editing and markdown-it, remark, or marked for complete Markdown parsing.
 
 Custom events:
 
@@ -206,9 +237,10 @@ Custom events:
 - `uzu-toast-close`: `{ toast }`
 - `uzu-dialog-open` / `uzu-dialog-close`: `{ dialog, overlay, trigger }`
 - `uzu-step-nav-change`: `{ value, step, stepNav, index }`
-- `uzu-editor-command`: `{ editor, surface, command }`
+- `uzu-editor-command`: `{ editor, surface, button, command, value }`
 - `uzu-editor-change`: `{ editor, surface, value }`
-- `uzu-markdown-editor-render`: `{ editor, source, preview }`
+- `uzu-markdown-editor-change`: `{ editor, source, preview, value }`
+- `uzu-markdown-editor-render`: `{ editor, source, preview, value }`
 - `uzu-inline-editor-change`: `{ editor, value }`
 - `uzu-panel-nav-change`: `{ target, control, panel, nav }`
 - `uzu-panel-show`: `{ target, control, panel, nav }`
@@ -240,13 +272,15 @@ The examples can be opened directly in a browser. No build step or development s
 Repository maintenance commands:
 
 ```bash
-npm run build:css
+npm run build
 npm run validate
 ```
 
-`npm run validate` checks source guardrails, then packs the library and installs it into a temporary consumer project to verify package exports, CSS files, type declarations, CDN-style `ui/*` paths, browser behavior, and component page layout smoke checks.
+Edit source partials in `ui/css/` and `ui/js/`. The public entry files `ui/usuzumi.css`, `ui/usuzumi.js`, `ui/usuzumi.min.css`, and `ui/usuzumi.min.js` are generated bundles for package and CDN consumers, so rebuild them instead of editing them by hand. `npm run build:css` and `npm run check:css` remain compatibility aliases for older local workflows.
 
-The scripts have no dependencies. See [DESIGN.md](DESIGN.md) for the full design specification.
+`npm run validate` checks generated bundle sync and source guardrails, then packs the library and installs it into a temporary consumer project to verify package exports, CSS files, type declarations, CDN-style `ui/*` paths, browser behavior, and component page layout smoke checks.
+
+The published library has no runtime dependencies. See [DESIGN.md](DESIGN.md) for the full design specification.
 
 ## License
 
