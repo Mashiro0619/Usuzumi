@@ -204,7 +204,7 @@ Optional document helpers:
 - Add `data-uzu-json-viewer`, `data-uzu-diff-viewer`, `data-uzu-rich-editor`, `data-uzu-markdown-editor`, or `data-uzu-inline-editor` for readable data previews and editor shells.
 - Add `data-uzu-auto-init` to a container when components will be inserted later and should initialize without calling `window.Usuzumi.init(container)` manually.
 
-Editor shells are UI and event bridges, not bundled editor engines. `data-uzu-rich-editor` emits toolbar command and surface change events; mount Tiptap, ProseMirror, or another editor engine inside the surface when you need a document model, history, shortcuts, paste rules, or collaboration. `data-uzu-markdown-editor` emits source changes. Add `data-uzu-markdown-render` only when you want Usuzumi's small preview helper; use CodeMirror 6 for source editing and markdown-it, remark, or marked for complete Markdown parsing.
+Editor shells are UI and event bridges, not bundled editor engines. `data-uzu-rich-editor` emits toolbar command and surface change events; mount Tiptap inside the surface when you need a document model, history, shortcuts, paste rules, or collaboration. `data-uzu-markdown-editor` emits source changes; use markdown-it for Markdown rendering and sanitization strategy. `data-uzu-code-editor` can stay a native textarea for short snippets, while CodeMirror 6 is the recommended engine for full code editing.
 
 Custom events:
 
@@ -256,7 +256,7 @@ The native library now includes lightweight versions of the larger component fam
 - Tree view: hierarchical focus, selection, and expand/collapse behavior.
 - Split pane and resizable panel: pointer and keyboard resizing, with optional local persistence keys.
 - JSON viewer and diff viewer: parsed JSON trees and readable unified-diff style rows.
-- Editor surfaces: rich-text, code, Markdown, plain-text, inline editor shells, and toolbar buttons. These are shells and light helpers; use a dedicated editor engine when you need syntax services, collaboration, history, or large-file performance.
+- Editor surfaces: rich-text, code, Markdown, plain-text, inline editor shells, and toolbar buttons. These are shells and light helpers; pair rich text with Tiptap, Markdown rendering with markdown-it, and full code editing with CodeMirror 6 when the project needs editor-engine behavior.
 
 ## Examples
 

@@ -93,4 +93,4 @@ const phaseTwoThreePanelsAvailable = phaseTwoThreeTargets.every((target) => Bool
 const phaseFourTargets = ['#component-combobox', '#component-data-grid', '#component-tree', '#component-split-pane', '#component-resizable', '#component-json-viewer', '#component-diff-viewer', '#component-rich-editor', '#component-markdown-editor', '#component-code-editor', '#component-plain-editor', '#component-inline-editor'];
 const phaseFourPanelsAvailable = phaseFourTargets.every((target) => Boolean(document.querySelector('[data-uzu-panel-target="' + target + '"]') && document.querySelector(target)));
 const menuGuideText = document.querySelector('#component-menu .uzu-doc-guidance')?.textContent || '';
-const guideHasUsageLabels = ['使用教程', '基本结构'].every((label) => menuGuideText.includes(label));`;
+const guideHasTutorialLabels = ['使用教程', '基本结构'].every((label) => menuGuideText.includes(label));`;

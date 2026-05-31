@@ -235,7 +235,7 @@ The native runtime includes lightweight versions of the complex component famili
 - Tree view manages hierarchical focus, selection, expand/collapse state, and matching ARIA attributes.
 - Split pane and resizable panel support pointer and keyboard resizing. Optional persistence keys use local storage.
 - JSON viewer parses JSON into a collapsible tree. Diff viewer renders unified-diff style text into readable rows.
-- Editor surfaces provide shells, toolbar buttons, source/preview regions, plain/code text surfaces, inline editing, and event hooks. They are not full editor engines. Rich text projects should mount Tiptap, ProseMirror, or another document engine inside the surface. Markdown projects should pair the shell with CodeMirror 6 for source editing and markdown-it, remark, or marked for complete parsing. Add `data-uzu-markdown-render` only for Usuzumi's small built-in preview helper.
+- Editor surfaces provide shells, toolbar buttons, source/preview regions, plain/code text surfaces, inline editing, and event hooks. They are not full editor engines. Rich text projects should mount Tiptap inside the surface. Markdown projects should use markdown-it for complete rendering and safety policy. Code editing projects should mount CodeMirror 6 inside the editor shell. Add `data-uzu-markdown-render` only for Usuzumi's small built-in preview helper.
 
 ## Visual Principles
 

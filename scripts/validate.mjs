@@ -123,6 +123,24 @@ function checkGuardrails(filePath, text) {
   if (filePath.startsWith(path.join(root, 'ui')) && /\.(?:uzu-doc|uzu-guide)-[A-Za-z0-9_-]+/.test(text)) {
     report(filePath, 'component-page documentation selectors must not live in ui/ files');
   }
+  if (toPosix(filePath).startsWith('example/assets/components-notes-') && /"(?:usage|purpose)"\s*:/.test(text)) {
+    report(filePath, 'component notes should use structure, behavior, and tutorialSections instead of usage/purpose fields');
+  }
+  if (['README.md', 'README.zh-CN.md', 'DESIGN.md', 'example/components.html', 'example/editor-integration.html'].includes(toPosix(filePath)) && /(?:ProseMirror|\bremark\b|\bmarked\b(?!\s+with\b)|Monaco)/.test(text)) {
+    report(filePath, 'editor guidance should stay explicit: Tiptap, markdown-it, and CodeMirror 6');
+  }
+}
+
+function checkMarkdownShape(filePath, text) {
+  if (!['README.md', 'README.zh-CN.md'].includes(toPosix(filePath))) return;
+  const fences = text.match(/^```/gm) || [];
+  if (fences.length % 2 !== 0) {
+    report(filePath, 'markdown code fences are unbalanced');
+  }
+  const headings = text.match(/^#{1,6}\s+\S/gm) || [];
+  if (headings.length < 6) {
+    report(filePath, 'README should expose a scannable heading structure');
+  }
 }
 
 function uniqueValues(values) {
@@ -163,6 +181,7 @@ function validateTextFiles() {
     const text = readText(filePath);
     checkGuardrails(filePath, text);
     checkComponentPageStructure(filePath, text);
+    if (extension === '.md') checkMarkdownShape(filePath, text);
     if (extension === '.html') checkHtmlReferences(filePath, text);
     if (extension === '.css') checkCssReferences(filePath, text);
     if (extension === '.md') checkMarkdownReferences(filePath, text);

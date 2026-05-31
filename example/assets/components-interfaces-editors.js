@@ -26,8 +26,7 @@ window.UsuzumiComponentDocs.componentInterfaces = Object.assign(
     "related": [
       ".uzu-editor-toolbar",
       ".uzu-toolbar-button",
-      "Tiptap",
-      "ProseMirror"
+      "Tiptap"
     ]
   },
   "markdown-editor": {
@@ -45,10 +44,7 @@ window.UsuzumiComponentDocs.componentInterfaces = Object.assign(
       "uzu-markdown-editor-render"
     ],
     "related": [
-      "CodeMirror 6",
       "markdown-it",
-      "remark",
-      "marked",
       "window.Usuzumi.renderMarkdown",
       ".uzu-code-block"
     ]
@@ -59,7 +55,8 @@ window.UsuzumiComponentDocs.componentInterfaces = Object.assign(
     ],
     "related": [
       "textarea.uzu-code-editor",
-      ".uzu-editor"
+      ".uzu-editor",
+      "CodeMirror 6"
     ],
     "states": [
       ":focus-visible",

@@ -42,7 +42,7 @@ return {
   newComponentPanelsAvailable,
   phaseTwoThreePanelsAvailable,
   phaseFourPanelsAvailable,
-  guideHasUsageLabels,
+  guideHasTutorialLabels,
   comboboxValue,
   comboboxVisibleCount,
   comboboxClosedAfterSelect,

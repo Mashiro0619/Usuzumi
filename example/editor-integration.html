@@ -95,8 +95,8 @@
         <p class="uzu-section-label">Guide</p>
         <h1 class="uzu-section-title"><span data-lang="zh">外部编辑器接入指南</span><span data-lang="en">External Editor Integration</span></h1>
         <p class="uzu-body-large">
-          <span data-lang="zh">Usuzumi 负责编辑区外观、工具栏按钮和事件桥。文档模型、快捷键、历史记录、语法服务和完整 Markdown 解析交给专门的编辑器库。</span>
-          <span data-lang="en">Usuzumi owns the editor surface, toolbar buttons, and event bridge. Document models, shortcuts, history, language services, and full Markdown parsing belong to dedicated editor libraries.</span>
+          <span data-lang="zh">Usuzumi 负责编辑区外观、工具栏按钮和事件桥。文档模型、快捷键、历史记录、语法服务和完整 Markdown 解析交给选定的编辑器库：Tiptap、markdown-it 和 CodeMirror 6。</span>
+          <span data-lang="en">Usuzumi owns the editor surface, toolbar buttons, and event bridge. Document models, shortcuts, history, language services, and full Markdown parsing stay in the chosen editor libraries: Tiptap, markdown-it, and CodeMirror 6.</span>
         </p>
       </div>
     </section>
@@ -119,17 +119,17 @@
             <tr>
               <td><span data-lang="zh">富文本</span><span data-lang="en">Rich text</span></td>
               <td><code class="uzu-code">.uzu-editor</code>、工具栏、<code class="uzu-code">uzu-editor-command</code></td>
-              <td><span data-lang="zh">Tiptap 或 ProseMirror 管理 schema、selection、history 和命令执行。</span><span data-lang="en">Tiptap or ProseMirror owns schema, selection, history, and commands.</span></td>
+              <td><span data-lang="zh">Tiptap 管理 schema、selection、history 和命令执行。</span><span data-lang="en">Tiptap owns schema, selection, history, and commands.</span></td>
             </tr>
             <tr>
               <td><span data-lang="zh">Markdown</span><span data-lang="en">Markdown</span></td>
               <td><code class="uzu-code">.uzu-markdown-editor</code>、源码区、预览区、change/render 事件</td>
-              <td><span data-lang="zh">CodeMirror 6 管源码编辑；markdown-it、remark 或 marked 管解析和安全策略。</span><span data-lang="en">CodeMirror 6 owns source editing; markdown-it, remark, or marked owns parsing and safety policy.</span></td>
+              <td><span data-lang="zh">markdown-it 管 Markdown 渲染和安全策略。</span><span data-lang="en">markdown-it owns Markdown rendering and safety policy.</span></td>
             </tr>
             <tr>
               <td><span data-lang="zh">代码编辑</span><span data-lang="en">Code editing</span></td>
               <td><code class="uzu-code">.uzu-code-editor</code> 或 <code class="uzu-code">.uzu-editor</code> 外壳</td>
-              <td><span data-lang="zh">CodeMirror、Monaco 或同类编辑器提供高亮、补全、诊断和多光标。</span><span data-lang="en">CodeMirror, Monaco, or similar editors provide highlighting, completion, diagnostics, and multi-cursor editing.</span></td>
+              <td><span data-lang="zh">CodeMirror 6 提供高亮、补全、诊断和多光标。</span><span data-lang="en">CodeMirror 6 provides highlighting, completion, diagnostics, and multi-cursor editing.</span></td>
             </tr>
           </tbody>
         </table>
@@ -148,7 +148,7 @@
         </article>
         <article class="uzu-guide-step">
           <strong>2. Mount</strong>
-          <p><span data-lang="zh">把 Tiptap/ProseMirror 挂到 <code class="uzu-code">data-uzu-editor-surface</code>。</span><span data-lang="en">Mount Tiptap/ProseMirror into <code class="uzu-code">data-uzu-editor-surface</code>.</span></p>
+          <p><span data-lang="zh">把 Tiptap 挂到 <code class="uzu-code">data-uzu-editor-surface</code>。</span><span data-lang="en">Mount Tiptap into <code class="uzu-code">data-uzu-editor-surface</code>.</span></p>
         </article>
         <article class="uzu-guide-step">
           <strong>3. Events</strong>
@@ -177,7 +177,7 @@
         <pre class="uzu-code-block-body uzu-scroll"><code>const shell = document.querySelector('[data-uzu-rich-editor]');
 const surface = shell.querySelector('[data-uzu-editor-surface]');
 
-// Example shape: replace this with your Tiptap or ProseMirror instance.
+// Example shape: replace this with your Tiptap instance.
 const editor = createRichTextEditor({
   element: surface,
   content: '&lt;p&gt;Start writing.&lt;/p&gt;',
@@ -212,7 +212,7 @@ shell.addEventListener('uzu-editor-command', (event) =&gt; {
       <div class="uzu-alert uzu-alert-info">
         <div class="uzu-title-pair">
           <h3><span data-lang="zh">内置渲染器的定位</span><span data-lang="en">Built-in renderer scope</span></h3>
-          <p><span data-lang="zh"><code class="uzu-code">data-uzu-markdown-render</code> 只适合轻量预览。需要表格、脚注、语法扩展、清洗策略或服务端一致输出时，把预览交给项目自己的 Markdown 管线。</span><span data-lang="en"><code class="uzu-code">data-uzu-markdown-render</code> is for light previews. Use your own Markdown pipeline for tables, footnotes, syntax extensions, sanitization, or server/client parity.</span></p>
+          <p><span data-lang="zh"><code class="uzu-code">data-uzu-markdown-render</code> 只适合轻量预览。需要表格、脚注、语法扩展、清洗策略或服务端一致输出时，把预览交给项目自己的 Markdown 管线。</span><span data-lang="en"><code class="uzu-code">data-uzu-markdown-render</code> is for light previews. Use markdown-it for tables, plugins, sanitization, and server/client parity.</span></p>
         </div>
       </div>
       <div class="uzu-code-block uzu-guide-code">
@@ -230,7 +230,7 @@ shell.addEventListener('uzu-editor-command', (event) =&gt; {
 const source = shell.querySelector('[data-uzu-markdown-source]');
 const preview = shell.querySelector('[data-uzu-markdown-preview]');
 
-// CodeMirror can mount over the source textarea and call render(value) on change.
+// markdown-it renders the preview from the source value.
 function render(value) {
   preview.innerHTML = markdownIt.render(value);
   shell.dispatchEvent(new CustomEvent('uzu-markdown-editor-render', {
@@ -266,7 +266,7 @@ render(source.value);</code></pre>
         <article class="uzu-card">
           <div class="uzu-title-pair">
             <h3><span data-lang="zh">长内容</span><span data-lang="en">Long content</span></h3>
-            <p><span data-lang="zh">语法高亮、补全、诊断和大文件滚动交给 CodeMirror 或 Monaco，再把外层放进 <code class="uzu-code">.uzu-editor</code>。</span><span data-lang="en">Let CodeMirror or Monaco handle highlighting, completion, diagnostics, and large-file scrolling, then place it inside <code class="uzu-code">.uzu-editor</code>.</span></p>
+            <p><span data-lang="zh">语法高亮、补全、诊断和大文件滚动交给 CodeMirror 6，再把外层放进 <code class="uzu-code">.uzu-editor</code>。</span><span data-lang="en">Let CodeMirror 6 handle highlighting, completion, diagnostics, and large-file scrolling, then place it inside <code class="uzu-code">.uzu-editor</code>.</span></p>
           </div>
         </article>
       </div>

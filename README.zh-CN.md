@@ -200,7 +200,7 @@ window.Usuzumi.destroy(container);
 
 组合框、轻量数据网格、树形视图、分栏和可调整面板分别使用 `data-uzu-combobox`、`data-uzu-data-grid`、`data-uzu-tree`、`data-uzu-split-pane`、`data-uzu-resizable`。JSON / Diff 查看器和编辑器外壳使用 `data-uzu-json-viewer`、`data-uzu-diff-viewer`、`data-uzu-rich-editor`、`data-uzu-markdown-editor`、`data-uzu-inline-editor`。
 
-编辑器外壳只负责 UI、事件和主题，不把完整编辑器引擎打包进核心库。`data-uzu-rich-editor` 会派发工具栏命令和内容区输入事件；需要文档模型、历史记录、快捷键、粘贴规则或协作时，把 Tiptap、ProseMirror 或其他编辑器引擎挂到内容区。`data-uzu-markdown-editor` 会派发源码变化事件；只有加上 `data-uzu-markdown-render` 时，才会启用 Usuzumi 的小型预览辅助。源码编辑可接 CodeMirror 6，完整 Markdown 解析可接 markdown-it、remark 或 marked。
+编辑器外壳只负责 UI、事件和主题，不把完整编辑器引擎打包进核心库。`data-uzu-rich-editor` 会派发工具栏命令和内容区输入事件；需要文档模型、历史记录、快捷键、粘贴规则或协作时，把 Tiptap 挂到内容区。`data-uzu-markdown-editor` 会派发源码变化事件；Markdown 渲染和安全策略交给 markdown-it。短代码片段可以继续使用原生 `textarea.uzu-code-editor`，完整代码编辑推荐接 CodeMirror 6。
 
 异步插入组件时，可以在外层容器上加 `data-uzu-auto-init`，后续新增的组件会自动初始化；也可以继续手动调用 `window.Usuzumi.init(container)`。
 
@@ -254,7 +254,7 @@ window.Usuzumi.destroy(container);
 - Tree View：层级焦点、选中和展开收起。
 - Split Pane / Resizable Panel：拖拽和键盘调整尺寸，并可用 key 做本地持久化。
 - JSON Viewer / Diff Viewer：JSON 树渲染和统一 diff 风格行展示。
-- 编辑器表面：富文本、代码、Markdown、纯文本、行内编辑外壳和工具栏按钮。它们是外壳和轻量辅助；需要语法服务、协同编辑、历史记录或大文件性能时，应接入专门编辑器。
+- 编辑器表面：富文本、代码、Markdown、纯文本、行内编辑外壳和工具栏按钮。它们是外壳和轻量辅助；富文本推荐接 Tiptap，Markdown 渲染推荐接 markdown-it，完整代码编辑推荐接 CodeMirror 6。
 
 ## 示例
 

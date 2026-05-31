@@ -33,7 +33,7 @@ assert(metrics.pageInterfaceHasExampleParameters, `${label}: configurable variab
 assert(metrics.newComponentPanelsAvailable, `${label}: first-stage component panels are missing`);
 assert(metrics.phaseTwoThreePanelsAvailable, `${label}: second/third-stage component panels are missing`);
 assert(metrics.phaseFourPanelsAvailable, `${label}: fourth-stage component panels are missing`);
-assert(metrics.guideHasUsageLabels, `${label}: component guide does not expose usage labels`);
+assert(metrics.guideHasTutorialLabels, `${label}: component guide does not expose tutorial labels`);
 }
 
 function checkComponentInteractionMetrics(metrics, label) {

@@ -10,17 +10,13 @@ window.UsuzumiComponentDocs.componentNotes = Object.assign(
       ".uzu-editor-surface",
       "[data-uzu-rich-editor]"
     ],
-    "purpose": [
-      "作为富文本编辑器的 UI 外壳，提供工具栏、编辑表面样式和事件出口。",
-      "Use it as the UI shell for a rich text editor: toolbar, surface styling, and event bridge."
-    ],
     "structure": [
       "外层使用 `data-uzu-rich-editor`，工具栏按钮使用 `data-uzu-editor-command`；编辑区域使用 `data-uzu-editor-surface`。`contenteditable`、selection 和文档模型由外部编辑器实例接管。",
       "Use `data-uzu-rich-editor` on the wrapper, `data-uzu-editor-command` on toolbar buttons, and `data-uzu-editor-surface` for the editable mount. The external editor instance owns `contenteditable`, selection, and the document model."
     ],
     "behavior": [
-      "按钮点击会派发 `uzu-editor-command`，内容区输入会派发 `uzu-editor-change`。把这两个事件接到 Tiptap、ProseMirror 或项目自己的编辑器实例即可。",
-      "Button clicks emit `uzu-editor-command`; surface input emits `uzu-editor-change`. Wire those events to Tiptap, ProseMirror, or your own editor instance."
+      "按钮点击会派发 `uzu-editor-command`，内容区输入会派发 `uzu-editor-change`。把这两个事件接到 Tiptap 实例即可。",
+      "Button clicks emit `uzu-editor-command`; surface input emits `uzu-editor-change`. Wire those events to a Tiptap instance."
     ],
     "tutorialSections": [
       {
@@ -68,17 +64,13 @@ window.UsuzumiComponentDocs.componentNotes = Object.assign(
       ".uzu-markdown-preview",
       "[data-uzu-markdown-editor]"
     ],
-    "purpose": [
-      "作为 Markdown 写作界面的外壳，提供源码区、预览区、事件和基础排版。",
-      "Use it as the shell for Markdown writing: source region, preview region, events, and base typography."
-    ],
     "structure": [
       "外层使用 `data-uzu-markdown-editor`，源码区域使用 `data-uzu-markdown-source`，预览区域使用 `data-uzu-markdown-preview`。源码编辑和 Markdown 解析可以分别接给不同库。",
       "Use `data-uzu-markdown-editor` on the wrapper, `data-uzu-markdown-source` for source, and `data-uzu-markdown-preview` for preview. Source editing and Markdown parsing can be wired to separate libraries."
     ],
     "behavior": [
-      "源码输入会派发 `uzu-markdown-editor-change`。`data-uzu-markdown-render` 会启用内置轻量预览；完整文档建议用 markdown-it、remark 或 marked 更新预览区。",
-      "Source input emits `uzu-markdown-editor-change`. `data-uzu-markdown-render` enables the light built-in preview; complete documents can update the preview through markdown-it, remark, or marked."
+      "源码输入会派发 `uzu-markdown-editor-change`。`data-uzu-markdown-render` 会启用内置轻量预览；完整文档建议用 markdown-it 更新预览区。",
+      "Source input emits `uzu-markdown-editor-change`. `data-uzu-markdown-render` enables the light built-in preview; complete documents can update the preview through markdown-it."
     ],
     "tutorialSections": [
       {
@@ -87,8 +79,8 @@ window.UsuzumiComponentDocs.componentNotes = Object.assign(
           "Base Structure"
         ],
         "body": [
-          "保留源码区和预览区两个明确节点。CodeMirror 6 可以挂在源码区，Markdown 解析器负责写入预览区。",
-          "Keep separate source and preview nodes. CodeMirror 6 can mount over the source area, while the Markdown parser writes into the preview area."
+          "保留源码区和预览区两个明确节点。CodeMirror 6 可以挂在源码区，markdown-it 负责写入预览区。",
+          "Keep separate source and preview nodes. CodeMirror 6 can mount over the source area, while markdown-it writes into the preview area."
         ],
         "code": "<section class=\"uzu-editor uzu-markdown-editor\" data-uzu-markdown-editor>\n  <textarea class=\"uzu-markdown-source\" data-uzu-markdown-source># Draft</textarea>\n  <div class=\"uzu-markdown-preview uzu-prose\" data-uzu-markdown-preview></div>\n</section>",
         "language": "html"
@@ -123,13 +115,9 @@ window.UsuzumiComponentDocs.componentNotes = Object.assign(
     "classes": [
       ".uzu-code-editor"
     ],
-    "purpose": [
-      "用于短代码、配置片段和命令文本输入。",
-      "Use it for short code, configuration snippets, and command text input."
-    ],
     "structure": [
-      "把 `.uzu-code-editor` 加在 `textarea` 上；长代码或需要语言服务时，把 CodeMirror / Monaco 挂进 `.uzu-editor` 外壳。",
-      "Add `.uzu-code-editor` to a `textarea`; for long code or language services, mount CodeMirror / Monaco inside the `.uzu-editor` shell."
+      "把 `.uzu-code-editor` 加在 `textarea` 上；长代码或需要语言服务时，把 CodeMirror 6 挂进 `.uzu-editor` 外壳。",
+      "Add `.uzu-code-editor` to a `textarea`; for long code or language services, mount CodeMirror 6 inside the `.uzu-editor` shell."
     ],
     "behavior": [
       "浏览器负责基础文本输入；项目代码可以监听 `input` / `change` 保存内容，或把外部编辑器的 update 事件转成项目自己的保存流程。",
@@ -154,8 +142,8 @@ window.UsuzumiComponentDocs.componentNotes = Object.assign(
           "External Editor Container"
         ],
         "body": [
-          "需要高亮、补全、诊断或大文件性能时，使用 `.uzu-editor` 提供边框、背景和尺寸，再把编辑器库挂到内部节点。",
-          "For highlighting, completion, diagnostics, or large-file performance, use `.uzu-editor` for border, background, and sizing, then mount the editor library into an inner node."
+          "需要高亮、补全、诊断或大文件性能时，使用 `.uzu-editor` 提供边框、背景和尺寸，再把 CodeMirror 6 挂到内部节点。",
+          "For highlighting, completion, diagnostics, or large-file performance, use `.uzu-editor` for border, background, and sizing, then mount CodeMirror 6 into an inner node."
         ],
         "code": "<section class=\"uzu-editor\" style=\"--uzu-editor-min-height: 320px\">\n  <div data-code-editor-mount></div>\n</section>",
         "language": "html"
@@ -165,10 +153,6 @@ window.UsuzumiComponentDocs.componentNotes = Object.assign(
   "plain-editor": {
     "classes": [
       ".uzu-plain-editor"
-    ],
-    "purpose": [
-      "用于没有格式的长文本，例如备注、说明、审核意见和发布摘要。",
-      "Use it for unformatted longer text such as notes, descriptions, review comments, and release summaries."
     ],
     "structure": [
       "把 `.uzu-plain-editor` 加在 `textarea` 上，并提供可见 label 或清楚的 `aria-label`。",
@@ -183,10 +167,6 @@ window.UsuzumiComponentDocs.componentNotes = Object.assign(
     "classes": [
       ".uzu-inline-editor",
       "[data-uzu-inline-editor]"
-    ],
-    "purpose": [
-      "用于原地编辑短标题、名称或单行字段。",
-      "Use it for in-place editing of short titles, names, or single-line fields."
     ],
     "structure": [
       "外层元素加 `.uzu-inline-editor` 和 `data-uzu-inline-editor`；空值提示可用 `data-placeholder`。",
