@@ -1,6 +1,39 @@
 ﻿export const browserExpressionSetup = `
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const events = [];
+let clipboardText = '';
+try {
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: {
+      writeText: async (value) => {
+        clipboardText = value;
+      }
+    }
+  });
+} catch (_) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText = async (value) => {
+      clipboardText = value;
+    };
+  }
+}
+if (!navigator.clipboard?.writeText) {
+  navigator.clipboard = {
+    writeText: async (value) => {
+      clipboardText = value;
+    }
+  };
+}
+const originalExecCommand = document.execCommand?.bind(document);
+document.execCommand = (command, ...args) => {
+  if (String(command).toLowerCase() === 'copy') {
+    const active = document.activeElement;
+    clipboardText = active && 'value' in active ? active.value : String(window.getSelection?.() || '');
+    return true;
+  }
+  return originalExecCommand ? originalExecCommand(command, ...args) : false;
+};
 const themeToggle = document.querySelector('#consumer-theme-toggle');
 const pageWidthTarget = document.querySelector('#consumer-page-width');
 const pageWidth = pageWidthTarget.getBoundingClientRect().width;

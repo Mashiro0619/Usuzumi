@@ -32,8 +32,8 @@ export const consumerFoundationHtml = `    <section id="consumer-page-width" cla
     </article>
     <p><code class="uzu-code" id="consumer-code">.uzu-scope</code> <kbd class="uzu-kbd" id="consumer-kbd">Ctrl</kbd></p>
     <p id="consumer-plain-backticks">Plain \`raw\` text should stay untouched.</p>
-    <div class="uzu-code-block" id="consumer-code-block">
-      <pre class="uzu-code-block-body uzu-scroll"><code>const label = 'Usuzumi';</code></pre>
+    <div class="uzu-code-block" id="consumer-code-block" style="--uzu-code-block-bg: rgb(250, 248, 240); --uzu-code-block-fg: rgb(32, 32, 30)">
+      <pre class="uzu-code-block-body uzu-scroll"><code data-uzu-code-source="const label = 'Usuzumi';"><span class="line"><span>highlighted label</span></span></code></pre>
       <button class="uzu-icon-button uzu-code-block-copy" type="button" data-uzu-code-copy aria-label="Copy code">
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><rect x="8" y="8" width="10" height="10" rx="1.8" stroke="currentColor" stroke-width="1.7"/><path d="M6 15H5.8A1.8 1.8 0 0 1 4 13.2V5.8A1.8 1.8 0 0 1 5.8 4h7.4A1.8 1.8 0 0 1 15 5.8V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
         <span data-uzu-code-copy-label>Copy</span>
@@ -66,6 +66,16 @@ export const consumerFoundationHtml = `    <section id="consumer-page-width" cla
         <section class="uzu-panel consumer-panel-secondary" id="consumer-panel-four" hidden>Panel four</section>
       </div>
     </div>
+    <section class="uzu-editor" id="consumer-editor-mount-shell">
+      <div class="uzu-editor-toolbar uzu-editor-toolbar-rich">
+        <span class="uzu-toolbar-group">
+          <button class="uzu-toolbar-button" type="button">B</button>
+        </span>
+      </div>
+      <div class="uzu-editor-surface uzu-editor-mount" id="consumer-editor-mount">
+        <div class="ProseMirror"><p>Mounted editor content</p><pre><code>const mounted = true;</code></pre></div>
+      </div>
+    </section>
     <div class="consumer-panel-layout" id="consumer-panel-layout-hash">
       <nav class="uzu-panel-nav" id="consumer-panel-nav-hash" data-uzu-panel-nav data-uzu-panel-hash="true" data-uzu-panel-selector=".consumer-panel-hash" aria-label="Hash consumer panels">
         <section class="uzu-panel-nav-section" aria-labelledby="consumer-panel-nav-title-hash">

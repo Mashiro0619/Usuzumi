@@ -8,8 +8,11 @@ if (value.toolbarDisplay !== 'flex') throw new Error('Browser consumer toolbar d
 if (value.toolbarButtonWidth <= 40 || value.toolbarButtonWidth >= 180) throw new Error('Browser consumer toolbar button width is not stable');
 if (value.toolbarButtonBackground !== 'rgb(47, 47, 44)') throw new Error('Browser consumer toolbar primary button styling is wrong');
 if (value.statDisplay !== 'grid' || value.statValueFontSize !== '34px') throw new Error('Browser consumer stat styles are wrong');
+if (value.editorMountMinHeight < 160 || value.editorMountProseMirrorPaddingTop < 12 || !value.editorMountCodeFontFamily.toLowerCase().includes('mono')) throw new Error('Browser consumer editor mount pattern styles are missing');
 if (!value.codeFontFamily.toLowerCase().includes('mono')) throw new Error('Browser consumer code should use a monospace stack');
 if (value.codeBlockBorderStyle === 'none') throw new Error('Browser consumer code block styling is missing');
+if (value.codeBlockCustomBackground !== 'rgb(250, 248, 240)' || value.codeBlockCustomColor !== 'rgb(32, 32, 30)') throw new Error('Browser consumer code block variables should customize the native code block surface');
+if (value.codeBlockCopiedText !== "const label = 'Usuzumi';") throw new Error('Browser consumer code copy should prefer data-uzu-code-source over highlighted DOM text');
 if (!['Copied', 'Copy'].includes(value.codeBlockCopyText)) throw new Error('Browser consumer code copy button did not initialize');
 if (!value.codeBlockCopyLabelExists) throw new Error('Browser consumer code copy should preserve its label element');
 if (!value.codeBlockCopySvgExists || value.codeBlockCopyDisplay !== 'absolute') throw new Error('Browser consumer code copy should render as an overlay icon button');

@@ -38,6 +38,11 @@
     button.textContent = button.dataset.uzuCopyText || 'Copy';
   }
 
+  function getCodeCopyText(block) {
+    const code = block?.querySelector('pre code') || block?.querySelector('pre');
+    return code?.dataset?.uzuCodeSource ?? code?.textContent ?? '';
+  }
+
   function initCodeCopy(root = document) {
     queryAll(root, '[data-uzu-code-copy]').forEach((button) => {
       if (!markInitialized(button, 'CodeCopy')) return;
@@ -50,7 +55,7 @@
       }
       button.addEventListener('click', () => {
         const block = button.closest('.uzu-code-block');
-        const code = block?.querySelector('pre code, pre')?.textContent || '';
+        const code = getCodeCopyText(block);
         copyText(code).then(() => {
           setCodeCopyLabel(button, 'uzuCopiedText', 'Copied');
           window.setTimeout(() => {

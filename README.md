@@ -195,7 +195,7 @@ window.Usuzumi.destroy(container);
 Optional document helpers:
 
 - Add `data-uzu-panel-nav` to a `.uzu-panel-nav` container and `data-uzu-panel-target="#panel-id"` to its buttons to switch `.uzu-panel` sections. Use `data-uzu-panel-hash="true"` to sync the URL hash.
-- Use `.uzu-code-block` with `.uzu-code-block-body` and a `[data-uzu-code-copy]` button for copyable snippets.
+- Use `.uzu-code-block` with `.uzu-code-block-body` and a `[data-uzu-code-copy]` button for copyable snippets. External highlighters may replace the existing `code` contents with token spans while keeping `data-uzu-code-source` for copy text. Set `--uzu-code-block-bg` and `--uzu-code-block-fg` on `.uzu-code-block` or `.uzu-code-block-body` when the highlighter theme needs its own colors.
 - Add `data-uzu-markdown` to a `.uzu-prose` container to render a small Markdown subset: headings, paragraphs, unordered lists, links, inline code, and fenced code blocks. This is not a full Markdown engine.
 - Add `data-uzu-search`, `data-uzu-password`, or `data-uzu-stepper` when search clear buttons, password visibility toggles, or numeric steppers need built-in behavior.
 - Add `data-uzu-menu`, `data-uzu-context-menu`, `data-uzu-menubar`, or `data-uzu-command` for lightweight menu behavior.
@@ -204,7 +204,7 @@ Optional document helpers:
 - Add `data-uzu-json-viewer`, `data-uzu-diff-viewer`, `data-uzu-rich-editor`, `data-uzu-markdown-editor`, or `data-uzu-inline-editor` for readable data previews and editor shells.
 - Add `data-uzu-auto-init` to a container when components will be inserted later and should initialize without calling `window.Usuzumi.init(container)` manually.
 
-Editor shells are UI and event bridges, not bundled editor engines. `data-uzu-rich-editor` emits toolbar command and surface change events; mount Tiptap inside the surface when you need a document model, history, shortcuts, paste rules, or collaboration. `data-uzu-markdown-editor` emits source changes; use markdown-it for Markdown rendering and sanitization strategy. `data-uzu-code-editor` can stay a native textarea for short snippets, while CodeMirror 6 is the recommended engine for full code editing.
+Editor shells are UI and event bridges, not bundled editor engines. `data-uzu-rich-editor` emits toolbar command and surface change events; mount Tiptap inside `.uzu-editor-mount` when you need a document model, history, shortcuts, paste rules, or collaboration. `data-uzu-markdown-editor` emits source changes; use markdown-it for Markdown rendering and sanitization strategy. `textarea.uzu-code-editor` can stay a native textarea for short snippets, while CodeMirror 6 is the recommended engine inside `.uzu-editor-mount` for full code editing.
 
 Custom events:
 

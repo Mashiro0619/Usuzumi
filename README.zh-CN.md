@@ -196,11 +196,13 @@ window.Usuzumi.destroy(container);
 
 它会断开该区域内的自动初始化观察器，移除运行时生成的 tooltip 描述，并清理属于该区域的拖拽状态与弹窗隔离状态。
 
+代码片段使用 `.uzu-code-block`、`.uzu-code-block-body` 和带有 `data-uzu-code-copy` 的复制按钮。外部语法高亮器可以替换现有 `code` 元素里的 token span，同时保留 `data-uzu-code-source` 作为纯文本复制内容；如果高亮主题需要自己的颜色，可在 `.uzu-code-block` 或 `.uzu-code-block-body` 上设置 `--uzu-code-block-bg` 与 `--uzu-code-block-fg`。
+
 需要内置行为时，在组件外层使用对应的 `data-uzu-*` 属性：菜单使用 `data-uzu-menu` 或 `data-uzu-context-menu`，命令菜单使用 `data-uzu-command`，accordion 使用 `data-uzu-accordion`，悬浮卡片使用 `data-uzu-hover-card`，标签使用 `data-uzu-tag`，步骤导航使用 `data-uzu-step-nav`。
 
 组合框、轻量数据网格、树形视图、分栏和可调整面板分别使用 `data-uzu-combobox`、`data-uzu-data-grid`、`data-uzu-tree`、`data-uzu-split-pane`、`data-uzu-resizable`。JSON / Diff 查看器和编辑器外壳使用 `data-uzu-json-viewer`、`data-uzu-diff-viewer`、`data-uzu-rich-editor`、`data-uzu-markdown-editor`、`data-uzu-inline-editor`。
 
-编辑器外壳只负责 UI、事件和主题，不把完整编辑器引擎打包进核心库。`data-uzu-rich-editor` 会派发工具栏命令和内容区输入事件；需要文档模型、历史记录、快捷键、粘贴规则或协作时，把 Tiptap 挂到内容区。`data-uzu-markdown-editor` 会派发源码变化事件；Markdown 渲染和安全策略交给 markdown-it。短代码片段可以继续使用原生 `textarea.uzu-code-editor`，完整代码编辑推荐接 CodeMirror 6。
+编辑器外壳只负责 UI、事件和主题，不把完整编辑器引擎打包进核心库。`data-uzu-rich-editor` 会派发工具栏命令和内容区输入事件；需要文档模型、历史记录、快捷键、粘贴规则或协作时，把 Tiptap 挂到 `.uzu-editor-mount`。`data-uzu-markdown-editor` 会派发源码变化事件；Markdown 渲染和安全策略交给 markdown-it。短代码片段可以继续使用原生 `textarea.uzu-code-editor`，完整代码编辑推荐把 CodeMirror 6 挂到 `.uzu-editor-mount`。
 
 异步插入组件时，可以在外层容器上加 `data-uzu-auto-init`，后续新增的组件会自动初始化；也可以继续手动调用 `window.Usuzumi.init(container)`。
 
